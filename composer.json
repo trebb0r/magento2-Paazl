@@ -1,6 +1,6 @@
 {
-  "name": "guapa/module-paazl",
-  "description": "Guapa Paazl",
+  "name": "paazl/magento2",
+  "description": "Paazl Magento 2 Module",
   "type": "magento2-module",
   "version": "1.0.8",
   "license": [
