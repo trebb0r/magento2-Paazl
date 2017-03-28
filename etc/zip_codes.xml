@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+* @package Guapa_Paazl
+* @author Guapa <info@guapa.nl>
+* @copyright 2010-2017 Guapa B.V.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Directory:etc/zip_codes.xsd">
+    <zip countryCode="NL">
+        <codes>
+            <code id="pattern_1" active="true" example="1234 AB">^[1-9][0-9]{3}\s?(?!sa|sd|ss)[a-zA-Z]{2}$</code>
+        </codes>
+    </zip>
+</config>

@@ -1,0 +1,47 @@
+<?php
+/**
+ * @package Guapa_Paazl
+ * @author Guapa <info@guapa.nl>
+ * @copyright 2010-2017 Guapa B.V.
+ */
+?>
+<div id="log_details_fieldset" class="field log-details">
+    <table class="admin__table-secondary">
+        <tbody>
+            <tr>
+                <th><?php echo __('Log Id'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getLogId(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Date'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getCreatedAt(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Log type'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getLogType(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Log code'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getLogCode(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Order Id'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getOrderId(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Shipment Id'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getShipmentId(); ?></td>
+            </tr>
+
+            <tr>
+                <th><?php echo __('Message / Data'); ?></th>
+                <td><?php echo $block->getCurrentLog()->getMessage(); ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

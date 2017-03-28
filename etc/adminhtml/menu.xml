@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+* @package Guapa_Paazl
+* @author Guapa <info@guapa.nl>
+* @copyright 2010-2017 Guapa B.V.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Guapa_Paazl::paazl" title="Paazl" module="Guapa_Paazl" sortOrder="30" resource="Magento_Backend::content"/>
+        <add id="Guapa_Paazl::guapa_paazl_logging"
+             title="Logging"
+             module="Guapa_Paazl"
+             sortOrder="10"
+             parent="Guapa_Paazl::paazl"
+             resource="Guapa_Paazl::logging"
+             action="paazl/log/index"
+             dependsOnConfig="paazl/debug/log"
+        />
+    </menu>
+</config>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+* @package Guapa_Paazl
+* @author Guapa <info@guapa.nl>
+* @copyright 2010-2017 Guapa B.V.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="PaazlListOrdersCommand" xsi:type="object">Guapa\Paazl\Console\Command\ListOrdersCommand</item>
+                <item name="PaazlCommitOrderCommand" xsi:type="object">Guapa\Paazl\Console\Command\CommitOrderCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
+        <plugin name="location-data-to-rate" type="Guapa\Paazl\Model\Plugin\Quote\Cart\ShippingMethodConverterPlugin" sortOrder="100"/>
+    </type>
+
+    <virtualType name="PaazlOrderRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">order</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaazlUpdateOrderRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">updateOrder</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaazlAddressRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">address</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaazlShippingOptionRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">shippingOption</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaazlOrderCommitRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">commitOrder</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaazlListOrdersRequest" type="Guapa\Paazl\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">listOrders</argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+* @package Guapa_Paazl
+* @author Guapa <info@guapa.nl>
+* @copyright 2010-2017 Guapa B.V.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Guapa\Paazl\Block\Adminhtml\Log\Details" name="paazl.log.details" template="Guapa_Paazl::log/details.phtml" />
+        </referenceContainer>
+    </body>
+</page>

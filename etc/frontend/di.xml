@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+* @package Guapa_Paazl
+* @author Guapa <info@guapa.nl>
+* @copyright 2010-2017 Guapa B.V.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Block\Onepage">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="addressFormStreetFields" xsi:type="object">Guapa\Paazl\Block\Checkout\LayoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
