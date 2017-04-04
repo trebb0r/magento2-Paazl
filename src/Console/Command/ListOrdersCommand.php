@@ -16,18 +16,18 @@ class ListOrdersCommand extends Command
     /**
      * @var \Paazl\Shipping\Model\PaazlManagement
      */
-    protected $paazlManagement;
+    protected $_paazlManagement;
 
     /**
      * ListOrdersCommand constructor.
-     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+     * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      * @param null $name
      */
     public function __construct(
-        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
         $name = null
     ) {
-        $this->paazlManagement = $paazlManagement;
+        $this->_paazlManagement = $_paazlManagement;
         parent::__construct($name);
     }
 
@@ -70,7 +70,7 @@ class ListOrdersCommand extends Command
      */
     protected function listOrders(\DateTime $dateTime)
     {
-        $response = $this->paazlManagement->processListOrdersRequest($dateTime);
+        $response = $this->_paazlManagement->processListOrdersRequest($dateTime);
 
         $orders = [];
         if (isset($response['orders']['order'])) $orders = $response['orders']['order'];

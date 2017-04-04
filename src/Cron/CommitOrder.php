@@ -40,7 +40,7 @@ class CommitOrder
     /**
      * @var \Paazl\Shipping\Model\PaazlManagement
      */
-    protected $paazlManagement;
+    protected $_paazlManagement;
 
     /** @var \Psr\Log\LoggerInterface */
     protected $_logger;
@@ -67,7 +67,7 @@ class CommitOrder
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->_orderRepository = $orderRepository;
@@ -78,7 +78,7 @@ class CommitOrder
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_filterBuilder = $filterBuilder;
         $this->_scopeConfig = $scopeConfig;
-        $this->paazlManagement = $paazlManagement;
+        $this->_paazlManagement = $_paazlManagement;
         $this->_logger = $logger;
     }
 
@@ -98,9 +98,9 @@ class CommitOrder
 
                 if ($order->getExtOrderId() == 'error-1002') continue;
 
-                $extOrderId = $this->paazlManagement->getReferencePrefix() . $order->getIncrementId();
+                $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getIncrementId();
 
-                $response = $this->paazlManagement->processOrderCommitRequest($order);
+                $response = $this->_paazlManagement->processOrderCommitRequest($order);
                 if (isset($response['success'])) {
                     $order->setExtOrderId($extOrderId);
                     $this->_orderResource->save($order);

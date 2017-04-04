@@ -15,19 +15,19 @@ class Order extends Generic
     /**
      * @var \Paazl\Shipping\Model\PaazlManagement
      */
-    protected $paazlManagement;
+    protected $_paazlManagement;
 
     /**
      * Order constructor.
      * @param Context $context
-     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+     * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      */
     public function __construct(
         Context $context,
-        \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
     )
     {
-        $this->paazlManagement = $paazlManagement;
+        $this->_paazlManagement = $_paazlManagement;
         parent::__construct($context);
     }
 
@@ -39,7 +39,7 @@ class Order extends Generic
     public function prepareProducts($request)
     {
         //@todo Mapping
-        $attributes = $this->paazlManagement->getMapping();
+        $attributes = $this->_paazlManagement->getMapping();
 
         $storeData = [
             'unitPriceCurrency' => $this->scopeConfig->getValue('currency/options/base', \Magento\Store\Model\ScopeInterface ::SCOPE_STORE)

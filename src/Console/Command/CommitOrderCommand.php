@@ -37,7 +37,7 @@ class CommitOrderCommand extends Command
     /**
      * @var \Paazl\Shipping\Model\PaazlManagement
      */
-    protected $paazlManagement;
+    protected $_paazlManagement;
 
     /**
      * CommitOrderCommand constructor.
@@ -46,7 +46,7 @@ class CommitOrderCommand extends Command
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Sales\Model\ResourceModel\Order $orderResource
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
-     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+     * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      * @param null $name
      */
     public function __construct(
@@ -55,7 +55,7 @@ class CommitOrderCommand extends Command
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Sales\Model\ResourceModel\Order $orderResource,
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
-        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
         $name = null
     ) {
         $this->_requestBuilder = $requestBuilder;
@@ -63,7 +63,7 @@ class CommitOrderCommand extends Command
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
         $this->_addressHelper = $addressHelper;
-        $this->paazlManagement = $paazlManagement;
+        $this->_paazlManagement = $_paazlManagement;
         parent::__construct($name);
     }
     /**
@@ -124,7 +124,7 @@ class CommitOrderCommand extends Command
             return 'Order not found';
         }
 
-        $response = $this->paazlManagement->processOrderCommitRequest($order);
+        $response = $this->_paazlManagement->processOrderCommitRequest($order);
         if (isset($response['success'])) {
             $order->setExtOrderId($order->getIncrementId());
             $this->_orderResource->save($order);
