@@ -42,7 +42,7 @@ class Order extends Generic
         $attributes = $this->paazlManagement->getMapping();
         //@todo Values from store-config
         $storeData = [
-            'unitPriceCurrency' => 'EUR'
+            'unitPriceCurrency' => $this->scopeConfig->getValue('currency/options/base', \Magento\Store\Model\ScopeInterface ::SCOPE_STORE)
         ];
 
         $products = [];
@@ -60,11 +60,6 @@ class Order extends Generic
                 $products[] = $productData;
             }
         }
-
-        /**
-         * promotionAbsolute
-         * promotion
-         */
 
         return $products;
     }
