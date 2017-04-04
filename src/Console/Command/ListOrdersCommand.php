@@ -60,10 +60,8 @@ class ListOrdersCommand extends Command
         if (!isset($orders[0])) $orders = [$orders];
 
         foreach ($orders as $order) {
-            //if (strpos($order['emailAddress'], 'guapa') !== false) {
-                $data = print_r($order, true);
-                $output->writeln('<info>' . $data . '</info>');
-            //}
+            $data = print_r($order, true);
+            $output->writeln('<info>' . $data . '</info>');
         }
 
         $result = (int)(count($orders));
