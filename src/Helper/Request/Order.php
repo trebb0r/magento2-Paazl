@@ -5,10 +5,32 @@
  */
 namespace Paazl\Shipping\Helper\Request;
 
+use Magento\Framework\App\Helper\Context;
+
 class Order extends Generic
 {
     const XML_PATH_ORDER_REFERENCE_ADD_PREFIX = 'paazl/order/add_prefix';
     const XML_PATH_ORDER_REFERENCE_PREFIX = 'paazl/order/reference_prefix';
+
+    /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $paazlManagement;
+
+    /**
+     * Order constructor.
+     * @param Context $context
+     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+     */
+    public function __construct(
+        Context $context,
+        \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+    )
+    {
+        $this->paazlManagement = $paazlManagement;
+        parent::__construct($context);
+    }
+
 
     /**
      * @param $request
@@ -17,21 +39,7 @@ class Order extends Generic
     public function prepareProducts($request)
     {
         //@todo Mapping
-        $attributes = [
-            'packagesPerUnit' => 'packagesPerUnit',
-            'matrix' => 'matrix',
-            'weight' => 'weight',
-            'width' => 'width',
-            'height' => 'height',
-            'length' => 'length',
-            'volume' => 'volume',
-            'code' => 'sku',
-            'description' => 'name',
-            'countryOfManufacture' => 'country_of_manufacture',
-            'unitPrice' => 'price_including_tax',
-            'hsTariffCode' => 'hsTariffCode',
-            'processingDays' => 'processingDays'
-        ];
+        $attributes = $this->paazlManagement->getMapping();
         //@todo Values from store-config
         $storeData = [
             'unitPriceCurrency' => 'EUR'
@@ -59,17 +67,5 @@ class Order extends Generic
          */
 
         return $products;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReferencePrefix()
-    {
-        $prefix = '';
-        if ($this->scopeConfig->isSetFlag(self::XML_PATH_ORDER_REFERENCE_ADD_PREFIX)) {
-            $prefix = trim((string)$this->scopeConfig->getValue(self::XML_PATH_ORDER_REFERENCE_PREFIX));
-        }
-        return $prefix;
     }
 }

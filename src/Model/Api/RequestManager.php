@@ -116,7 +116,7 @@ class RequestManager
                     'message'   =>  $this->paazlError->getMessageByCode($response->error->code)
                 ];
                 //@todo Config
-                if ($paazlError['log_code'] != 1004) {
+                if ($paazlError['log_code'] != 1004) { // 1004 = zipcode + house number combination is incorrect
                     $this->log->write($paazlError);
                 }
                 $errors[] = $paazlError;

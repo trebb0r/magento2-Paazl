@@ -31,37 +31,39 @@ class CommitOrderCommand extends Command
     /** @var \Magento\Sales\Model\ResourceModel\Order */
     protected $_orderResource;
 
-    /** @var \Paazl\Shipping\Helper\Request\Order */
-    protected $_orderHelper;
-
     /** @var \Paazl\Shipping\Helper\Utility\Address */
     protected $_addressHelper;
+
+    /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $paazlManagement;
 
     /**
      * CommitOrderCommand constructor.
      * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
      * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param \Magento\Sales\Model\ResourceModel\Order $orderResource
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
+     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
      * @param null $name
      */
     public function __construct(
         \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
         \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Paazl\Shipping\Helper\Request\Order $orderHelper,
         \Magento\Sales\Model\ResourceModel\Order $orderResource,
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
+        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
         $name = null
     ) {
         $this->_requestBuilder = $requestBuilder;
         $this->_requestManager = $requestManager;
         $this->_orderFactory = $orderFactory;
-        $this->_orderHelper = $orderHelper;
         $this->_orderResource = $orderResource;
         $this->_addressHelper = $addressHelper;
+        $this->paazlManagement = $paazlManagement;
         parent::__construct($name);
     }
     /**
@@ -126,10 +128,10 @@ class CommitOrderCommand extends Command
         $shippingAddress = $order->getShippingAddress();
 
         $requestData = [
-            'context' => $this->_orderHelper->getReferencePrefix() . $order->getQuoteId(),
+            'context' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(),
             'body' => [
-                'orderReference' => $this->_orderHelper->getReferencePrefix() . $order->getIncrementId(), // Final reference
-                'pendingOrderReference' => $this->_orderHelper->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
+                'orderReference' => $this->paazlManagement->getReferencePrefix() . $order->getIncrementId(), // Final reference
+                'pendingOrderReference' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
                 'totalAmount' => $order->getBaseSubtotalInclTax() * 100, // In cents
                 'customerEmail' => $order->getCustomerEmail(),
                 'customerPhoneNumber' => $shippingAddress->getTelephone(),
@@ -137,7 +139,7 @@ class CommitOrderCommand extends Command
                     'type' => 'delivery', //@todo Service points
                     'identifier' => null, //@todo Service points
                     'option' => $shippingMethod->getMethod(),
-                    'orderWeight' => $this->_orderHelper->getConvertedWeight($order->getWeight()),
+                    'orderWeight' => $this->paazlManagement->getConvertedWeight($order->getWeight()),
                     'maxLabels' => 1, //@todo Support for shipments having multiple packages
                     'description' => 'Delivery' //@todo Find out what description is expected
                 ],

@@ -65,6 +65,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $_orderHelper;
 
     /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $paazlManagement;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -86,6 +91,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param Api\RequestManager $requestManager
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
      * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
+     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
      * @param array $data
      */
     public function __construct(
@@ -109,6 +115,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
         \Paazl\Shipping\Helper\Request\Order $orderHelper,
+        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
         array $data = []
     ) {
         $this->_checkoutSession = $checkoutSession;
@@ -116,6 +123,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_requestManager = $requestManager;
         $this->_addressHelper = $addressHelper;
         $this->_orderHelper = $orderHelper;
+        $this->paazlManagement = $paazlManagement;
         parent::__construct(
             $scopeConfig,
             $rateErrorFactory,
@@ -451,7 +459,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         if (is_null($this->_quoteId) && !is_null($this->_request)) {
             if ($this->_request->getAllItems()) {
                 foreach ($this->_request->getAllItems() as $item) {
-                    $this->_quoteId = $this->_orderHelper->getReferencePrefix() . (string)$item->getQuoteId();
+                    $this->_quoteId = $this->paazlManagement->getReferencePrefix() . (string)$item->getQuoteId();
                     break;
                 }
             }

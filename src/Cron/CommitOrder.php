@@ -34,11 +34,13 @@ class CommitOrder
     /** @var \Magento\Framework\Api\FilterBuilder */
     protected $_filterBuilder;
 
-    /** @var \Paazl\Shipping\Helper\Data */
-    protected $_paazlHelper;
-
     /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
     protected $_scopeConfig;
+
+    /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $paazlManagement;
 
     /** @var \Psr\Log\LoggerInterface */
     protected $_logger;
@@ -53,6 +55,8 @@ class CommitOrder
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
      * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
@@ -62,9 +66,8 @@ class CommitOrder
         \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
-        \Paazl\Shipping\Helper\Request\Order $paazlHelper,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-
+        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->_orderRepository = $orderRepository;
@@ -74,9 +77,8 @@ class CommitOrder
         $this->_requestManager = $requestManager;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_filterBuilder = $filterBuilder;
-        $this->_paazlHelper = $paazlHelper;
         $this->_scopeConfig = $scopeConfig;
-
+        $this->paazlManagement = $paazlManagement;
         $this->_logger = $logger;
     }
 
@@ -98,7 +100,7 @@ class CommitOrder
 
                 if ($order->getExtOrderId() == 'error-1002') continue;
 
-                $extOrderId = $this->_paazlHelper->getReferencePrefix() . $order->getIncrementId();
+                $extOrderId = $this->paazlManagement->getReferencePrefix() . $order->getIncrementId();
 
                 $assuredAmount = 0;
                 if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {
@@ -106,10 +108,10 @@ class CommitOrder
                 }
 
                 $requestData = [
-                    'context' => $this->_paazlHelper->getReferencePrefix() . $order->getQuoteId(),
+                    'context' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(),
                     'body' => [
                         'orderReference' => $extOrderId, // Final reference
-                        'pendingOrderReference' => $this->_paazlHelper->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
+                        'pendingOrderReference' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
                         'totalAmount' => $order->getBaseSubtotalInclTax() * 100, // In cents
                         'customerEmail' => $order->getCustomerEmail(),
                         'customerPhoneNumber' => $shippingAddress->getTelephone(),
@@ -117,7 +119,7 @@ class CommitOrder
                             'type' => 'delivery', //@todo Service points
                             'identifier' => null, //@todo Service points
                             'option' => $shippingMethod->getMethod(),
-                            'orderWeight' => $this->_paazlHelper->getConvertedWeight($order->getWeight()),
+                            'orderWeight' => $this->paazlManagement->getConvertedWeight($order->getWeight()),
                             'maxLabels' => 1, //@todo Support for shipments having multiple packages
                             'description' => 'Delivery', //@todo Find out what description is expected
                             'assuredAmount' => $assuredAmount,
