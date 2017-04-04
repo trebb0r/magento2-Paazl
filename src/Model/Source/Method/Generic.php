@@ -1,23 +1,23 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\Source\Method;
+namespace Paazl\Shipping\Model\Source\Method;
 
 class Generic
 {
-    /** @var \Guapa\Paazl\Model\Carrier */
+    /** @var \Paazl\Shipping\Model\Carrier */
     protected $paazlCarrier;
 
     /** @var string */
     protected $_code = '';
 
     /**
-     * @param \Guapa\Paazl\Model\Carrier $carrier
+     * @param \Paazl\Shipping\Model\Carrier $carrier
      */
-    public function __construct(\Guapa\Paazl\Model\Carrier $carrier)
+    public function __construct(\Paazl\Shipping\Model\Carrier $carrier)
     {
         $this->paazlCarrier = $carrier;
     }

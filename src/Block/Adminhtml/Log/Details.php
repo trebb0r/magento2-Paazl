@@ -1,12 +1,12 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Block\Adminhtml\Log;
+namespace Paazl\Shipping\Block\Adminhtml\Log;
 
-use Guapa\Paazl\Model\Log;
+use Paazl\Shipping\Model\Log;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Button\ButtonList;
@@ -17,7 +17,7 @@ use Magento\Framework\Registry;
 
 /**
  * Class Details
- * @package Guapa\Paazl\Block\Adminhtml\Log
+ * @package Paazl\Shipping\Block\Adminhtml\Log
  */
 class Details extends Template implements ContainerInterface
 {

@@ -1,16 +1,16 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\ResourceModel;
+namespace Paazl\Shipping\Model\ResourceModel;
 
 use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Class Log
- * @package Guapa\Paazl\Model\ResourceModel
+ * @package Paazl\Shipping\Model\ResourceModel
  */
 class Log extends AbstractDb
 {

@@ -1,16 +1,16 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\ResourceModel\Log;
+namespace Paazl\Shipping\Model\ResourceModel\Log;
 
 use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
  * Class Collection
- * @package Guapa\Paazl\Model\ResourceModel\Log
+ * @package Paazl\Shipping\Model\ResourceModel\Log
  */
 class Collection extends AbstractCollection
 {
@@ -20,6 +20,6 @@ class Collection extends AbstractCollection
     * @return void
     */
     protected function _construct() {
-        $this->_init('Guapa\Paazl\Model\Log', 'Guapa\Paazl\Model\ResourceModel\Log');
+        $this->_init('Paazl\Shipping\Model\Log', 'Paazl\Shipping\Model\ResourceModel\Log');
     }
 }

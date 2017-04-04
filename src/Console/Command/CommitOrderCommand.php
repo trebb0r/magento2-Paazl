@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Console\Command;
+namespace Paazl\Shipping\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,10 +20,10 @@ class CommitOrderCommand extends Command
     /** Use real (entity_id) ID */
     const OPTION_REAL_ID = 'real_id';
 
-    /** @var \Guapa\Paazl\Model\Api\RequestBuilder */
+    /** @var \Paazl\Shipping\Model\Api\RequestBuilder */
     protected $_requestBuilder;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestManager */
+    /** @var \Paazl\Shipping\Model\Api\RequestManager */
     protected $_requestManager;
 
     /** @var \Magento\Sales\Model\OrderFactory */
@@ -32,29 +32,29 @@ class CommitOrderCommand extends Command
     /** @var \Magento\Sales\Model\ResourceModel\Order */
     protected $_orderResource;
 
-    /** @var \Guapa\Paazl\Helper\Request\Order */
+    /** @var \Paazl\Shipping\Helper\Request\Order */
     protected $_orderHelper;
 
-    /** @var \Guapa\Paazl\Helper\Utility\Address */
+    /** @var \Paazl\Shipping\Helper\Utility\Address */
     protected $_addressHelper;
 
     /**
      * CommitOrderCommand constructor.
-     * @param \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder
-     * @param \Guapa\Paazl\Model\Api\RequestManager $requestManager
+     * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
+     * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Guapa\Paazl\Helper\Request\Order $orderHelper
+     * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param \Magento\Sales\Model\ResourceModel\Order $orderResource
-     * @param \Guapa\Paazl\Helper\Utility\Address $addressHelper
+     * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
      * @param null $name
      */
     public function __construct(
-        \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder,
-        \Guapa\Paazl\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
+        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Guapa\Paazl\Helper\Request\Order $orderHelper,
+        \Paazl\Shipping\Helper\Request\Order $orderHelper,
         \Magento\Sales\Model\ResourceModel\Order $orderResource,
-        \Guapa\Paazl\Helper\Utility\Address $addressHelper,
+        \Paazl\Shipping\Helper\Utility\Address $addressHelper,
         $name = null
     ) {
         $this->_requestBuilder = $requestBuilder;

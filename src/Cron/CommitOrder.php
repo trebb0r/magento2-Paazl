@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Cron;
+namespace Paazl\Shipping\Cron;
 
 use Magento\Store\Model\ScopeInterface as StoreScopeInterface;
 
@@ -23,10 +23,10 @@ class CommitOrder
     /** @var \Magento\Sales\Model\ResourceModel\Order */
     protected $_orderResource;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestBuilder */
+    /** @var \Paazl\Shipping\Model\Api\RequestBuilder */
     protected $_requestBuilder;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestManager */
+    /** @var \Paazl\Shipping\Model\Api\RequestManager */
     protected $_requestManager;
 
     /** @var \Magento\Framework\Api\SearchCriteriaBuilder */
@@ -35,7 +35,7 @@ class CommitOrder
     /** @var \Magento\Framework\Api\FilterBuilder */
     protected $_filterBuilder;
 
-    /** @var \Guapa\Paazl\Helper\Data */
+    /** @var \Paazl\Shipping\Helper\Data */
     protected $_paazlHelper;
 
     /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
@@ -49,8 +49,8 @@ class CommitOrder
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Sales\Model\ResourceModel\Order $orderResource
-     * @param \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder
-     * @param \Guapa\Paazl\Model\Api\RequestManager $requestManager
+     * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
+     * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
      * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -59,11 +59,11 @@ class CommitOrder
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Sales\Model\ResourceModel\Order $orderResource,
-        \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder,
-        \Guapa\Paazl\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
+        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
-        \Guapa\Paazl\Helper\Request\Order $paazlHelper,
+        \Paazl\Shipping\Helper\Request\Order $paazlHelper,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
 
         \Psr\Log\LoggerInterface $logger

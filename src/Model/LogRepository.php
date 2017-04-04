@@ -1,21 +1,21 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model;
+namespace Paazl\Shipping\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Guapa\Paazl\Api\LogRepositoryInterface;
-use Guapa\Paazl\Api\Data\LogInterface;
-use Guapa\Paazl\Model\ResourceModel\Log as LogResource;
-use Guapa\Paazl\Model\ResourceModel\Log\CollectionFactory;
+use Paazl\Shipping\Api\LogRepositoryInterface;
+use Paazl\Shipping\Api\Data\LogInterface;
+use Paazl\Shipping\Model\ResourceModel\Log as LogResource;
+use Paazl\Shipping\Model\ResourceModel\Log\CollectionFactory;
 
 /**
  * Class LogRepository
- * @package Guapa\Paazl\Model
+ * @package Paazl\Shipping\Model
  */
 class LogRepository implements LogRepositoryInterface
 {

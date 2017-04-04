@@ -1,14 +1,14 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Controller\Adminhtml\Log;
+namespace Paazl\Shipping\Controller\Adminhtml\Log;
 
-use Guapa\Paazl\Controller\Adminhtml\Log;
-use Guapa\Paazl\Helper\Log as LogHelper;
-use Guapa\Paazl\Model\LogRepository;
+use Paazl\Shipping\Controller\Adminhtml\Log;
+use Paazl\Shipping\Helper\Log as LogHelper;
+use Paazl\Shipping\Model\LogRepository;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Controller\ResultFactory;
@@ -22,7 +22,7 @@ use Magento\Framework\Webapi\Exception;
 
 /**
  * Class Index
- * @package Guapa\Paazl\Controller\Adminhtml\Log
+ * @package Paazl\Shipping\Controller\Adminhtml\Log
  */
 class Details extends Log
 {

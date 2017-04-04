@@ -1,16 +1,16 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Block\Checkout;
+namespace Paazl\Shipping\Block\Checkout;
 
 use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 
 /**
  * Class LayoutProcessor
- * @package Guapa\Paazl\Block\Checkout
+ * @package Paazl\Shipping\Block\Checkout
  */
 class LayoutProcessor implements LayoutProcessorInterface
 {
@@ -50,7 +50,7 @@ class LayoutProcessor implements LayoutProcessorInterface
             // Custom fields
             $houseNumberElement = $this->getCustomField([
                 'label' => __('House number'),
-                'component' => 'Guapa_Paazl/js/form/element/house-number',
+                'component' => 'Paazl_Shipping/js/form/element/house-number',
                 'dataScope' => 'shippingAddress.house_number',
                 'validation' => ['required-entry' => true, 'min_text_length' => 1, 'max_text_length' => 255],
                 'sortOrder' => (int)$originalStreetElement['sortOrder'] - 3,

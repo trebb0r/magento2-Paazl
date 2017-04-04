@@ -1,15 +1,15 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\Api;
+namespace Paazl\Shipping\Model\Api;
 
 use Magento\Framework\Webapi\Soap\ClientFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Guapa\Paazl\Helper\Log as LogHelper;
-use Guapa\Paazl\Model\Api\Request as PaazlRequest;
+use Paazl\Shipping\Helper\Log as LogHelper;
+use Paazl\Shipping\Model\Api\Request as PaazlRequest;
 
 class RequestManager
 {
@@ -46,7 +46,7 @@ class RequestManager
     /** @var \Magento\Framework\Api\SimpleDataObjectConverter */
     protected $objectConverter;
 
-    /** @var \Guapa\Paazl\Model\Api\PaazlSoapError */
+    /** @var \Paazl\Shipping\Model\Api\PaazlSoapError */
     protected $paazlError;
 
     /** @var LogHelper */
@@ -64,7 +64,7 @@ class RequestManager
         ClientFactory $clientFactory,
         ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
-        \Guapa\Paazl\Model\Api\PaazlSoapError $paazlError,
+        \Paazl\Shipping\Model\Api\PaazlSoapError $paazlError,
         LogHelper $log
     ) {
         $this->clientFactory = $clientFactory;
@@ -80,8 +80,8 @@ class RequestManager
     }
 
     /**
-     * @param \Guapa\Paazl\Model\Api\Request $requestObject
-     * @return \Guapa\Paazl\Model\Api\Request
+     * @param \Paazl\Shipping\Model\Api\Request $requestObject
+     * @return \Paazl\Shipping\Model\Api\Request
      */
     public function doRequest(PaazlRequest $requestObject)
     {

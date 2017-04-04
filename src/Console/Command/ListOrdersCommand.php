@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Console\Command;
+namespace Paazl\Shipping\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,21 +14,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ListOrdersCommand extends Command
 {
-    /** @var \Guapa\Paazl\Model\Api\RequestBuilder */
+    /** @var \Paazl\Shipping\Model\Api\RequestBuilder */
     protected $_requestBuilder;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestManager */
+    /** @var \Paazl\Shipping\Model\Api\RequestManager */
     protected $_requestManager;
 
     /**
      * ListOrdersCommand constructor.
-     * @param \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder
-     * @param \Guapa\Paazl\Model\Api\RequestManager $requestManager
+     * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
+     * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param null $name
      */
     public function __construct(
-        \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder,
-        \Guapa\Paazl\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
+        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         $name = null
     ) {
         $this->_requestBuilder = $requestBuilder;

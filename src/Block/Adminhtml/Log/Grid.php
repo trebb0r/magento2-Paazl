@@ -1,14 +1,14 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Block\Adminhtml\Log;
+namespace Paazl\Shipping\Block\Adminhtml\Log;
 
 /**
  * Class Grid
- * @package Guapa\Paazl\Block\Adminhtml\Log
+ * @package Paazl\Shipping\Block\Adminhtml\Log
  */
 class Grid extends \Magento\Backend\Block\Widget\Grid\Container
 {
@@ -17,7 +17,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Container
      */
     protected function _construct()
     {
-        $this->_blockGroup = 'Guapa_Paazl';
+        $this->_blockGroup = 'Paazl_Shipping';
         $this->_controller = 'adminhtml_log';
         $this->_headerText = __('Paazl Log');
 

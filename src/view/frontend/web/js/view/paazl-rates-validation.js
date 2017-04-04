@@ -1,5 +1,5 @@
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
@@ -8,8 +8,8 @@ define(
         'uiComponent',
         'Magento_Checkout/js/model/shipping-rates-validator',
         'Magento_Checkout/js/model/shipping-rates-validation-rules',
-        'Guapa_Paazl/js/model/shipping-rates-validator',
-        'Guapa_Paazl/js/model/shipping-rates-validation-rules',
+        'Paazl_Shipping/js/model/shipping-rates-validator',
+        'Paazl_Shipping/js/model/shipping-rates-validation-rules',
     ],
     function (
         Component,

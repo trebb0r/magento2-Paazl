@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\Source\Method;
+namespace Paazl\Shipping\Model\Source\Method;
 
 /**
  * Class Freemethod

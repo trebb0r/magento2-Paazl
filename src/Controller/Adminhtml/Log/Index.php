@@ -1,17 +1,17 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Controller\Adminhtml\Log;
+namespace Paazl\Shipping\Controller\Adminhtml\Log;
 
-use Guapa\Paazl\Controller\Adminhtml\Log;
+use Paazl\Shipping\Controller\Adminhtml\Log;
 use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Class Index
- * @package Guapa\Paazl\Controller\Adminhtml\Log
+ * @package Paazl\Shipping\Controller\Adminhtml\Log
  */
 class Index extends Log
 {

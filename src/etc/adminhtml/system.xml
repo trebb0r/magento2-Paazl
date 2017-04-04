@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-* @package Guapa_Paazl
+* @package Paazl_Shipping
 * @author Guapa <info@guapa.nl>
 * @copyright 2010-2017 Guapa B.V.
 -->
@@ -13,7 +13,7 @@
         <section id="paazl" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Paazl</label>
             <tab>paazl</tab>
-            <resource>Guapa_Paazl::config</resource>
+            <resource>Paazl_Shipping::config</resource>
             <group id="api" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>API</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -31,7 +31,7 @@
                 </field>
                 <field id="api_type" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Type</label>
-                    <source_model>Guapa\Paazl\Model\Source\ApiType</source_model>
+                    <source_model>Paazl\Shipping\Model\Source\ApiType</source_model>
                 </field>
             </group>
             <group id="api_advanced" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -116,13 +116,13 @@
                 </field>
                 <field id="allowed_methods" translate="label" type="multiselect" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Allowed Methods</label>
-                    <source_model>Guapa\Paazl\Model\Source\Method</source_model>
+                    <source_model>Paazl\Shipping\Model\Source\Method</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
                 <field id="free_method" translate="label" type="select" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Free Method</label>
                     <frontend_class>free-method</frontend_class>
-                    <source_model>Guapa\Paazl\Model\Source\Method\FreeMethod</source_model>
+                    <source_model>Paazl\Shipping\Model\Source\Method\FreeMethod</source_model>
                 </field>
                 <field id="free_shipping_enable" translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Free Shipping Amount Threshold</label>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-* @package Guapa_Paazl
+* @package Paazl_Shipping
 * @author Guapa <info@guapa.nl>
 * @copyright 2010-2017 Guapa B.V.
 -->
@@ -8,7 +8,7 @@
     <type name="Magento\Checkout\Block\Onepage">
         <arguments>
             <argument name="layoutProcessors" xsi:type="array">
-                <item name="addressFormStreetFields" xsi:type="object">Guapa\Paazl\Block\Checkout\LayoutProcessor</item>
+                <item name="addressFormStreetFields" xsi:type="object">Paazl\Shipping\Block\Checkout\LayoutProcessor</item>
             </argument>
         </arguments>
     </type>

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Controller\Adminhtml;
+namespace Paazl\Shipping\Controller\Adminhtml;
 
 use Magento\Backend\App\AbstractAction;
 use Magento\Backend\App\Action\Context;
@@ -15,18 +15,18 @@ use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\LayoutFactory;
 use Magento\Framework\Controller\Result\RawFactory;
-use Guapa\Paazl\Helper\Log as LogHelper;
+use Paazl\Shipping\Helper\Log as LogHelper;
 
 /**
  * Class Log
- * @package Guapa\Paazl\Controller\Adminhtml
+ * @package Paazl\Shipping\Controller\Adminhtml
  */
 abstract class Log extends AbstractAction
 {
     /** @var Registry $coreRegistry */
     protected $coreRegistry;
 
-    /** @var \Guapa\Paazl\Helper\Log $log */
+    /** @var \Paazl\Shipping\Helper\Log $log */
     protected $log;
 
     /**
@@ -77,6 +77,6 @@ abstract class Log extends AbstractAction
      */
     protected function _isAllowed()
     {
-        return ( $this->_authorization->isAllowed('Guapa_Paazl::log') && $this->log->getLoggingEnabled() );
+        return ( $this->_authorization->isAllowed('Paazl_Shipping::log') && $this->log->getLoggingEnabled() );
     }
 }

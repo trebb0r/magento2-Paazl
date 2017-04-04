@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <!--
-* @package Guapa_Paazl
+* @package Paazl_Shipping
 * @author Guapa <info@guapa.nl>
 * @copyright 2010-2017 Guapa B.V.
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <block class="Guapa\Paazl\Block\Adminhtml\Log\Grid" name="paazl_log_grid">
+            <block class="Paazl\Shipping\Block\Adminhtml\Log\Grid" name="paazl_log_grid">
                 <block class="Magento\Backend\Block\Widget\Grid" name="paazl_log_grid.grid" as="grid">
                     <arguments>
                         <argument name="id" xsi:type="string">log_id</argument>
-                        <argument name="dataSource" xsi:type="object">Guapa\Paazl\Model\ResourceModel\Log\Collection</argument>
+                        <argument name="dataSource" xsi:type="object">Paazl\Shipping\Model\ResourceModel\Log\Collection</argument>
                         <argument name="default_sort" xsi:type="string">id</argument>
                         <argument name="default_dir" xsi:type="string">ASC</argument>
                         <argument name="save_parameters_in_session" xsi:type="string">1</argument>

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Observer;
+namespace Paazl\Shipping\Observer;
 
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
@@ -20,23 +20,23 @@ class OrderSaveObserver implements ObserverInterface
     /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
     protected $_scopeConfig;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestBuilder */
+    /** @var \Paazl\Shipping\Model\Api\RequestBuilder */
     protected $_requestBuilder;
 
-    /** @var \Guapa\Paazl\Model\Api\RequestManager */
+    /** @var \Paazl\Shipping\Model\Api\RequestManager */
     protected $_requestManager;
 
     /**
      * OrderSaveObserver constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder
-     * @param \Guapa\Paazl\Model\Api\RequestManager $requestManager
+     * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
+     * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder,
-        \Guapa\Paazl\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
+        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         array $data = []
     ) {
         $this->_scopeConfig = $scopeConfig;

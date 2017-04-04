@@ -1,13 +1,13 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Helper\Utility;
+namespace Paazl\Shipping\Helper\Utility;
 
 
-class Address extends \Guapa\Paazl\Helper\Data
+class Address extends \Paazl\Shipping\Helper\Data
 {
     /**
      * @param $street

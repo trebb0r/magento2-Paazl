@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!--
-* @package Guapa_Paazl
+* @package Paazl_Shipping
 * @author Guapa <info@guapa.nl>
 * @copyright 2010-2017 Guapa B.V.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Guapa_Paazl" setup_version="1.0.7">
+    <module name="Paazl_Shipping" setup_version="1.0.7">
         <sequence>
             <module name="Magento_Checkout"/>
             <module name="Magento_Customer"/>

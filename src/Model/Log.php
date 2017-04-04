@@ -1,17 +1,17 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model;
+namespace Paazl\Shipping\Model;
 
-use Guapa\Paazl\Api\Data\LogInterface;
+use Paazl\Shipping\Api\Data\LogInterface;
 use Magento\Framework\Model\AbstractModel;
 
 /**
  * Class Log
- * @package Guapa\Paazl\Model
+ * @package Paazl\Shipping\Model
  */
 class Log extends AbstractModel implements LogInterface
 {
@@ -21,7 +21,7 @@ class Log extends AbstractModel implements LogInterface
      */
     protected function _construct()
     {
-        $this->_init('Guapa\Paazl\Model\ResourceModel\Log');
+        $this->_init('Paazl\Shipping\Model\ResourceModel\Log');
     }
 
     /**

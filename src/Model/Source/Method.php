@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model\Source;
+namespace Paazl\Shipping\Model\Source;
 
 class Method implements \Magento\Framework\Option\ArrayInterface
 {

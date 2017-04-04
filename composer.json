@@ -15,7 +15,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "Guapa\\Paazl\\": "src/"
+      "Paazl\\Shipping\\": "src/"
     }
   }
 }

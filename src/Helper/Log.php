@@ -1,22 +1,22 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Helper;
+namespace Paazl\Shipping\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
-use Guapa\Paazl\Model\LogFactory;
-use Guapa\Paazl\Model\LogRepository;
+use Paazl\Shipping\Model\LogFactory;
+use Paazl\Shipping\Model\LogRepository;
 
 /**
  * Class Log
- * @package Guapa\Paazl\Helper
+ * @package Paazl\Shipping\Helper
  */
 class Log extends AbstractHelper
 {

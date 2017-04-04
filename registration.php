@@ -2,6 +2,6 @@
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'Guapa_Paazl',
+    'Paazl_Shipping',
     __DIR__.'/src'
 );

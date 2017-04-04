@@ -1,19 +1,19 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Api;
+namespace Paazl\Shipping\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Guapa\Paazl\Api\Data\LogInterface;
+use Paazl\Shipping\Api\Data\LogInterface;
 
 /**
  * @api
  * Interface QueueRepositoryInterface
- * @package Guapa\Paazl\Api
+ * @package Paazl\Shipping\Api
  */
 interface LogRepositoryInterface
 {

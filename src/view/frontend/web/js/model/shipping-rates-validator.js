@@ -1,5 +1,5 @@
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
@@ -7,7 +7,7 @@ define(
     [
         'jquery',
         'mageUtils',
-        'Guapa_Paazl/js/model/shipping-rates-validation-rules',
+        'Paazl_Shipping/js/model/shipping-rates-validation-rules',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/checkout-data',
         'mage/translate'

@@ -1,12 +1,12 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Helper\Request;
+namespace Paazl\Shipping\Helper\Request;
 
-class Generic extends \Guapa\Paazl\Helper\Data
+class Generic extends \Paazl\Shipping\Helper\Data
 {
     
 }

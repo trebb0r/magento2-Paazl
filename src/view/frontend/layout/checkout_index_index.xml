@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-* @package Guapa_Paazl
+* @package Paazl_Shipping
 * @author Guapa <info@guapa.nl>
 * @copyright 2010-2017 Guapa B.V.
 -->
@@ -22,7 +22,7 @@
                                                         <item name="shipping-rates-validation" xsi:type="array">
                                                             <item name="children" xsi:type="array">
                                                                 <item name="paazl-rates-validation" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Guapa_Paazl/js/view/paazl-rates-validation</item>
+                                                                    <item name="component" xsi:type="string">Paazl_Shipping/js/view/paazl-rates-validation</item>
                                                                 </item>
                                                             </item>
                                                         </item>
@@ -33,7 +33,7 @@
                                                         <item name="shipping-address-fieldset" xsi:type="array">
                                                             <item name="children" xsi:type="array">
                                                                 <item name="paazl" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Guapa_Paazl/js/view/checkout/shipping/paazl</item>
+                                                                    <item name="component" xsi:type="string">Paazl_Shipping/js/view/checkout/shipping/paazl</item>
                                                                     <item name="config" xsi:type="array">
                                                                         <item name="deps" xsi:type="array">
                                                                             <item name="0" xsi:type="string">checkout.steps.shipping-step.shippingAddress</item>

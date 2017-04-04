@@ -1,12 +1,12 @@
 <?php
 /**
- * @package Guapa_Paazl
+ * @package Paazl_Shipping
  * @author Guapa <info@guapa.nl>
  * @copyright 2010-2017 Guapa B.V.
  */
-namespace Guapa\Paazl\Model;
+namespace Paazl\Shipping\Model;
 
-use Guapa\Paazl\Model\Api\RequestBuilder;
+use Paazl\Shipping\Model\Api\RequestBuilder;
 use Magento\Quote\Model\Quote\Address\RateResult\Error;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
@@ -14,7 +14,7 @@ use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Simplexml\Element;
 use Magento\Framework\Xml\Security;
-use Guapa\Paazl\Model\Api\Request as PaazlRequest;
+use Paazl\Shipping\Model\Api\Request as PaazlRequest;
 
 /**
  * Paazl shipping
@@ -59,10 +59,10 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     /** @var Api\RequestManager */
     protected $_requestManager;
 
-    /** @var \Guapa\Paazl\Helper\Utility\Address */
+    /** @var \Paazl\Shipping\Helper\Utility\Address */
     protected $_addressHelper;
 
-    /** @var \Guapa\Paazl\Helper\Request\Order */
+    /** @var \Paazl\Shipping\Helper\Request\Order */
     protected $_orderHelper;
 
     /**
@@ -85,8 +85,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param RequestBuilder $requestBuilder
      * @param Api\RequestManager $requestManager
-     * @param \Guapa\Paazl\Helper\Utility\Address $addressHelper
-     * @param \Guapa\Paazl\Helper\Request\Order $orderHelper
+     * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
+     * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param array $data
      */
     public function __construct(
@@ -106,10 +106,10 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Guapa\Paazl\Model\Api\RequestBuilder $requestBuilder,
-        \Guapa\Paazl\Model\Api\RequestManager $requestManager,
-        \Guapa\Paazl\Helper\Utility\Address $addressHelper,
-        \Guapa\Paazl\Helper\Request\Order $orderHelper,
+        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
+        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Helper\Utility\Address $addressHelper,
+        \Paazl\Shipping\Helper\Request\Order $orderHelper,
         array $data = []
     ) {
         $this->_checkoutSession = $checkoutSession;
