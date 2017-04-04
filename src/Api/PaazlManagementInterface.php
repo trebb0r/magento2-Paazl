@@ -24,4 +24,10 @@ interface PaazlManagementInterface
      * @return float
      */
     public function getConvertedWeight($weight);
+
+    /**
+     * @param $order
+     * @return mixed
+     */
+    public function processOrderCommitRequest($order);
 }
