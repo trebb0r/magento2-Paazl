@@ -110,7 +110,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $shippingMethod = $order->getShippingMethod(true);
         $shippingAddress = $order->getShippingAddress();
 
-        $extOrderId = $this->paazlManagement->getReferencePrefix() . $order->getIncrementId();
+        $extOrderId = $this->getReferencePrefix() . $order->getIncrementId();
 
         $assuredAmount = 0;
         if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {
@@ -118,10 +118,10 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         }
 
         $requestData = [
-            'context' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(),
+            'context' => $this->getReferencePrefix() . $order->getQuoteId(),
             'body' => [
                 'orderReference' => $extOrderId, // Final reference
-                'pendingOrderReference' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
+                'pendingOrderReference' => $this->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
                 'totalAmount' => $order->getBaseSubtotalInclTax() * 100, // In cents
                 'customerEmail' => $order->getCustomerEmail(),
                 'customerPhoneNumber' => $shippingAddress->getTelephone(),
@@ -129,7 +129,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'type' => 'delivery', //@todo Service points
                     'identifier' => null, //@todo Service points
                     'option' => $shippingMethod->getMethod(),
-                    'orderWeight' => $this->paazlManagement->getConvertedWeight($order->getWeight()),
+                    'orderWeight' => $this->getConvertedWeight($order->getWeight()),
                     'maxLabels' => 1, //@todo Support for shipments having multiple packages
                     'description' => 'Delivery', //@todo Find out what description is expected
                     'assuredAmount' => $assuredAmount,
