@@ -40,7 +40,7 @@ class Order extends Generic
     {
         //@todo Mapping
         $attributes = $this->paazlManagement->getMapping();
-        //@todo Values from store-config
+
         $storeData = [
             'unitPriceCurrency' => $this->scopeConfig->getValue('currency/options/base', \Magento\Store\Model\ScopeInterface ::SCOPE_STORE)
         ];
