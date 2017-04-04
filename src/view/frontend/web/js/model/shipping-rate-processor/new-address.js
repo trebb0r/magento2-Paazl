@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2017 H&O E-commerce specialisten B.V. (http://www.h-o.nl/)
+ * See LICENSE.txt for license details.
+ */
+
+/**
  * Temporary file until I find a cleaner way to
  * alter the payload / set the extension attributes server side.
  */

@@ -1,8 +1,7 @@
 <?php
 /**
- * @package Paazl_Shipping
- * @author Guapa <info@guapa.nl>
- * @copyright 2010-2017 Guapa B.V.
+ * Copyright (c) 2017 H&O E-commerce specialisten B.V. (http://www.h-o.nl/)
+ * See LICENSE.txt for license details.
  */
 namespace Paazl\Shipping\Api\Data;
 
