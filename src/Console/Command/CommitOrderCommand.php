@@ -124,43 +124,7 @@ class CommitOrderCommand extends Command
             return 'Order not found';
         }
 
-        $shippingMethod = $order->getShippingMethod(true);
-        $shippingAddress = $order->getShippingAddress();
-
-        $requestData = [
-            'context' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(),
-            'body' => [
-                'orderReference' => $this->paazlManagement->getReferencePrefix() . $order->getIncrementId(), // Final reference
-                'pendingOrderReference' => $this->paazlManagement->getReferencePrefix() . $order->getQuoteId(), // Temporary reference
-                'totalAmount' => $order->getBaseSubtotalInclTax() * 100, // In cents
-                'customerEmail' => $order->getCustomerEmail(),
-                'customerPhoneNumber' => $shippingAddress->getTelephone(),
-                'shippingMethod' => [
-                    'type' => 'delivery', //@todo Service points
-                    'identifier' => null, //@todo Service points
-                    'option' => $shippingMethod->getMethod(),
-                    'orderWeight' => $this->paazlManagement->getConvertedWeight($order->getWeight()),
-                    'maxLabels' => 1, //@todo Support for shipments having multiple packages
-                    'description' => 'Delivery' //@todo Find out what description is expected
-                ],
-                'shippingAddress' => [
-                    'customerName' => $shippingAddress->getName(),
-                    'street' => $shippingAddress->getStreetLine(1),
-                    'housenumber' => $shippingAddress->getStreetLine(2),
-                    'addition' => $shippingAddress->getStreetLine(3),
-                    'zipcode' => $shippingAddress->getPostcode(),
-                    'city' => $shippingAddress->getCity(),
-                    'province' => (strlen((string)$shippingAddress->getRegionCode()) < 3)
-                        ? $shippingAddress->getRegionCode()
-                        : null,
-                    'country' => $shippingAddress->getCountryId()
-                ]
-            ]
-        ];
-
-        $orderCommitRequest = $this->_requestBuilder->build('PaazlOrderCommitRequest', $requestData);
-
-        $response = $this->_requestManager->doRequest($orderCommitRequest)->getResponse();
+        $response = $this->paazlManagement->processOrderCommitRequest($order);
         if (isset($response['success'])) {
             $order->setExtOrderId($order->getIncrementId());
             $this->_orderResource->save($order);
