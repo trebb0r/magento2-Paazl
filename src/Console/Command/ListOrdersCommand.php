@@ -13,25 +13,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ListOrdersCommand extends Command
 {
-    /** @var \Paazl\Shipping\Model\Api\RequestBuilder */
-    protected $_requestBuilder;
-
-    /** @var \Paazl\Shipping\Model\Api\RequestManager */
-    protected $_requestManager;
+    /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $paazlManagement;
 
     /**
      * ListOrdersCommand constructor.
-     * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
-     * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
+     * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
      * @param null $name
      */
     public function __construct(
-        \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
-        \Paazl\Shipping\Model\Api\RequestManager $requestManager,
+        \Paazl\Shipping\Model\PaazlManagement $paazlManagement,
         $name = null
     ) {
-        $this->_requestBuilder = $requestBuilder;
-        $this->_requestManager = $requestManager;
+        $this->paazlManagement = $paazlManagement;
         parent::__construct($name);
     }
 
@@ -74,14 +70,7 @@ class ListOrdersCommand extends Command
      */
     protected function listOrders(\DateTime $dateTime)
     {
-        $requestData = [
-            'context' => $dateTime->format('Ymd'),
-            'body' => [
-                'changedSince' => $dateTime->format('Y-m-d'),
-            ]
-        ];
-        $listOrdersRequest = $this->_requestBuilder->build('PaazlListOrdersRequest', $requestData);
-        $response = $this->_requestManager->doRequest($listOrdersRequest)->getResponse();
+        $response = $this->paazlManagement->processListOrdersRequest($dateTime);
 
         $orders = [];
         if (isset($response['orders']['order'])) $orders = $response['orders']['order'];

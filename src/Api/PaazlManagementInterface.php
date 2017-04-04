@@ -30,4 +30,10 @@ interface PaazlManagementInterface
      * @return mixed
      */
     public function processOrderCommitRequest($order);
+
+    /**
+     * @param $dateTime
+     * @return mixed
+     */
+    public function processListOrdersRequest($dateTime);
 }

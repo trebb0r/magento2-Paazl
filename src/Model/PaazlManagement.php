@@ -154,4 +154,22 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         return $response;
     }
+
+    /**
+     * @param $dateTime
+     * @return mixed
+     */
+    public function processListOrdersRequest($dateTime)
+    {
+        $requestData = [
+            'context' => $dateTime->format('Ymd'),
+            'body' => [
+                'changedSince' => $dateTime->format('Y-m-d'),
+            ]
+        ];
+        $listOrdersRequest = $this->_requestBuilder->build('PaazlListOrdersRequest', $requestData);
+        $response = $this->_requestManager->doRequest($listOrdersRequest)->getResponse();
+
+        return $response;
+    }
 }
