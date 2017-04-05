@@ -269,6 +269,17 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $this->_paazlData['requests']['shippingOption'] = $shippingOptionRequest;
         }
 
+        // Get PaazlPerfect Url
+        $data = [
+            'context' => $this->_getQuoteId(),
+            'body' => [
+                'orderReference' => $this->_getQuoteId(),
+            ],
+        ];
+
+        $checkoutRequest = $this->_requestBuilder->build('PaazlCheckoutRequest', $data);
+        $this->_paazlData['requests']['checkoutRequest'] = $checkoutRequest;
+
         return $this->_paazlData;
     }
 

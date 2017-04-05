@@ -28,6 +28,9 @@
                                                     </item>
                                                 </item>
                                                 <item name="shippingAddress" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="template" xsi:type="string">Paazl_Shipping/shipping</item>
+                                                    </item>
                                                     <item name="children" xsi:type="array">
                                                         <item name="shipping-address-fieldset" xsi:type="array">
                                                             <item name="children" xsi:type="array">

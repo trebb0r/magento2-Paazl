@@ -53,4 +53,10 @@
             <argument name="method" xsi:type="string">listOrders</argument>
         </arguments>
     </virtualType>
+
+    <virtualType name="PaazlCheckoutRequest" type="Paazl\Shipping\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">checkout</argument>
+        </arguments>
+    </virtualType>
 </config>

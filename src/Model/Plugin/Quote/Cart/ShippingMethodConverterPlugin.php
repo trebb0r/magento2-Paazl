@@ -44,7 +44,7 @@ class ShippingMethodConverterPlugin
                 ? $this->objectConverter->convertStdObjectToArray($this->checkoutSession->getPaazlData())
                 : [];
 
-            $data = ['addressRequest' => []];
+            $data = ['addressRequest' => [], 'checkoutRequest' => []];
             if (isset($paazlData['results']['addressRequest'])) {
                 foreach ($paazlData['results']['addressRequest'] as $addressResult) {
                     if (isset($addressResult['address'])) $data['addressRequest'][] = [
@@ -52,6 +52,9 @@ class ShippingMethodConverterPlugin
                         'identifier' => $addressResult['identifier']
                     ];
                 }
+            }
+            if (isset($paazlData['results']['checkoutRequest'])) {
+                $data['checkoutRequest'] = $paazlData['results']['checkoutRequest'];
             }
 
             $encodedData = json_encode($data, JSON_UNESCAPED_SLASHES);

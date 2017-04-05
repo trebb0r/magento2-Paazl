@@ -10,7 +10,10 @@ define(
         'Magento_Checkout/js/model/shipping-service',
         'Magento_Checkout/js/model/quote',
         'jquery',
-        'Magento_Checkout/js/checkout-data'
+        'Magento_Checkout/js/checkout-data',
+        'Magento_Ui/js/lib/view/utils/dom-observer',
+        'Paazl_Shipping/js/model/shipping-rate-processor/new-address',
+        'Magento_Checkout/js/model/shipping-rate-registry'
     ],
     function (
         Component,
@@ -18,13 +21,17 @@ define(
         shippingService,
         quote,
         $,
-        checkoutData
+        checkoutData,
+        domObserver,
+        shippingRateProcessorNewAddress,
+        rateRegistry
     ) {
         'use strict';
         return Component.extend({
             initialize: function () {
                 this._super();
                 var self = this;
+                var paazlPerfectLoaded = false;
 
                 shippingService.getShippingRates().subscribe(function (rates) {
                     var dataProcessed = false;
@@ -57,7 +64,29 @@ define(
                                             });
 
                                             self.processResult(address);
-                                        }
+                                        };
+                                        if (paazlData.hasOwnProperty('checkoutRequest')) {
+                                            var key = Object.keys(paazlData['checkoutRequest'])[0];
+                                            var url = paazlData['checkoutRequest'][key]['url'];
+
+                                            if (self.paazlPerfectLoaded != true) {
+                                                // load the url and show
+                                                $('input[name="postcode"]').attr('data-pcm-input', 'consigneePostalCode');
+                                                $('select[name="country_id"]').attr('data-pcm-input', 'consigneeCountryCode');
+                                                $('#customer-email').attr('data-pcm-input', 'notificationEmailAddress');
+                                                $('input[name="telephone"]').attr('data-pcm-input', 'notificationPhoneNumber');
+
+                                                $.getScript(url, function() {
+                                                    // @todo: add callback function for save
+                                                    domObserver.get('#paazlperfect-link',function () {
+                                                        $('#paazlperfect-link').click(function () {
+                                                            PaazlCheckoutModuleLoader.show(self.handlePaazlPerfect);
+                                                        });
+                                                    }.bind(this));
+                                                });
+                                                self.paazlPerfectLoaded = true;
+                                            }
+                                        };
                                     } catch (err) {
                                     }
                                 }
@@ -155,6 +184,13 @@ define(
                         element.trigger('change');
                     }
                 }
+            },
+
+            handlePaazlPerfect: function (data) {
+                console.log(data);
+                // Clear the rateRegistry cache so new rates will be retrieved
+                rateRegistry.set(quote.shippingAddress().getCacheKey(), null);
+                shippingRateProcessorNewAddress.getRates(quote.shippingAddress());
             }
         });
     }

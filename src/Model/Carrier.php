@@ -341,8 +341,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             }
 
             $rate = $this->_rateMethodFactory->create();
-            $rate->setCarrier($this->_code);
-            $rate->setCarrierTitle($methodData['title']);
+            $rate->setCarrier(static::CODE);
+            //$rate->setCarrierTitle($methodData['title']);
+            $rate->setCarrierTitle(static::CODE);
             $rate->setMethod($method);
             $rate->setMethodTitle($methodData['method']);
             $rate->setCost($methodPrice);
