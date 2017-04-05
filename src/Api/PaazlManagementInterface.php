@@ -36,4 +36,31 @@ interface PaazlManagementInterface
      * @return mixed
      */
     public function processListOrdersRequest($dateTime);
+
+    /**
+     * Prepare (API) requests
+     * @param RateRequest $request
+     * @return $this
+     */
+    public function setRequest(\Magento\Quote\Model\Quote\Address\RateRequest $request);
+
+    /**
+     * @return array
+     */
+    public function getPaazlData();
+
+    /**
+     * @param $paazlData
+     */
+    public function setPaazlData($paazlData);
+
+    /**
+     * @return string
+     */
+    public function getShoppingOptionKey();
+
+    /**
+     * @return RateRequest
+     */
+    public function getRequest();
 }

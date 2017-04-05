@@ -37,9 +37,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     /** @var int */
     protected $_quoteId;
 
-    /** @var string */
-    protected $_shippingOptionKey;
-
     /** @var string[] */
     protected $_errors = [];
 
@@ -159,12 +156,13 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_paazlData = (!is_null($paazlData))
             ? $paazlData
             : ['orderReference' => false, 'requests' => [], 'results' => []];
+        $this->_paazlManagement->setPaazlData($this->_paazlData);
 
         $this->setRequest($request);
         $this->_getQuotes();
         $this->_updateFreeMethodQuote($request);
 
-        $this->_checkoutSession->setPaazlData($this->_paazlData);
+        $this->_checkoutSession->setPaazlData($this->_paazlManagement->getPaazlData());
 
         return $this->getResult();
     }
@@ -176,70 +174,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      */
     public function setRequest(RateRequest $request)
     {
-        $this->_request = $request;
-        $this->_paazlData['requests'] = [];
-
-        $addressData = $this->_getAddressData($request);
-
-        // Prepare order(update) request data
-        $products = $this->_orderHelper->prepareProducts($request);
-        $orderRequestData = [
-            'context' => $this->_getQuoteId(),
-            'body' => [
-                'orderReference' => $this->_getQuoteId(),
-                'products' => $products
-            ]
-        ];
-
-        if ($this->_paazlData['orderReference'] != $this->_getQuoteId()) {
-            // Create (temporary) order as a reference
-            $orderRequest = $this->_requestBuilder->build('PaazlOrderRequest', $orderRequestData);
-            $this->_paazlData['requests']['orderRequest'] = $orderRequest;
-        } else {
-            // Update (temporary) order
-            $updateOrderRequest = $this->_requestBuilder->build('PaazlUpdateOrderRequest', $orderRequestData);
-            $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
-        }
-        // "address" request
-        if (!is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
-            $dutchPostcode = $this->_addressHelper->isDutchPostcode($addressData['postcode'], true);
-            if ($dutchPostcode !== false) {
-                // Dutch address-request
-                $data = [
-                    'context' => $this->_getQuoteId(),
-                    'body' => [
-                        'orderReference' => $this->_getQuoteId(),
-                        'zipcode' => $dutchPostcode,
-                        'housenumber' => $addressData['house_number'],
-                        'addition' => $addressData['house_number_addition']
-                    ],
-                ];
-                $identifier = $addressData['postcode']
-                    . '_' . $addressData['house_number'] . '_'
-                    . $addressData['house_number_addition'] . '_'
-                    . $addressData['country_id'];
-                $addressRequest = $this->_requestBuilder->build('PaazlAddressRequest', $data);
-                $addressRequest->setIdentifier($identifier);
-                $this->_paazlData['requests']['addressRequest'] = $addressRequest;
-            }
-        }
-        // "shippingOption" request
-        if (!is_null($addressData['country_id'])) {
-            $data = [
-                'context' => $this->_getQuoteId(),
-                'body' => [
-                    'orderReference' => $this->_getQuoteId(),
-                    'postcode' => $addressData['postcode'],
-                    'country' => (string)$request->getDestCountryId(),
-                    'extendedDeliveryDateDetails' => false,
-                    'shippingOption' => null,
-                    'deliveryDateRange' => null
-                ]
-            ];
-            $shippingOptionRequest = $this->_requestBuilder->build('PaazlShippingOptionRequest', $data);
-            $this->_shippingOptionKey = $shippingOptionRequest->getRequestKey();
-            $this->_paazlData['requests']['shippingOption'] = $shippingOptionRequest;
-        }
+        $this->_paazlData = $this->_paazlManagement->setRequest($request);
+        $this->_request = $this->_paazlManagement->getRequest();
 
         return $this;
     }
@@ -250,7 +186,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     public function getAllowedMethods()
     {
         $methods = [];
-        $requestKey = (string)$this->_shippingOptionKey;
+        $requestKey = (string)$this->_paazlManagement->getShoppingOptionKey();
+        $this->_paazlData = $this->_paazlManagement->getPaazlData();
 
         // Read shippingOption response
         if (isset($this->_paazlData['results']['shippingOption'][$requestKey]['shippingOptions'])) {
@@ -354,6 +291,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected function _getQuotes()
     {
         $this->_result = $this->_rateFactory->create();
+        $this->_paazlData = $this->_paazlManagement->getPaazlData();
 
         if (isset($this->_paazlData['requests'])) {
             if (count($this->_paazlData['requests'])) {
@@ -382,8 +320,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
 
         if (isset($this->_paazlData['results']['orderRequest']['success'])) {
             // Set order reference
-            $this->_paazlData['orderReference'] = $this->_getQuoteId();
+            $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
         }
+        $this->_paazlManagement->setPaazlData($this->_paazlData);
 
         $freeShippingThreshold = (float)$this->getConfigData('free_shipping_subtotal');
         $allowedMethods = $this->getAllowedMethods();
@@ -422,49 +361,5 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
         //
-    }
-
-    /**
-     * @param $request
-     * @return array
-     */
-    protected function _getAddressData($request)
-    {
-        foreach ($request->getAllItems() as $item) {
-            $address = $item->getAddress();
-            $extensionAttributes = $address->getExtensionAttributes();
-            if (!is_null($extensionAttributes)) {
-                $houseNumber = $extensionAttributes->getHouseNumber();
-                $addition = $extensionAttributes->getHouseNumberAddition();
-            }
-            break;
-        }
-
-        $addressData = [
-            'street_parts' => $this->_addressHelper->getMultiLineStreetParts($request->getDestStreet()),
-            'postcode' => $request->getDestPostcode(),
-            'country_id' => $request->getDestCountryId(),
-            'house_number' => (isset($houseNumber)) ? $houseNumber : null,
-            'house_number_addition' => (isset($addition)) ? $addition : null
-        ];
-
-        return $addressData;
-    }
-
-    /**
-     * @return int
-     */
-    private function _getQuoteId()
-    {
-        if (is_null($this->_quoteId) && !is_null($this->_request)) {
-            if ($this->_request->getAllItems()) {
-                foreach ($this->_request->getAllItems() as $item) {
-                    $this->_quoteId = $this->_paazlManagement->getReferencePrefix() . (string)$item->getQuoteId();
-                    break;
-                }
-            }
-        }
-        
-        return $this->_quoteId;
     }
 }
