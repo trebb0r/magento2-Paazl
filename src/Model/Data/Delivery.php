@@ -39,4 +39,55 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     {
         $this->_data['service_point_address'] = $data;
     }
+
+    /**
+     * @return array
+     */
+    public function getServicePointName()
+    {
+        return $this->_data['service_point_name'];
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setServicePointName($data)
+    {
+        $this->_data['service_point_name'] = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getServicePointPostcode()
+    {
+        return $this->_data['service_point_postcode'];
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setServicePointPostcode($data)
+    {
+        $this->_data['service_point_postcode'] = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getServicePointCity()
+    {
+        return $this->_data['service_point_city'];
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setServicePointCity($data)
+    {
+        $this->_data['service_point_city'] = $data;
+    }
 }

@@ -115,6 +115,10 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                     $this->_paazlData['delivery'] = $data['delivery'];
                     $this->_paazlManagement->setPaazlData($this->_paazlData);
                 }
+                else {
+                    $this->_paazlData['delivery'] = [];
+                    $this->_paazlManagement->setPaazlData($this->_paazlData);
+                }
 
                 $this->_result->append($rate);
 

@@ -81,10 +81,19 @@ class ShippingMethodConverterPlugin
                 $delivery = $this->delivery;
 
                 if (isset($paazlData['delivery']['servicePoint']['address'])) {
+                    $delivery->setServicePointName($paazlData['delivery']['servicePoint']['name']);
                     $delivery->setServicePointAddress($paazlData['delivery']['servicePoint']['address']);
+                    $delivery->setServicePointPostcode($paazlData['delivery']['servicePoint']['postcode']);
+                    $delivery->setServicePointCity($paazlData['delivery']['servicePoint']['city']);
+                }
+                else {
+                    $delivery->setData([]);
                 }
 
                 $shippingMethodExtension->setDelivery($delivery);
+            }
+            else {
+                $data;
             }
 
             $result->setExtensionAttributes($shippingMethodExtension);
