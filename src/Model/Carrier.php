@@ -67,6 +67,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $_paazlManagement;
 
     /**
+     * @var \Magento\Quote\Api\Data\ShippingMethodExtensionFactory
+     */
+    protected $shippingMethodExtensionFactory;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -89,6 +94,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
      * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
+     * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
      * @param array $data
      */
     public function __construct(
@@ -113,6 +119,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
         \Paazl\Shipping\Helper\Request\Order $orderHelper,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
+        \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
         array $data = []
     ) {
         $this->_checkoutSession = $checkoutSession;
@@ -121,6 +128,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_addressHelper = $addressHelper;
         $this->_orderHelper = $orderHelper;
         $this->_paazlManagement = $_paazlManagement;
+        $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
         parent::__construct(
             $scopeConfig,
             $rateErrorFactory,

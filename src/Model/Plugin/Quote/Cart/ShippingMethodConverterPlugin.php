@@ -17,6 +17,11 @@ class ShippingMethodConverterPlugin
     protected $objectConverter;
 
     /**
+     * @var \Paazl\Shipping\Model\Data\Delivery
+     */
+    protected $delivery;
+
+    /**
      * ShippingMethodConverter constructor.
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -25,11 +30,13 @@ class ShippingMethodConverterPlugin
     public function __construct(
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter
+        \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
+        \Paazl\Shipping\Model\Data\Delivery $delivery
     ) {
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
         $this->checkoutSession = $checkoutSession;
         $this->objectConverter = $objectConverter;
+        $this->delivery = $delivery;
     }
 
     /**
@@ -39,7 +46,7 @@ class ShippingMethodConverterPlugin
      */
     public function afterModelToDataObject(\Magento\Quote\Model\Cart\ShippingMethodConverter $subject, $result)
     {
-        if ($result->getCarrierCode() == 'paazl') {
+        if ($result->getCarrierCode() == 'paazl' || $result->getCarrierCode() == 'paazlperfect') {
             $paazlData = (!is_null($this->checkoutSession->getPaazlData()))
                 ? $this->objectConverter->convertStdObjectToArray($this->checkoutSession->getPaazlData())
                 : [];
@@ -65,6 +72,21 @@ class ShippingMethodConverterPlugin
                 : $this->shippingMethodExtensionFactory->create();
 
             $shippingMethodExtension->setPaazlData($encodedData);
+
+            $result->setExtensionAttributes($shippingMethodExtension);
+        }
+
+        if ($result->getCarrierCode() == 'paazlperfect') {
+            if (isset($paazlData['delivery']) && isset($paazlData['delivery']['servicePoint'])) {
+                $delivery = $this->delivery;
+
+                if (isset($paazlData['delivery']['servicePoint']['address'])) {
+                    $delivery->setServicePointAddress($paazlData['delivery']['servicePoint']['address']);
+                }
+
+                $shippingMethodExtension->setDelivery($delivery);
+            }
+
             $result->setExtensionAttributes($shippingMethodExtension);
         }
 

@@ -113,6 +113,9 @@
                             <td class="col col-method"
                                     data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">
                                 <div data-bind="text: method.method_title"></div>
+                                <!-- ko if: method.extension_attributes && method.extension_attributes.delivery -->
+                                <div><span data-bind="text: method.extension_attributes.delivery.service_point_address"></span></div>
+                                <!-- /ko -->
                                 <!-- ko if: method.carrier_code == 'paazlperfect' -->
                                 <div><a id="paazlperfect-link" data-bind="text: 'Select a different shipping method'"></a></div>
                                 <!-- /ko -->
