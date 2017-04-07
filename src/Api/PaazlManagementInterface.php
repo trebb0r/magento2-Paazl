@@ -63,4 +63,9 @@ interface PaazlManagementInterface
      * @return RateRequest
      */
     public function getRequest();
+
+    /**
+     * @return array
+     */
+    public function getShippingOptions();
 }

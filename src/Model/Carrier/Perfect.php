@@ -111,14 +111,8 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 $rate->setCost($methodPrice);
                 $rate->setPrice($methodPrice);
 
-                if ($data['delivery']['deliveryType'] == 'servicepoint') {
-                    $this->_paazlData['delivery'] = $data['delivery'];
-                    $this->_paazlManagement->setPaazlData($this->_paazlData);
-                }
-                else {
-                    $this->_paazlData['delivery'] = [];
-                    $this->_paazlManagement->setPaazlData($this->_paazlData);
-                }
+                $this->_paazlData['delivery'] = $data['delivery'];
+                $this->_paazlManagement->setPaazlData($this->_paazlData);
 
                 $this->_result->append($rate);
 

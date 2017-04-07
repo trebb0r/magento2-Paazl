@@ -114,8 +114,21 @@
                                     data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">
                                 <div data-bind="text: method.method_title"></div>
                                 <!-- ko if: method.extension_attributes && method.extension_attributes.delivery -->
-                                <div><span data-bind="text: method.extension_attributes.delivery.service_point_name"></span></div>
-                                <div><span data-bind="text: method.extension_attributes.delivery.service_point_address + ', ' + method.extension_attributes.delivery.service_point_city"></span></div>
+                                    <!-- ko if: method.extension_attributes && method.extension_attributes.delivery.service_point_name -->
+                                    <div><span data-bind="text: method.extension_attributes.delivery.service_point_name"></span></div>
+                                    <div><span data-bind="text: method.extension_attributes.delivery.service_point_address + ', ' + method.extension_attributes.delivery.service_point_city"></span></div>
+                                    <!-- /ko -->
+
+                                    <!-- ko if: method.extension_attributes.delivery.delivery_date -->
+                                        <!-- ko if: method.extension_attributes.delivery.delivery_window_start -->
+                                    <div><span data-bind="text: method.extension_attributes.delivery.delivery_date + ' ' + method.extension_attributes.delivery.delivery_window_start + ' - ' + method.extension_attributes.delivery.delivery_window_end"></span></div>
+                                        <!-- /ko -->
+                                        <!-- ko ifnot: method.extension_attributes.delivery.delivery_window_start -->
+                                    <div><span data-bind="text: method.extension_attributes.delivery.delivery_date"></span></div>
+                                        <!-- /ko -->
+
+                                    <!-- /ko -->
+
                                 <!-- /ko -->
                                 <!-- ko if: method.carrier_code == 'paazlperfect' -->
                                 <div><a id="paazlperfect-link"><!-- ko i18n: 'Select a different shipping method'--><!-- /ko --></a></div>

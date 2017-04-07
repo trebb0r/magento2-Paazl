@@ -22,21 +22,37 @@ class ShippingMethodConverterPlugin
     protected $delivery;
 
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $timezoneInterface;
+
+    /**
+     * @var \Paazl\Shipping\Model\PaazlManagement
+     */
+    protected $_paazlManagement;
+
+    /**
      * ShippingMethodConverter constructor.
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
+     * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      */
     public function __construct(
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
-        \Paazl\Shipping\Model\Data\Delivery $delivery
+        \Paazl\Shipping\Model\Data\Delivery $delivery,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
     ) {
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
         $this->checkoutSession = $checkoutSession;
         $this->objectConverter = $objectConverter;
         $this->delivery = $delivery;
+        $this->timezoneInterface = $timezoneInterface;
+        $this->_paazlManagement = $_paazlManagement;
     }
 
     /**
@@ -92,8 +108,42 @@ class ShippingMethodConverterPlugin
 
                 $shippingMethodExtension->setDelivery($delivery);
             }
-            else {
-                $data;
+            elseif (isset($paazlData['delivery'])) {
+                $delivery = $this->delivery;
+
+                if (isset($paazlData['delivery']['preferredDeliveryDate'])) {
+                    $dateTime = $paazlData['delivery']['preferredDeliveryDate'];
+
+                    $shippingOptions = $this->_paazlManagement->getShippingOptions();
+
+                    foreach($shippingOptions as $shippingOption) {
+                        if ($shippingOption['type'] == $result->getMethodCode()) {
+                            foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
+                                if ($deliveryDateOption['deliveryDate'] == $dateTime) {
+                                    $startTimeAsTimeZone = $this->timezoneInterface
+                                        ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
+                                        ->format('H:i:s');
+                                    $endTimeAsTimeZone = $this->timezoneInterface
+                                        ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['upperBound']))
+                                        ->format('H:i:s');
+
+                                    $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
+                                    $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
+                                }
+                            }
+                        }
+                    }
+
+                    $dateAsTimeZone = $this->timezoneInterface
+                        ->date(new \DateTime($dateTime))
+                        ->format('d-m-Y');
+
+                    $delivery->setDeliveryDate($dateAsTimeZone);
+                }
+                else {
+                    $delivery->setData([]);
+                }
+                $shippingMethodExtension->setDelivery($delivery);
             }
 
             $result->setExtensionAttributes($shippingMethodExtension);

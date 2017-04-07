@@ -24,11 +24,11 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     }
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointAddress()
     {
-        return $this->_data['service_point_address'];
+        return isset($this->_data['service_point_address'])? $this->_data['service_point_address'] : null;
     }
 
     /**
@@ -41,11 +41,11 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     }
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointName()
     {
-        return $this->_data['service_point_name'];
+        return isset($this->_data['service_point_name'])? $this->_data['service_point_name'] : null;
     }
 
     /**
@@ -58,11 +58,11 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     }
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointPostcode()
     {
-        return $this->_data['service_point_postcode'];
+        return isset($this->_data['service_point_postcode'])? $this->_data['service_point_postcode'] : null;
     }
 
     /**
@@ -75,11 +75,11 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     }
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointCity()
     {
-        return $this->_data['service_point_city'];
+        return isset($this->_data['service_point_city'])? $this->_data['service_point_city'] : null;
     }
 
     /**
@@ -89,5 +89,56 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     public function setServicePointCity($data)
     {
         $this->_data['service_point_city'] = $data;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryDate()
+    {
+        return isset($this->_data['delivery_date'])? $this->_data['delivery_date'] : null;
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryDate($data)
+    {
+        $this->_data['delivery_date'] = $data;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryWindowStart()
+    {
+        return isset($this->_data['delivery_window_start'])? $this->_data['delivery_window_start'] : null;
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowStart($data)
+    {
+        $this->_data['delivery_window_start'] = $data;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryWindowEnd()
+    {
+        return isset($this->_data['delivery_window_end'])? $this->_data['delivery_window_end'] : null;
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowEnd($data)
+    {
+        $this->_data['delivery_window_end'] = $data;
     }
 }

@@ -259,7 +259,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'orderReference' => $this->_getQuoteId(),
                     'postcode' => $addressData['postcode'],
                     'country' => (string)$request->getDestCountryId(),
-                    'extendedDeliveryDateDetails' => false,
+                    'extendedDeliveryDateDetails' => true,
                     'shippingOption' => null,
                     'deliveryDateRange' => null
                 ]
@@ -295,6 +295,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             if (!is_null($extensionAttributes)) {
                 $houseNumber = $extensionAttributes->getHouseNumber();
                 $addition = $extensionAttributes->getHouseNumberAddition();
+            }
+            // Try to get information from address?
+            if ($houseNumber == '') {
+                $houseNumber = $address->getStreetLine(2);
+                $addition = $address->getStreetLine(3);
             }
             break;
         }
@@ -357,5 +362,43 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     public function getRequest()
     {
         return $this->_request;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShippingOptions()
+    {
+        $requestKey = (string)$this->getShoppingOptionKey();
+        $this->_paazlData = $this->getPaazlData();
+
+        // Read shippingOption response
+        if (isset($this->_paazlData['results']['shippingOption'][$requestKey]['shippingOptions'])) {
+            $shippingOptionNode =
+                $this->_paazlData['results']['shippingOption'][$requestKey]['shippingOptions']['shippingOption'];
+
+            /**
+             * <shippingOption type="AVG">
+             * <type>AVG</type>
+             * <description>AVG</description>
+             * <deliverySchemeLineId>0</deliverySchemeLineId>
+             * <distributor>TNT</distributor>
+             * <price>5.0</price>
+             * <deliveryDayOfWeekRange>MONDAY_SATURDAY</deliveryDayOfWeekRange>
+             * <cod>false</cod>
+             * <insurance>false</insurance>
+             * <shipperNotification>false</shipperNotification>
+             * <deliveryDates>
+             * <deliveryDate>2020-01-01+01:00</deliveryDate>
+             * </deliveryDates>
+             * </shippingOption>
+             */
+
+            $shippingOptions = (isset($shippingOptionNode['type'])) ? [$shippingOptionNode] : $shippingOptionNode;
+
+            return $shippingOptions;
+        }
+
+        return [];
     }
 }

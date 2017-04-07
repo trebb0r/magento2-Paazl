@@ -16,7 +16,7 @@ interface Delivery
     public function setData($data);
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointAddress();
 
@@ -28,7 +28,7 @@ interface Delivery
 
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointName();
 
@@ -40,7 +40,7 @@ interface Delivery
 
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointPostcode();
 
@@ -51,7 +51,7 @@ interface Delivery
     public function setServicePointPostcode($data);
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getServicePointCity();
 
@@ -60,4 +60,37 @@ interface Delivery
      * @return $this
      */
     public function setServicePointCity($data);
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryDate();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryDate($data);
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryWindowStart();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowStart($data);
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryWindowEnd();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowEnd($data);
 }
