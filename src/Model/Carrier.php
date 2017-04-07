@@ -230,8 +230,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                             'distributor' =>  $shippingOption['distributor'],
                             'title' => $shippingOption['distributor'],
                             'price' => $shippingOption['price'],
-                            'method' => $shippingOption['type'], // $shippingOption['distributor'] . '_' .
-//                            'method_title' => $shippingOption['type']
+                            'method' => $shippingOption['type'],
+                            'description' => $shippingOption['description'],
                         ];
                     } else {
                         $this->_logger->debug('$shippingOption', [$shippingOption]);
@@ -353,7 +353,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             //$rate->setCarrierTitle($methodData['title']);
             $rate->setCarrierTitle(static::CODE);
             $rate->setMethod($method);
-            $rate->setMethodTitle($methodData['method']);
+            $rate->setMethodTitle($methodData['distributor'] . ' - ' . $methodData['description']);
             $rate->setCost($methodPrice);
             $rate->setPrice($methodPrice);
 
