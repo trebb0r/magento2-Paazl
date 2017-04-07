@@ -123,6 +123,20 @@ class RequestManager
             }
             if ($this->debugMode) {
                 $requestObject->setLastRequest($client->__getLastRequest());
+
+                $paazlLog = [
+                    'log_type'  =>  'Paazl Request: ' . $requestObject->getMethod(),
+                    'log_code'  =>  0,
+                    'message'   =>  print_r($requestObject->getBody(), true)
+                ];
+                $this->log->write($paazlLog);
+
+                $paazlLog = [
+                    'log_type'  =>  'Paazl Response: ' . $requestObject->getMethod(),
+                    'log_code'  =>  0,
+                    'message'   =>  print_r($response, true)
+                ];
+                $this->log->write($paazlLog);
             }
 
             // Response handling by custom "handler" classes?
