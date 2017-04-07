@@ -75,6 +75,8 @@ define(
                                                 $('select[name="country_id"]').attr('data-pcm-input', 'consigneeCountryCode');
                                                 $('#customer-email').attr('data-pcm-input', 'notificationEmailAddress');
                                                 $('input[name="telephone"]').attr('data-pcm-input', 'notificationPhoneNumber');
+                                                $('#checkout-locale').val(window.checkoutConfig.locale);
+                                                $('#checkout-locale').attr('data-pcm-input', 'locale');
 
                                                 $.getScript(url, function() {
                                                     // @todo: add callback function for save

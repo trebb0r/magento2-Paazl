@@ -66,5 +66,9 @@
         </arguments>
     </virtualType>
 
+    <type name="Magento\Checkout\Model\DefaultConfigProvider">
+        <plugin name="paalz_shipping_configprovider_plugin" type="Paazl\Shipping\Model\Plugin\Checkout\ConfigProviderPlugin" />
+    </type>
+
     <preference for="Paazl\Shipping\Api\Data\Delivery" type="Paazl\Shipping\Model\Data\Delivery" />
 </config>
