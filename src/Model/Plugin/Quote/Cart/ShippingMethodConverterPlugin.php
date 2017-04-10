@@ -143,14 +143,14 @@ class ShippingMethodConverterPlugin
         }
 
         if ($result->getCarrierCode() == 'paazlperfect') {
-            if (isset($paazlData['delivery']) && isset($paazlData['delivery']['servicePoint'])) {
+            if (isset($paazlData['delivery']) && isset($paazlData['delivery'][$result->getMethodCode()]) && isset($paazlData['delivery'][$result->getMethodCode()]['servicePoint'])) {
                 $delivery = $this->deliveryFactory->create();
 
-                if (isset($paazlData['delivery']['servicePoint']['address'])) {
-                    $delivery->setServicePointName($paazlData['delivery']['servicePoint']['name']);
-                    $delivery->setServicePointAddress($paazlData['delivery']['servicePoint']['address']);
-                    $delivery->setServicePointPostcode($paazlData['delivery']['servicePoint']['postcode']);
-                    $delivery->setServicePointCity($paazlData['delivery']['servicePoint']['city']);
+                if (isset($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['address'])) {
+                    $delivery->setServicePointName($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['name']);
+                    $delivery->setServicePointAddress($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['address']);
+                    $delivery->setServicePointPostcode($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['postcode']);
+                    $delivery->setServicePointCity($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['city']);
                 }
                 else {
                     $delivery->setData([]);
@@ -158,11 +158,11 @@ class ShippingMethodConverterPlugin
 
                 $shippingMethodExtension->setDelivery($delivery);
             }
-            elseif (isset($paazlData['delivery'])) {
+            elseif (isset($paazlData['delivery']) && isset($paazlData['delivery'][$result->getMethodCode()])) {
                 $delivery = $this->deliveryFactory->create();
 
-                if (isset($paazlData['delivery']['preferredDeliveryDate'])) {
-                    $dateTime = $paazlData['delivery']['preferredDeliveryDate'];
+                if (isset($paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'])) {
+                    $dateTime = $paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'];
 
                     $shippingOptions = $this->_paazlManagement->getShippingOptions();
 

@@ -80,8 +80,18 @@ define(
 
                                                 $.getScript(url, function() {
                                                     // @todo: add callback function for save
-                                                    domObserver.get('#paazlperfect-link',function () {
-                                                        $('#paazlperfect-link').click(function () {
+                                                    domObserver.get('.paazlperfect-link',function () {
+                                                        $('.paazlperfect-link').click(function () {
+                                                            var methodCode = $(this).attr('method_code');
+                                                            if (methodCode == 'servicepoint') {
+                                                                $('#checkout-paazl-type').val('servicePoint');
+                                                            }
+                                                            if (methodCode == 'delivery') {
+                                                                $('#checkout-paazl-type').val('home');
+                                                            }
+
+                                                            $('#checkout-paazl-type').attr('data-pcm-input', 'deliveryType');
+
                                                             PaazlCheckoutModuleLoader.show(self.handlePaazlPerfect);
                                                         });
                                                     }.bind(this));

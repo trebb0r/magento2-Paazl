@@ -80,47 +80,82 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         if (isset($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['callbackUrl'])) {
             if ($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['callbackUrl'] != "") {
                 $data = $this->_paazlData['results'][$requestMethod][$checkoutStatusKey];
-                $method = $data['delivery']['option'];
+                $methodChosen = $data['delivery']['option'];
+                $deliveryType = $data['delivery']['deliveryType'];
 
+                // @todo: for Shipping + Delivery
                 $allMethods = parent::getAllowedMethods();
-                if (isset($allMethods[$method])) {
-                    $methodData = $allMethods[$method];
-                    $title = $methodData['title'] . ' - ' . $data['delivery']['description'];
-                }
-                else {
-                    $title = $data['delivery']['description'];
-                }
-
-                $methodPrice = (in_array($method, $this->getCode('free_methods')))
-                    ? 0
-                    : $data['delivery']['rate'];
-
-                if ($freeShippingThreshold > 0) {
-                    if ($this->_request->getPackageValueWithDiscount() > $freeShippingThreshold) {
-                        if (in_array($method, $this->getCode('free_shipping_allowed_methods'))) {
-                            $methodPrice = 0;
+                foreach ($allowedMethods as $method => $methodData) {
+                    if ($deliveryType == $method) {
+                        if (isset($allMethods[$method])) {
+                            $methodData = $allMethods[$methodChosen];
+                            $title = $methodData['title'] . ' - ' . $data['delivery']['description'];
+                        } else {
+                            $title = $data['delivery']['description'];
                         }
+
+                        $methodPrice = (in_array($method, $this->getCode('free_methods')))
+                            ? 0
+                            : $data['delivery']['rate'];
+
+                        if ($freeShippingThreshold > 0) {
+                            if ($this->_request->getPackageValueWithDiscount() > $freeShippingThreshold) {
+                                if (in_array($method, $this->getCode('free_shipping_allowed_methods'))) {
+                                    $methodPrice = 0;
+                                }
+                            }
+                        }
+
+                        $rate = $this->_rateMethodFactory->create();
+                        $rate->setCarrier(static::CODE);
+                        $rate->setCarrierTitle($methodData['title']);
+                        //$rate->setCarrierTitle(static::CODE);
+                        $rate->setMethod($method);
+                        $rate->setMethodTitle($title);
+                        $rate->setCost($methodPrice);
+                        $rate->setPrice($methodPrice);
+
+                        $this->_paazlData['delivery'][$method] = $data['delivery'];
+                        $this->_paazlManagement->setPaazlData($this->_paazlData);
+
+                        $this->_result->append($rate);
+                    }
+                    else {
+                        $title = $methodData['description'];
+
+                        $methodPrice = (in_array($method, $this->getCode('free_methods')))
+                            ? 0
+                            : $methodData['price'];
+
+                        if ($freeShippingThreshold > 0) {
+                            if ($this->_request->getPackageValueWithDiscount() > $freeShippingThreshold) {
+                                if (in_array($method, $this->getCode('free_shipping_allowed_methods'))) {
+                                    $methodPrice = 0;
+                                }
+                            }
+                        }
+
+                        $rate = $this->_rateMethodFactory->create();
+                        $rate->setCarrier(static::CODE);
+                        $rate->setCarrierTitle($methodData['title']);
+                        //$rate->setCarrierTitle(static::CODE);
+                        $rate->setMethod($method);
+                        $rate->setMethodTitle($title);
+                        $rate->setCost($methodPrice);
+                        $rate->setPrice($methodPrice);
+
+                        $this->_result->append($rate);
                     }
                 }
-
-                $rate = $this->_rateMethodFactory->create();
-                $rate->setCarrier(static::CODE);
-                $rate->setCarrierTitle(static::CODE);
-                $rate->setMethod($method);
-                $rate->setMethodTitle($title);
-                $rate->setCost($methodPrice);
-                $rate->setPrice($methodPrice);
-
-                $this->_paazlData['delivery'] = $data['delivery'];
-                $this->_paazlManagement->setPaazlData($this->_paazlData);
-
-                $this->_result->append($rate);
 
                 return $this->_result;
             }
         }
 
+        // Before choosing something in Paazl Perfect
         foreach ($allowedMethods as $method => $methodData) {
+            $title = $methodData['description'];
+
             $methodPrice = (in_array($method, $this->getCode('free_methods')))
                 ? 0
                 : $methodData['price'];
@@ -138,7 +173,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
             $rate->setCarrierTitle($methodData['title']);
             //$rate->setCarrierTitle(static::CODE);
             $rate->setMethod($method);
-            $rate->setMethodTitle($methodData['method']);
+            $rate->setMethodTitle($title);
             $rate->setCost($methodPrice);
             $rate->setPrice($methodPrice);
 
@@ -159,7 +194,18 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         uasort($methods, ["\Paazl\Shipping\Model\Carrier\Perfect", "cmp"]);
 
         $key = key($methods);
-        return [$key => array_shift($methods)];
+
+        if ($key == 'SERVICE_POINT') {
+            next($methods);
+            $key = key($methods);
+        }
+
+        $data = [
+            'delivery' => $methods[$key],
+            'servicepoint' => $methods['SERVICE_POINT'],
+        ];
+
+        return $data;
     }
 
     private function cmp($a, $b)
