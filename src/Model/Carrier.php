@@ -220,10 +220,24 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
              */
 
             $shippingOptions = (isset($shippingOptionNode['type'])) ? [$shippingOptionNode] : $shippingOptionNode;
+            $firstServicePoint = null;
 
             foreach ($shippingOptions as $shippingOption) {
                 if (isset($shippingOption['servicePoints'])) {
                     //@todo Pickup point logic
+                    if (isset($shippingOption['servicePoints']['servicePoint'][0]) && is_null($firstServicePoint)) {
+                        $firstServicePoint = $shippingOption['servicePoints']['servicePoint'][0];
+                        $methods[$shippingOption['type']]['servicePoint'] = $firstServicePoint;
+
+                        $methods[$shippingOption['type']] = [
+                            'distributor' =>  $firstServicePoint['distributor'],
+                            'title' => $firstServicePoint['distributor'],
+                            'price' => $firstServicePoint['price'],
+                            'method' => $shippingOption['type'],
+                            'description' => $shippingOption['description'],
+                        ];
+                        $methods[$shippingOption['type']]['servicePoint'] = $firstServicePoint;
+                    }
                 } else {
                     if (isset($shippingOption['distributor'])) {
                         $methods[$shippingOption['type']] = [

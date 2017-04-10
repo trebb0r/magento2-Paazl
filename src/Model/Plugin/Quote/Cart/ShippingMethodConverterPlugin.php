@@ -98,7 +98,7 @@ class ShippingMethodConverterPlugin
             $shippingOptions = $this->_paazlManagement->getShippingOptions();
 
             foreach($shippingOptions as $shippingOption) {
-                if ($shippingOption['type'] == $result->getMethodCode()) {
+                if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates'])) {
                     $firstShippingOption = $shippingOption['deliveryDates']['deliveryDateOption'][0];
                     $dateTime = $firstShippingOption['deliveryDate'];
                     $dateAsTimeZone = $this->timezoneInterface
@@ -116,6 +116,24 @@ class ShippingMethodConverterPlugin
                         $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                         $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
                     }
+                }
+
+                if ($shippingOption['type'] == $result->getMethodCode()  && isset($shippingOption['servicePoints'])) {
+                    $delivery = $this->deliveryFactory->create();
+
+                    $firstServicePoint = $shippingOption['servicePoints']['servicePoint'][0];
+
+                    if (isset($firstServicePoint['address'])) {
+                        $delivery->setServicePointName($firstServicePoint['name']);
+                        $delivery->setServicePointAddress($firstServicePoint['address']);
+                        $delivery->setServicePointPostcode($firstServicePoint['postcode']);
+                        $delivery->setServicePointCity($firstServicePoint['city']);
+                    }
+                    else {
+                        $delivery->setData([]);
+                    }
+
+                    $shippingMethodExtension->setDelivery($delivery);
                 }
             }
 

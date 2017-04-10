@@ -290,6 +290,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     protected function _getAddressData($request)
     {
         foreach ($request->getAllItems() as $item) {
+            $houseNumber = '';
             $address = $item->getAddress();
             $extensionAttributes = $address->getExtensionAttributes();
             if (!is_null($extensionAttributes)) {

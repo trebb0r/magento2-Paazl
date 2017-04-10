@@ -155,6 +155,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
     {
         $methods = parent::getAllowedMethods();
 
+        // Sort by price
         uasort($methods, ["\Paazl\Shipping\Model\Carrier\Perfect", "cmp"]);
 
         $key = key($methods);
