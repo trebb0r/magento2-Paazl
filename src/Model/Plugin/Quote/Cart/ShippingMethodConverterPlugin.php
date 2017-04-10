@@ -151,7 +151,7 @@ class ShippingMethodConverterPlugin
                     foreach($shippingOptions as $shippingOption) {
                         if ($shippingOption['type'] == $result->getMethodCode()) {
                             foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
-                                if ($deliveryDateOption['deliveryDate'] == $dateTime) {
+                                if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
                                     $startTimeAsTimeZone = $this->timezoneInterface
                                         ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
                                         ->format('H:i:s');
