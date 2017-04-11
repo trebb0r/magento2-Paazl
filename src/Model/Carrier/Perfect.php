@@ -171,6 +171,19 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 }
             }
 
+            // set _paazlData['delivery'] for default options
+            if (isset($methodData['servicePoint'])) {
+                $this->_paazlData['delivery'][$method] = [
+                    'servicePoint' => $methodData['servicePoint'],
+                ];
+            }
+
+            if (isset($methodData['deliveryDates'])) {
+                $this->_paazlData['delivery'][$method] = [
+                    'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
+                ];
+            }
+
             $rate = $this->_rateMethodFactory->create();
             $rate->setCarrier(static::CODE);
             $rate->setCarrierTitle($methodData['title']);
@@ -182,6 +195,8 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
 
             $this->_result->append($rate);
         }
+
+        $this->_paazlManagement->setPaazlData($this->_paazlData);
 
         return $this->_result;
     }
