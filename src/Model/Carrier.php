@@ -156,6 +156,10 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      */
     public function collectRates(RateRequest $request)
     {
+        if (!$this->getConfigFlag('active')) {
+            return false;
+        }
+
         if (!$this->canCollectRates()) {
             return $this->getErrorMessage();
         }

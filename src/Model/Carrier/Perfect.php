@@ -10,6 +10,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
     /** Paazl carrier code */
     const CODE = 'paazlperfect';
 
+    /** @var string */
+    protected $_code = self::CODE;
+
     /**
      * @return Result
      */
