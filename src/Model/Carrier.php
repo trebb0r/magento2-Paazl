@@ -72,6 +72,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $shippingMethodExtensionFactory;
 
     /**
+     * @var bool
+     */
+    protected $accessToPaazlPerfect;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -165,6 +170,15 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         }
 
         $paazlData = $this->_checkoutSession->getPaazlData();
+
+        // If we switch Paazl account the session get's mixed up. Easiest to see if checkoutStatusRequest has more than 1 result
+        if (isset($paazlData['results']) && isset($paazlData['results']['checkoutStatusRequest'])) {
+            if (count($paazlData['results']['checkoutStatusRequest']) > 1) {
+                // Session mixed up. Reset it.
+                $paazlData = null;
+            }
+        }
+
         $this->_paazlData = (!is_null($paazlData))
             ? $paazlData
             : ['orderReference' => false, 'requests' => [], 'results' => []];
@@ -175,6 +189,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_updateFreeMethodQuote($request);
 
         $this->_checkoutSession->setPaazlData($this->_paazlManagement->getPaazlData());
+
+        // If we have access to Paazl Perfect dan disable Paazl Default
+        if ($this->hasAccessToPaazlPerfect()) {
+            return false;
+        }
 
         return $this->getResult();
     }
@@ -384,6 +403,32 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         }
 
         return $this->_result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAccessToPaazlPerfect()
+    {
+        if (!isset($this->accessToPaazlPerfect)) {
+            $this->accessToPaazlPerfect = true;
+
+            // Check if has access to Paazl Perfect
+            $this->_paazlData = $this->_paazlManagement->getPaazlData();
+
+            if (isset($this->_paazlData['results']) && isset($this->_paazlData['results']['checkoutStatusRequest'])) {
+                $key = key($this->_paazlData['results']['checkoutStatusRequest']);
+                $checkoutStatusRequest = $this->_paazlData['results']['checkoutStatusRequest'][$key];
+
+                if (isset($checkoutStatusRequest['error'])) {
+                    if ($checkoutStatusRequest['error']['code'] == 1053) {
+                        $this->accessToPaazlPerfect = false;
+                    }
+                }
+            }
+        }
+
+        return $this->accessToPaazlPerfect;
     }
 
     /**

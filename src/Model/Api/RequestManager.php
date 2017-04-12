@@ -109,14 +109,14 @@ class RequestManager
                 [$requestObject->getBody()]
             );
 
-            if(isset($response->error)) {
+            if(isset($response->error) && $response->error->code != 1053) { // 1053 = missing permission for Paazl Perfect
                 $paazlError = [
                     'log_type'  =>  'Paazl Error',
                     'log_code'  =>  $response->error->code,
                     'message'   =>  $this->paazlError->getMessageByCode($response->error->code)
                 ];
                 //@todo Config
-                if ($paazlError['log_code'] != 1004) { // 1004 = zipcode + house number combination is incorrect
+                if ($paazlError['log_code'] != 1004) { // 1004 = zipcode + house number combination is incorrect.
                     $this->log->write($paazlError);
                 }
                 $errors[] = $paazlError;

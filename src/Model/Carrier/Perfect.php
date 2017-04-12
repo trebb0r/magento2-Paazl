@@ -5,6 +5,8 @@
  */
 namespace Paazl\Shipping\Model\Carrier;
 
+use Magento\Quote\Model\Quote\Address\RateRequest;
+
 class Perfect extends \Paazl\Shipping\Model\Carrier
 {
     /** Paazl carrier code */
@@ -12,6 +14,23 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
 
     /** @var string */
     protected $_code = self::CODE;
+
+    /**
+     * Collect and get rates
+     * @param RateRequest $request
+     * @return Result|bool|null
+     */
+    public function collectRates(RateRequest $request)
+    {
+        parent::collectRates($request);
+
+        // If we don't have access to Paazl Perfect then only Paazl Default will be shown.
+        if (!$this->hasAccessToPaazlPerfect()) {
+            return false;
+        }
+
+        return $this->getResult();
+    }
 
     /**
      * @return Result
