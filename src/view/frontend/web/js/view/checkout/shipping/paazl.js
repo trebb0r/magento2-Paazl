@@ -81,7 +81,8 @@ define(
                                                 $.getScript(url, function() {
                                                     // @todo: add callback function for save
                                                     domObserver.get('.paazlperfect-link',function () {
-                                                        $('.paazlperfect-link').click(function () {
+                                                        $('.paazlperfect-link').click(function (e) {
+                                                            e.preventDefault();
                                                             var methodCode = $(this).attr('method_code');
                                                             if (methodCode == 'servicepoint') {
                                                                 $('#checkout-paazl-type').val('servicePoint');
