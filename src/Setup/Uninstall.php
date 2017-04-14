@@ -5,8 +5,8 @@
  */
 namespace Paazl\Shipping\Setup;
 
-use Magento\Eav\Setup\EavSetup;
-use Magento\Eav\Setup\EavSetupFactory;
+use Paazl\Shipping\Setup\PaazlSetup;
+use Paazl\Shipping\Setup\PaazlSetupFactory;
 use Magento\Framework\Setup\UninstallInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -17,16 +17,16 @@ class Uninstall implements UninstallInterface
     /**
      * EAV setup factory
      *
-     * @var EavSetupFactory
+     * @var PaazlSetupFactory
      */
     private $eavSetupFactory;
 
     /**
      * Init
      *
-     * @param EavSetupFactory $eavSetupFactory
+     * @param PaazlSetupFactory $eavSetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
+    public function __construct(PaazlSetupFactory $eavSetupFactory)
     {
         $this->eavSetupFactory = $eavSetupFactory;
     }
@@ -44,10 +44,12 @@ class Uninstall implements UninstallInterface
             $setup->getTable('paazl_log')
         );
 
-        /** @var EavSetup $eavSetup */
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+        /** @var PaazlSetup $eavSetup */
+        $eavSetup = $this->eavSetupFactory->create();
 
-        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'length');
+        foreach($eavSetup->getAttributeList() as $attributeInfo) {
+            $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeInfo['attributeCode']);
+        }
         $eavSetup->removeAttributeGroup(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'Paazl');
     }
 }
