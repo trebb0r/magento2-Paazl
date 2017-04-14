@@ -32,6 +32,10 @@ class PaazlSetup extends EavSetup
                 'attributeCode' => 'customs_message',
                 'label' => 'Customs message',
             ],
+            [
+                'attributeCode' => 'matrix',
+                'label' => 'Matrix override',
+            ],
         ];
     }
 }
