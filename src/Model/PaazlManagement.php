@@ -89,7 +89,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             'length' => 'length',
             'volume' => 'volume',
             'code' => 'sku',
-            'description' => 'name',
+            'description' => 'customs_message',
             'countryOfManufacture' => 'country_of_manufacture',
             'unitPrice' => 'price_including_tax',
             'hsTariffCode' => 'hsTariffCode',
