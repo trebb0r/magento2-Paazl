@@ -80,5 +80,7 @@ class InstallData implements InstallDataInterface
                 ]
             );
         }
+
+        // Need to do a reindex and clear cache. Maybe add to the readme?
     }
 }
