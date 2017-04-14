@@ -18,16 +18,24 @@ class Order extends Generic
     protected $_paazlManagement;
 
     /**
+     * @var \Magento\Catalog\Model\ProductFactory
+     */
+    protected $productFactory;
+
+    /**
      * Order constructor.
      * @param Context $context
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
      */
     public function __construct(
         Context $context,
-        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
+        \Magento\Catalog\Model\ProductFactory $productFactory
     )
     {
         $this->_paazlManagement = $_paazlManagement;
+        $this->productFactory = $productFactory;
         parent::__construct($context);
     }
 
@@ -52,8 +60,11 @@ class Order extends Generic
                 $productData['quantity'] = $item->getQty();
                 $productData['unitPriceCurrency'] = $item->getQuoteCurrencyCode();
 
+                $product = $this->productFactory->create()->load($item->getProductId());
+
                 foreach ($attributes as $nodeName => $attributeCode) {
                     $productData[$nodeName] = $item->getProduct()->getData($attributeCode);
+                    $productData[$nodeName] = $product->getData($attributeCode);
                 }
 
                 $productData = array_merge($productData, $storeData);
