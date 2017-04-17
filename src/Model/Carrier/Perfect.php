@@ -10,7 +10,7 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 class Perfect extends \Paazl\Shipping\Model\Carrier
 {
     /** Paazl carrier code */
-    const CODE = 'paazlperfect';
+    const CODE = 'paazlp';
 
     /** @var string */
     protected $_code = self::CODE;
@@ -68,6 +68,17 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         if (isset($this->_paazlData['results']['orderRequest']['success'])) {
             // Set order reference
             $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
+        }
+        elseif (isset($this->_paazlData['results']['updateOrderRequest']['success'])) {
+            // Set order reference
+            $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
+        }
+        elseif (count($this->_paazlData['results']['orderRequest'] > 0)) {
+            $orderRequest = current($this->_paazlData['results']['orderRequest']);
+            if ($orderRequest['error']['code'] == 1003) {
+                // Set order reference
+                $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
+            }
         }
 
         $checkoutStatusRequestData = [
@@ -132,7 +143,10 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $rate->setCarrier(static::CODE);
                         $rate->setCarrierTitle($methodData['title']);
                         //$rate->setCarrierTitle(static::CODE);
-                        $rate->setMethod($method);
+                        $rate->setMethod($methodData['method']);
+                        if (isset($methodData['servicePoint'])) {
+                            $rate->setIdentifier($data['delivery'][$method]['servicePoint']['code']);
+                        }
                         $rate->setMethodTitle($title);
                         $rate->setCost($methodPrice);
                         $rate->setPrice($methodPrice);
@@ -161,7 +175,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $rate->setCarrier(static::CODE);
                         $rate->setCarrierTitle($methodData['title']);
                         //$rate->setCarrierTitle(static::CODE);
-                        $rate->setMethod($method);
+                        $rate->setMethod($methodData['method']);
                         $rate->setMethodTitle($title);
                         $rate->setCost($methodPrice);
                         $rate->setPrice($methodPrice);
@@ -192,13 +206,13 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
 
             // set _paazlData['delivery'] for default options
             if (isset($methodData['servicePoint'])) {
-                $this->_paazlData['delivery'][$method] = [
+                $this->_paazlData['delivery'][$methodData['method']] = [
                     'servicePoint' => $methodData['servicePoint'],
                 ];
             }
 
             if (isset($methodData['deliveryDates'])) {
-                $this->_paazlData['delivery'][$method] = [
+                $this->_paazlData['delivery'][$methodData['method']] = [
                     'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
                 ];
             }
@@ -207,10 +221,16 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
             $rate->setCarrier(static::CODE);
             $rate->setCarrierTitle($methodData['title']);
             //$rate->setCarrierTitle(static::CODE);
-            $rate->setMethod($method);
+            //$rate->setMethod($method);
+            $rate->setMethod($methodData['method']);
+            if (isset($methodData['servicePoint'])) {
+                $rate->setIdentifier($methodData['servicePoint']['code']);
+            }
             $rate->setMethodTitle($title);
             $rate->setCost($methodPrice);
             $rate->setPrice($methodPrice);
+
+            $this->_paazlManagement->setPaazlData($this->_paazlData);
 
             $this->_result->append($rate);
         }

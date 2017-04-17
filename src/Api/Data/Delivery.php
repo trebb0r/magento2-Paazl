@@ -93,4 +93,15 @@ interface Delivery
      * @return $this
      */
     public function setDeliveryWindowEnd($data);
+
+    /**
+     * @return string|null
+     */
+    public function getServicePointCode();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setServicePointCode($data);
 }

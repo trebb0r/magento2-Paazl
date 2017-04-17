@@ -21,6 +21,17 @@ class InstallSchema implements InstallSchemaInterface
 
         $this->addLogTable($setup);
 
+        $setup->getConnection()->addColumn(
+            $setup->getTable('quote_shipping_rate'),
+            'identifier',
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'length' => 255,
+                'nullable' => true,
+                'comment' => 'Identifier'
+            ]
+        );
+
         $setup->endSetup();
     }
 

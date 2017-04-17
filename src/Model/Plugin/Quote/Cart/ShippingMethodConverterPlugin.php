@@ -63,7 +63,7 @@ class ShippingMethodConverterPlugin
      */
     public function afterModelToDataObject(\Magento\Quote\Model\Cart\ShippingMethodConverter $subject, $result)
     {
-        if ($result->getCarrierCode() == 'paazl' || $result->getCarrierCode() == 'paazlperfect') {
+        if ($result->getCarrierCode() == 'paazl' || $result->getCarrierCode() == 'paazlp') {
             $paazlData = (!is_null($this->checkoutSession->getPaazlData()))
                 ? $this->objectConverter->convertStdObjectToArray($this->checkoutSession->getPaazlData())
                 : [];
@@ -128,6 +128,7 @@ class ShippingMethodConverterPlugin
                         $delivery->setServicePointAddress($firstServicePoint['address']);
                         $delivery->setServicePointPostcode($firstServicePoint['postcode']);
                         $delivery->setServicePointCity($firstServicePoint['city']);
+                        $delivery->setServicePointCode($firstServicePoint['code']);
                     }
                     else {
                         $delivery->setData([]);
@@ -142,7 +143,7 @@ class ShippingMethodConverterPlugin
             $result->setExtensionAttributes($shippingMethodExtension);
         }
 
-        if ($result->getCarrierCode() == 'paazlperfect') {
+        if ($result->getCarrierCode() == 'paazlp') {
             if (isset($paazlData['delivery']) && isset($paazlData['delivery'][$result->getMethodCode()]) && isset($paazlData['delivery'][$result->getMethodCode()]['servicePoint'])) {
                 $delivery = $this->deliveryFactory->create();
 
@@ -151,12 +152,14 @@ class ShippingMethodConverterPlugin
                     $delivery->setServicePointAddress($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['address']);
                     $delivery->setServicePointPostcode($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['postcode']);
                     $delivery->setServicePointCity($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['city']);
+                    $delivery->setServicePointCode($paazlData['delivery'][$result->getMethodCode()]['servicePoint']['code']);
                 }
                 else {
                     $delivery->setData([]);
                 }
 
                 $shippingMethodExtension->setDelivery($delivery);
+                $shippingMethodExtension->setPaazlMethod('servicepoint');
             }
             elseif (isset($paazlData['delivery']) && isset($paazlData['delivery'][$result->getMethodCode()])) {
                 $delivery = $this->deliveryFactory->create();
@@ -194,6 +197,7 @@ class ShippingMethodConverterPlugin
                     $delivery->setData([]);
                 }
                 $shippingMethodExtension->setDelivery($delivery);
+                $shippingMethodExtension->setPaazlMethod('delivery');
             }
 
             $result->setExtensionAttributes($shippingMethodExtension);

@@ -44,6 +44,8 @@ class Uninstall implements UninstallInterface
             $setup->getTable('paazl_log')
         );
 
+        $setup->getConnection()->dropColumn($setup->getTable('quote_shipping_rate'), 'identifier');
+
         /** @var PaazlSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create();
 

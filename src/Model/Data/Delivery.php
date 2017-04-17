@@ -141,4 +141,21 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     {
         $this->_data['delivery_window_end'] = $data;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getServicePointCode()
+    {
+        return isset($this->_data['service_point_code'])? $this->_data['service_point_code'] : null;
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setServicePointCode($data)
+    {
+        $this->_data['service_point_code'] = $data;
+    }
 }

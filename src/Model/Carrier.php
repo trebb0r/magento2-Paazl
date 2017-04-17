@@ -258,6 +258,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                             'price' => $firstServicePoint['price'],
                             'method' => $shippingOption['type'],
                             'description' => $shippingOption['description'],
+                            'identifier' => $firstServicePoint['code'],
                         ];
                         $methods[$shippingOption['type']]['servicePoint'] = $firstServicePoint;
                     }
@@ -371,6 +372,18 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             // Set order reference
             $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
         }
+        elseif (isset($this->_paazlData['results']['updateOrderRequest']['success'])) {
+            // Set order reference
+            $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
+        }
+        elseif (count($this->_paazlData['results']['orderRequest'] > 0)) {
+            $orderRequest = current($this->_paazlData['results']['orderRequest']);
+            if ($orderRequest['error']['code'] == 1003) {
+                // Set order reference
+                $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
+            }
+        }
+
         $this->_paazlManagement->setPaazlData($this->_paazlData);
 
         $freeShippingThreshold = (float)$this->getConfigData('free_shipping_subtotal');
@@ -394,6 +407,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             $rate->setCarrierTitle($methodData['title']);
             //$rate->setCarrierTitle(static::CODE);
             $rate->setMethod($method);
+            //$rate->setMethod($methodData['method']);
             //$rate->setMethodTitle($methodData['distributor'] . ' - ' . $methodData['description']);
             $rate->setMethodTitle($methodData['description']);
             $rate->setCost($methodPrice);

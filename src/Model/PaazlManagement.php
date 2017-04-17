@@ -51,19 +51,33 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     protected $_orderHelper;
 
     /**
+     * @var \Magento\Quote\Model\QuoteFactory
+     */
+    protected $quoteFactory;
+
+    /**
+     * @var \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory
+     */
+    protected $quoteAddressRateCollectionFactory;
+
+    /**
      * PaazlManagement constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
      * @param \Paazl\Shipping\Model\Api\RequestManager $requestManager
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
      * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
+     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
+     * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
         \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
-        \Paazl\Shipping\Helper\Request\Order\Proxy $orderHelper
+        \Paazl\Shipping\Helper\Request\Order\Proxy $orderHelper,
+        \Magento\Quote\Model\QuoteFactory $quoteFactory,
+        \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -71,6 +85,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->_requestManager = $requestManager;
         $this->_addressHelper = $addressHelper;
         $this->_orderHelper = $orderHelper;
+        $this->quoteFactory = $quoteFactory;
+        $this->quoteAddressRateCollectionFactory = $quoteAddressRateCollectionFactory;
     }
 
 
@@ -133,6 +149,18 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     {
         $shippingMethod = $order->getShippingMethod(true);
         $shippingAddress = $order->getShippingAddress();
+        /**
+         * @var $quote \Magento\Quote\Model\Quote
+         */
+        $quote = $this->quoteFactory->create()->setStoreId($order->getStoreId())->load($order->getQuoteId());
+
+        $quoteAddress = $quote->getShippingAddress();
+
+        $rateCollection = $this->quoteAddressRateCollectionFactory->create();
+        $rateCollection->addFieldToFilter('address_id',  array('eq' => $quoteAddress->getId()));
+        $rateCollection->addFieldToFilter('code',  array('eq' => $quoteAddress->getShippingMethod()));
+
+        $rate = $rateCollection->fetchItem();
 
         $extOrderId = $this->getReferencePrefix() . $order->getIncrementId();
 
@@ -150,8 +178,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 'customerEmail' => $order->getCustomerEmail(),
                 'customerPhoneNumber' => $shippingAddress->getTelephone(),
                 'shippingMethod' => [
-                    'type' => 'delivery', //@todo Service points
-                    'identifier' => null, //@todo Service points
+                    'type' => 'delivery',
+                    'identifier' => null,
                     'option' => $shippingMethod->getMethod(),
                     'orderWeight' => $this->getConvertedWeight($order->getWeight()),
                     'maxLabels' => 1, //@todo Support for shipments having multiple packages
@@ -173,6 +201,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 ]
             ]
         ];
+        // Service points
+        if ($rate && $rate['identifier'] != '') {
+            $requestData['body']['shippingMethod']['identifier'] = $rate['identifier'];
+            $requestData['body']['shippingMethod']['type'] = 'servicepoint';
+        }
         $orderCommitRequest = $this->_requestBuilder->build('PaazlOrderCommitRequest', $requestData);
         $response = $this->_requestManager->doRequest($orderCommitRequest)->getResponse();
 

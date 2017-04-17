@@ -109,7 +109,7 @@ class RequestManager
                 [$requestObject->getBody()]
             );
 
-            if(isset($response->error) && $response->error->code != 1053) { // 1053 = missing permission for Paazl Perfect
+            if(isset($response->error) && !in_array($response->error->code, [1053, 1003])) { // 1053 = missing permission for Paazl Perfect, 1003 = An order with this reference already exists
                 $paazlError = [
                     'log_type'  =>  'Paazl Error',
                     'log_code'  =>  $response->error->code,

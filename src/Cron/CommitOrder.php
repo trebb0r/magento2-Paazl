@@ -87,7 +87,7 @@ class CommitOrder
         if ($this->_scopeConfig->isSetFlag(self::XML_PATH_CRON_COMMIT_ORDERS)) {
             // Orders with ext_order_id 0 are flagged for export
             $filterData = [
-                ['ext_order_id', 0, 'eq']
+                ['ext_order_id', '0', 'eq']
             ];
             $filters = $this->_buildFilters($filterData);
             $searchCriteria = $this->_buildSearchCriteria($filters);

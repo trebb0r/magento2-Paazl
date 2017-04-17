@@ -71,4 +71,8 @@
     </type>
 
     <preference for="Paazl\Shipping\Api\Data\Delivery" type="Paazl\Shipping\Model\Data\Delivery" />
+
+    <type name="Magento\Quote\Model\Quote\Address\Rate">
+        <plugin name="paalz_shipping_quote_address_rate_plugin" type="Paazl\Shipping\Model\Plugin\Quote\Address\RatePlugin" />
+    </type>
 </config>
