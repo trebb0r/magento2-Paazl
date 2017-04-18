@@ -84,10 +84,9 @@ define(
                                                         $('.paazlperfect-link').click(function (e) {
                                                             e.preventDefault();
                                                             var methodCode = $(this).attr('method_code');
-                                                            if (methodCode == 'servicepoint') {
+                                                            if (methodCode == 'SERVICE_POINT') {
                                                                 $('#checkout-paazl-type').val('servicePoint');
-                                                            }
-                                                            if (methodCode == 'delivery') {
+                                                            } else {
                                                                 $('#checkout-paazl-type').val('home');
                                                             }
 
