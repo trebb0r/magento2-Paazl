@@ -169,6 +169,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             $rate->setPaazlNotification(current($data['notification']));
                         }
                         $rate->setMethodTitle($title);
+                        $rate->setCarrierTitle('');
                         $rate->setCost($methodPrice);
                         $rate->setPrice($methodPrice);
 
@@ -198,6 +199,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         //$rate->setCarrierTitle(static::CODE);
                         $rate->setMethod($methodData['method']);
                         $rate->setMethodTitle($title);
+                        $rate->setCarrierTitle('');
                         $rate->setCost($methodPrice);
                         $rate->setPrice($methodPrice);
 
@@ -253,6 +255,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 $rate->setPaazlNotification($quote->getShippingAddress()->getTelephone()); // Set default to telephone
             }
             $rate->setMethodTitle($title);
+            $rate->setCarrierTitle('');
             $rate->setCost($methodPrice);
             $rate->setPrice($methodPrice);
 
