@@ -75,7 +75,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         }
         elseif (count($this->_paazlData['results']['orderRequest'] > 0)) {
             $orderRequest = current($this->_paazlData['results']['orderRequest']);
-            if ($orderRequest['error']['code'] == 1003) {
+            if (isset($orderRequest['error']) && $orderRequest['error']['code'] == 1003) {
                 // Set order reference
                 $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
             }
@@ -120,11 +120,24 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 $allMethods = parent::getAllowedMethods();
                 foreach ($allowedMethods as $method => $methodData) {
                     if ($deliveryType == $method) {
-                        if (isset($allMethods[$method])) {
+                        if (isset($allMethods[$methodChosen])) {
+                            $method = $methodChosen;
                             $methodData = $allMethods[$methodChosen];
                             $title = $methodData['title'] . ' - ' . $data['delivery']['description'];
                         } else {
                             $title = $data['delivery']['description'];
+                            if ($deliveryType == 'servicepoint') {
+                                $method = $methodChosen;
+                                $methodData = [
+                                    'distributor' => 'SERVICE_POINT',
+                                    'title' => $data['delivery']['option'],
+                                    'price' => $data['delivery']['rate'],
+                                    'method' => 'SERVICE_POINT',
+                                    'description' => $data['delivery']['description'],
+                                    'identifier' => $data['delivery']['servicePoint']['code'],
+                                    'servicePoint' => $data['delivery']['servicePoint'],
+                                ];
+                            }
                         }
 
                         $methodPrice = (in_array($method, $this->getCode('free_methods')))
@@ -145,7 +158,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         //$rate->setCarrierTitle(static::CODE);
                         $rate->setMethod($methodData['method']);
                         if (isset($methodData['servicePoint'])) {
-                            $rate->setIdentifier($data['delivery'][$method]['servicePoint']['code']);
+                            $rate->setIdentifier($data['delivery']['servicePoint']['code']);
                         }
                         $rate->setMethodTitle($title);
                         $rate->setCost($methodPrice);

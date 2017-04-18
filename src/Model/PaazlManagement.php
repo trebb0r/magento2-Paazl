@@ -205,6 +205,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         if ($rate && $rate['identifier'] != '') {
             $requestData['body']['shippingMethod']['identifier'] = $rate['identifier'];
             $requestData['body']['shippingMethod']['type'] = 'servicepoint';
+            $requestData['body']['shippingMethod']['option'] = 'SERVICEPOINT';
         }
         $orderCommitRequest = $this->_requestBuilder->build('PaazlOrderCommitRequest', $requestData);
         $response = $this->_requestManager->doRequest($orderCommitRequest)->getResponse();

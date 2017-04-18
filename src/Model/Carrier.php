@@ -378,7 +378,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         }
         elseif (count($this->_paazlData['results']['orderRequest'] > 0)) {
             $orderRequest = current($this->_paazlData['results']['orderRequest']);
-            if ($orderRequest['error']['code'] == 1003) {
+            if (isset($orderRequest['error']) && $orderRequest['error']['code'] == 1003) {
                 // Set order reference
                 $this->_paazlData['orderReference'] = $this->_paazlManagement->_getQuoteId();
             }
