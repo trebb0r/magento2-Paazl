@@ -25,6 +25,18 @@ class RatePlugin
                     $rate->getIdentifier()
                 );
             }
+            $paazlOption = $rate->getPaazlOption();
+            if (isset($paazlOption) && $paazlOption != '') {
+                $return->setPaazlOption(
+                    $rate->getPaazlOption()
+                );
+            }
+            $paazlNotification = $rate->getPaazlNotification();
+            if (isset($paazlNotification) && $paazlNotification != '') {
+                $return->setPaazlNotification(
+                    $rate->getPaazlNotification()
+                );
+            }
         }
         return $return;
     }

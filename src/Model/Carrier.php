@@ -77,6 +77,16 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $accessToPaazlPerfect;
 
     /**
+     * @var \Magento\Quote\Model\QuoteFactory
+     */
+    protected $quoteFactory;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -100,6 +110,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
+     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param array $data
      */
     public function __construct(
@@ -125,6 +137,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Paazl\Shipping\Helper\Request\Order $orderHelper,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
+        \Magento\Quote\Model\QuoteFactory $quoteFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = []
     ) {
         $this->_checkoutSession = $checkoutSession;
@@ -134,6 +148,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_orderHelper = $orderHelper;
         $this->_paazlManagement = $_paazlManagement;
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
+        $this->quoteFactory = $quoteFactory;
+        $this->storeManager = $storeManager;
         parent::__construct(
             $scopeConfig,
             $rateErrorFactory,
@@ -259,6 +275,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                             'method' => $shippingOption['type'],
                             'description' => $shippingOption['description'],
                             'identifier' => $firstServicePoint['code'],
+                            'paazl_option' => $firstServicePoint['shippingOption'],
                         ];
                         $methods[$shippingOption['type']]['servicePoint'] = $firstServicePoint;
                     }
@@ -358,7 +375,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                         $response = $request->getResponse();
 
                         if (!count($request->getErrors()) && !is_null($response)) {
-                            if (!is_null($request->getIdentifier())) $response['identifier'] = $request->getIdentifier();
+                            if (!is_null($request->getIdentifier())) {
+                                $response['identifier'] = $request->getIdentifier();
+                            }
                             $this->_paazlData['results'][$requestMethod][$request->getRequestKey()] = $response;
                             $this->_setCachedQuotes($request->getRequestKey(), $response);
                         }

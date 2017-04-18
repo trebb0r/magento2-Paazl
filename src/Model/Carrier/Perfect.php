@@ -55,7 +55,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $response = $request->getResponse();
 
                         if (!count($request->getErrors()) && !is_null($response)) {
-                            if (!is_null($request->getIdentifier())) $response['identifier'] = $request->getIdentifier();
+                            if (!is_null($request->getIdentifier())) {
+                                $response['identifier'] = $request->getIdentifier();
+                            }
                             $this->_paazlData['results'][$requestMethod][$request->getRequestKey()] = $response;
                             $this->_setCachedQuotes($request->getRequestKey(), $response);
                         }
@@ -98,7 +100,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
             $response = $request->getResponse();
 
             if (!count($request->getErrors()) && !is_null($response)) {
-                if (!is_null($request->getIdentifier())) $response['identifier'] = $request->getIdentifier();
+                if (!is_null($request->getIdentifier())) {
+                    $response['identifier'] = $request->getIdentifier();
+                }
                 $this->_paazlData['results'][$requestMethod][$request->getRequestKey()] = $response;
                 $this->_setCachedQuotes($request->getRequestKey(), $response);
             }
@@ -135,6 +139,8 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                                     'method' => 'SERVICE_POINT',
                                     'description' => $data['delivery']['description'],
                                     'identifier' => $data['delivery']['servicePoint']['code'],
+                                    'paazl_option' => $data['delivery']['option'],
+                                    'paazl_notification' => current($data['notification']),
                                     'servicePoint' => $data['delivery']['servicePoint'],
                                 ];
                             }
@@ -159,6 +165,8 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $rate->setMethod($methodData['method']);
                         if (isset($methodData['servicePoint'])) {
                             $rate->setIdentifier($data['delivery']['servicePoint']['code']);
+                            $rate->setPaazlOption($data['delivery']['option']);
+                            $rate->setPaazlNotification(current($data['notification']));
                         }
                         $rate->setMethodTitle($title);
                         $rate->setCost($methodPrice);
@@ -238,6 +246,11 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
             $rate->setMethod($methodData['method']);
             if (isset($methodData['servicePoint'])) {
                 $rate->setIdentifier($methodData['servicePoint']['code']);
+                $rate->setPaazlOption($methodData['servicePoint']['shippingOption']);
+
+                $quoteId = str_replace($this->_paazlManagement->getReferencePrefix(), '', $this->_paazlManagement->_getQuoteId());
+                $quote = $this->quoteFactory->create()->setStoreId($this->storeManager->getStore()->getId())->load($quoteId);
+                $rate->setPaazlNotification($quote->getShippingAddress()->getTelephone()); // Set default to telephone
             }
             $rate->setMethodTitle($title);
             $rate->setCost($methodPrice);

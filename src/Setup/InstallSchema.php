@@ -32,6 +32,28 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
 
+        $setup->getConnection()->addColumn(
+            $setup->getTable('quote_shipping_rate'),
+            'paazl_option',
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'length' => 255,
+                'nullable' => true,
+                'comment' => 'Option'
+            ]
+        );
+
+        $setup->getConnection()->addColumn(
+            $setup->getTable('quote_shipping_rate'),
+            'paazl_notification',
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'length' => 255,
+                'nullable' => true,
+                'comment' => 'Notification'
+            ]
+        );
+
         $setup->endSetup();
     }
 
