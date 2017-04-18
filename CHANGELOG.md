@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [1.1.0] - 2017-04-18
+## [1.0.1] - 2017-04-18
+### Changed
+- Don't show carrier title
+
+## [1.0.0] - 2017-04-18
 ### Note
 - First release of Paazl_Shipping.
