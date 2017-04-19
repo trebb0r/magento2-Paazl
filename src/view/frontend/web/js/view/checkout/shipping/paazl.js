@@ -200,6 +200,11 @@ define(
 
             handlePaazlPerfect: function (data) {
                 console.log(data);
+
+                // set email and phone when entered in paazl perfect.
+                $('input[data-pcm-input="notificationEmailAddress"]').val(data.notificationEmailAddress);
+                $('input[data-pcm-input="notificationPhoneNumber"]').val(data.notificationPhoneNumber);
+
                 // Clear the rateRegistry cache so new rates will be retrieved
                 rateRegistry.set(quote.shippingAddress().getCacheKey(), null);
                 shippingRateProcessorNewAddress.getRates(quote.shippingAddress());
