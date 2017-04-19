@@ -34,6 +34,11 @@ class ShippingMethodConverterPlugin
     protected $registry;
 
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface
+     */
+    protected $dateTimeFormatter;
+
+    /**
      * ShippingMethodConverter constructor.
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
      * @param \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter
@@ -41,6 +46,7 @@ class ShippingMethodConverterPlugin
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface $dateTimeFormatter
      */
     public function __construct(
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
@@ -48,7 +54,8 @@ class ShippingMethodConverterPlugin
         \Paazl\Shipping\Model\Data\DeliveryFactory $deliveryFactory,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface $dateTimeFormatter
     ) {
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
         $this->objectConverter = $objectConverter;
@@ -56,6 +63,7 @@ class ShippingMethodConverterPlugin
         $this->timezoneInterface = $timezoneInterface;
         $this->_paazlManagement = $_paazlManagement;
         $this->registry = $registry;
+        $this->dateTimeFormatter = $dateTimeFormatter;
     }
 
     /**
@@ -108,6 +116,7 @@ class ShippingMethodConverterPlugin
                     $dateAsTimeZone = $this->timezoneInterface
                         ->date(new \DateTime($dateTime))
                         ->format('l j F');
+                    $dateAsTimeZone = $this->dateTimeFormatter->formatObject($this->timezoneInterface->date(new \DateTime($dateTime)), 'eeee d MMMM');
                     $delivery->setDeliveryDate($dateAsTimeZone);
 
                     if (isset($firstShippingOption['deliveryTimeRange'])) {
@@ -196,6 +205,8 @@ class ShippingMethodConverterPlugin
                     $dateAsTimeZone = $this->timezoneInterface
                         ->date(new \DateTime($dateTime))
                         ->format('l j F');
+
+                    $dateAsTimeZone = $this->dateTimeFormatter->formatObject($this->timezoneInterface->date(new \DateTime($dateTime)), 'eeee d MMMM');
 
                     $delivery->setDeliveryDate($dateAsTimeZone);
                 }
