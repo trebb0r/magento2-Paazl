@@ -115,7 +115,7 @@ class ShippingMethodConverterPlugin
                             ->format('H:i');
                         $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                         $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
-                        $delivery->setDeliveryWindowText(__('between %1 and %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
+                        $delivery->setDeliveryWindowText(__('%1 - %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
                     }
                 }
 
@@ -183,7 +183,7 @@ class ShippingMethodConverterPlugin
 
                                     $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                                     $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
-                                    $delivery->setDeliveryWindowText(__('between %1 and %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
+                                    $delivery->setDeliveryWindowText(__('%1 - %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
                                 }
                             }
                         }
