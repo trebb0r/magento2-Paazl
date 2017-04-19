@@ -10,9 +10,6 @@ class ShippingMethodConverterPlugin
     /** @var \Magento\Quote\Api\Data\ShippingMethodExtensionFactory  */
     protected $shippingMethodExtensionFactory;
 
-    /** @var \Magento\Checkout\Model\Session  */
-    protected $checkoutSession;
-
     /** @var \Magento\Framework\Api\SimpleDataObjectConverter */
     protected $objectConverter;
 
@@ -32,28 +29,33 @@ class ShippingMethodConverterPlugin
     protected $_paazlManagement;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
      * ShippingMethodConverter constructor.
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter
      * @param \Paazl\Shipping\Model\Data\DeliveryFactory $deliveryFactory
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
+     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
-        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
         \Paazl\Shipping\Model\Data\DeliveryFactory $deliveryFactory,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
-        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
+        \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
+        \Magento\Framework\Registry $registry
     ) {
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
-        $this->checkoutSession = $checkoutSession;
         $this->objectConverter = $objectConverter;
         $this->deliveryFactory = $deliveryFactory;
         $this->timezoneInterface = $timezoneInterface;
         $this->_paazlManagement = $_paazlManagement;
+        $this->registry = $registry;
     }
 
     /**
@@ -64,8 +66,10 @@ class ShippingMethodConverterPlugin
     public function afterModelToDataObject(\Magento\Quote\Model\Cart\ShippingMethodConverter $subject, $result)
     {
         if ($result->getCarrierCode() == 'paazl' || $result->getCarrierCode() == 'paazlp') {
-            $paazlData = (!is_null($this->checkoutSession->getPaazlData()))
-                ? $this->objectConverter->convertStdObjectToArray($this->checkoutSession->getPaazlData())
+            $paazlData = $this->registry->registry('paazlData');
+
+            $paazlData = (!is_null($paazlData))
+                ? $this->objectConverter->convertStdObjectToArray($paazlData)
                 : [];
 
             $data = ['addressRequest' => [], 'checkoutRequest' => []];

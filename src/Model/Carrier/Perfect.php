@@ -127,11 +127,12 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         if (isset($allMethods[$methodChosen])) {
                             $method = $methodChosen;
                             $methodData = $allMethods[$methodChosen];
-                            $title = $methodData['title'] . ' - ' . $data['delivery']['description'];
+                            $title = $methodData['description'] . ' - ' . $data['delivery']['description'];
                         } else {
                             $title = $data['delivery']['description'];
                             if ($deliveryType == 'servicepoint') {
                                 $method = 'SERVICE_POINT';
+                                //$method = $methodChosen;
                                 $methodData = [
                                     'distributor' => 'SERVICE_POINT',
                                     'title' => $data['delivery']['option'],
@@ -193,6 +194,19 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             }
                         }
 
+                        // set _paazlData['delivery'] for default options
+                        if (isset($methodData['servicePoint'])) {
+                            $this->_paazlData['delivery'][$methodData['method']] = [
+                                'servicePoint' => $methodData['servicePoint'],
+                            ];
+                        }
+
+                        if (isset($methodData['deliveryDates'])) {
+                            $this->_paazlData['delivery'][$methodData['method']] = [
+                                'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
+                            ];
+                        }
+
                         $rate = $this->_rateMethodFactory->create();
                         $rate->setCarrier(static::CODE);
                         $rate->setCarrierTitle($methodData['title']);
@@ -202,6 +216,8 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $rate->setCarrierTitle('');
                         $rate->setCost($methodPrice);
                         $rate->setPrice($methodPrice);
+
+                        $this->_paazlManagement->setPaazlData($this->_paazlData);
 
                         $this->_result->append($rate);
                     }

@@ -46,9 +46,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     /** @var string */
     protected $_code = self::CODE;
 
-    /** @var \Magento\Checkout\Model\Session */
-    protected $_checkoutSession;
-
     /** @var RequestBuilder */
     protected $_requestBuilder;
 
@@ -87,6 +84,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $storeManager;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -103,7 +105,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
      * @param \Magento\Directory\Helper\Data $directoryData
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param RequestBuilder $requestBuilder
      * @param Api\RequestManager $requestManager
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
@@ -112,6 +113,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @param \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Registry $registry
      * @param array $data
      */
     public function __construct(
@@ -130,7 +132,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Magento\Directory\Model\CurrencyFactory $currencyFactory,
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        \Magento\Checkout\Model\Session $checkoutSession,
         \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder,
         \Paazl\Shipping\Model\Api\RequestManager $requestManager,
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
@@ -139,9 +140,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         \Magento\Quote\Api\Data\ShippingMethodExtensionFactory $shippingMethodExtensionFactory,
         \Magento\Quote\Model\QuoteFactory $quoteFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->_checkoutSession = $checkoutSession;
         $this->_requestBuilder = $requestBuilder;
         $this->_requestManager = $requestManager;
         $this->_addressHelper = $addressHelper;
@@ -150,6 +151,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->shippingMethodExtensionFactory = $shippingMethodExtensionFactory;
         $this->quoteFactory = $quoteFactory;
         $this->storeManager = $storeManager;
+        $this->registry = $registry;
         parent::__construct(
             $scopeConfig,
             $rateErrorFactory,
@@ -185,7 +187,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             return $this->getErrorMessage();
         }
 
-        $paazlData = $this->_checkoutSession->getPaazlData();
+        $paazlData = $this->registry->registry('paazlData');
 
         // If we switch Paazl account the session get's mixed up. Easiest to see if checkoutStatusRequest has more than 1 result
         if (isset($paazlData['results']) && isset($paazlData['results']['checkoutStatusRequest'])) {
@@ -204,7 +206,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->_getQuotes();
         $this->_updateFreeMethodQuote($request);
 
-        $this->_checkoutSession->setPaazlData($this->_paazlManagement->getPaazlData());
+        $this->registry->unregister('paazlData');
+        $this->registry->register('paazlData', $this->_paazlManagement->getPaazlData());
 
         // If we have access to Paazl Perfect dan disable Paazl Default
         if ($this->hasAccessToPaazlPerfect()) {
