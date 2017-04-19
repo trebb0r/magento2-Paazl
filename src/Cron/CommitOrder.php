@@ -101,7 +101,7 @@ class CommitOrder
                 $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getIncrementId();
 
                 $response = $this->_paazlManagement->processOrderCommitRequest($order);
-                if (isset($response['success'])) {
+                if (isset($response['succes'])) {
                     $order->setExtOrderId($extOrderId);
                     $this->_orderResource->save($order);
                 } else {
