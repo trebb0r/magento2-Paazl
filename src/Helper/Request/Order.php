@@ -53,6 +53,7 @@ class Order extends Generic
             'unitPriceCurrency' => $this->scopeConfig->getValue('currency/options/base', \Magento\Store\Model\ScopeInterface ::SCOPE_STORE)
         ];
 
+        $namespace = 'http://www.paazl.com/schemas/matrix';
         $products = [];
         foreach ($request->getAllItems() as $item) {
             if ($item->getProductType() == 'simple') {
@@ -68,15 +69,30 @@ class Order extends Generic
                 }
 
                 $productData = array_merge($productData, $storeData);
-                $var = new \SoapVar($productData,SOAP_ENC_OBJECT,NULL,NULL,'product');
+
+                array_walk($productData, array('\Paazl\Shipping\Helper\Request\order', 'soapvar'));
+
+                $soapVar = new \SoapVar($productData,SOAP_ENC_OBJECT,NULL,NULL,'product',$namespace);
 
                 // Remove empty values or the order and update call don't work in Paazl?
                 //$productData = array_filter($productData, function($value) { return !is_null($value) && $value !== ''; });
 
-                $products[] = $var;
+                $products[] = $soapVar;
             }
         }
 
-        return new \SoapVar($products,SOAP_ENC_OBJECT,null,null,'products');
+        array_walk($products, array('\Paazl\Shipping\Helper\Request\order', 'soapvarObj'));
+
+        return new \SoapVar($products,SOAP_ENC_OBJECT,null,null,'products',$namespace);
+    }
+
+    public function soapvar(&$item, $key) {
+        $namespace = 'http://www.paazl.com/schemas/matrix';
+        $item = new \SoapVar($item, XSD_STRING,NULL,NULL,$key,$namespace);
+    }
+
+    public function soapvarObj(&$item, $key) {
+        $namespace = 'http://www.paazl.com/schemas/matrix';
+        $item = new \SoapVar($item, SOAP_ENC_OBJECT,NULL,NULL,'product',$namespace);
     }
 }
