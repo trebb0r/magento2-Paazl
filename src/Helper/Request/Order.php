@@ -98,6 +98,8 @@ class Order extends Generic
 
     public function soapvar(&$item, $key) {
         $namespace = 'http://www.paazl.com/schemas/matrix';
+        // Cast to string for soapVar
+        $item = (string)$item;
         $item = new \SoapVar($item, XSD_STRING,NULL,NULL,$key,$namespace);
     }
 
