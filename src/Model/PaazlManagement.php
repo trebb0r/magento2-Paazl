@@ -61,6 +61,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     protected $quoteAddressRateCollectionFactory;
 
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $timezoneInterface;
+
+    /**
      * PaazlManagement constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
@@ -69,6 +74,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param \Paazl\Shipping\Helper\Request\Order $orderHelper
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
      * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -77,7 +83,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
         \Paazl\Shipping\Helper\Request\Order\Proxy $orderHelper,
         \Magento\Quote\Model\QuoteFactory $quoteFactory,
-        \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
+        \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -87,6 +94,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->_orderHelper = $orderHelper;
         $this->quoteFactory = $quoteFactory;
         $this->quoteAddressRateCollectionFactory = $quoteAddressRateCollectionFactory;
+        $this->timezoneInterface = $timezoneInterface;
     }
 
 
@@ -214,6 +222,14 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 $requestData['body']['shippingMethod']['servicepointNotificationMobile'] = $notification;
             }
         }
+        // Preferred delivery date
+        if ($rate && $rate['paazl_preferred_date'] != '') {
+            $preferredDate = $this->timezoneInterface
+                ->date(new \DateTime($rate['paazl_preferred_date']))
+                ->format('d-m-Y');
+            $requestData['body']['shippingMethod']['preferredDeliveryDate'] = $preferredDate;
+        }
+
         $orderCommitRequest = $this->_requestBuilder->build('PaazlOrderCommitRequest', $requestData);
         $response = $this->_requestManager->doRequest($orderCommitRequest)->getResponse();
 

@@ -47,7 +47,7 @@ class InstallData implements InstallDataInterface
         $attributeSetId = $eavSetup->getAttributeSetId($entityTypeId, 'Default');
 
         // Create group
-        $eavSetup->addAttributeGroup(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'Paazl', 62);
+        $eavSetup->addAttributeGroup(\Magento\Catalog\Model\Product::ENTITY, 'Default', $groupName, 62);
 
         foreach($eavSetup->getAttributeList() as $attributeInfo) {
             // Create attributes
@@ -55,7 +55,7 @@ class InstallData implements InstallDataInterface
                 \Magento\Catalog\Model\Product::ENTITY,
                 $attributeInfo['attributeCode'],
                 [
-                    'group' => 'Paazl',
+                    'group' => $groupName,
                     'sort_order' => 40,
                     'type' => 'varchar',
                     'backend' => '',
@@ -81,6 +81,6 @@ class InstallData implements InstallDataInterface
             );
         }
 
-        // Need to do a reindex and clear cache. Maybe add to the readme?
+        // @todo Need to do a reindex and clear cache. Maybe add to the readme?
     }
 }

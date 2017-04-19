@@ -169,6 +169,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             $rate->setPaazlOption($data['delivery']['option']);
                             $rate->setPaazlNotification(current($data['notification']));
                         }
+                        else {
+                            $rate->setPaazlPreferredDate($data['delivery']['preferredDeliveryDate']);
+                        }
                         $rate->setMethodTitle($title);
                         $rate->setCarrierTitle('');
                         $rate->setCost($methodPrice);
@@ -269,6 +272,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 $quoteId = str_replace($this->_paazlManagement->getReferencePrefix(), '', $this->_paazlManagement->_getQuoteId());
                 $quote = $this->quoteFactory->create()->setStoreId($this->storeManager->getStore()->getId())->load($quoteId);
                 $rate->setPaazlNotification($quote->getShippingAddress()->getTelephone()); // Set default to telephone
+            }
+            else {
+                $rate->setPaazlPreferredDate($methodData['deliveryDates'][0]['deliveryDate']);
             }
             $rate->setMethodTitle($title);
             $rate->setCarrierTitle('');

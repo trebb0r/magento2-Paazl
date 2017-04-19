@@ -37,6 +37,12 @@ class RatePlugin
                     $rate->getPaazlNotification()
                 );
             }
+            $paazlPreferredDate = $rate->getPaazlPreferredDate();
+            if (isset($paazlPreferredDate) && $paazlPreferredDate != '') {
+                $return->setPaazlPreferredDate(
+                    $rate->getPaazlPreferredDate()
+                );
+            }
         }
         return $return;
     }
