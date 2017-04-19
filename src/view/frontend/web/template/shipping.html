@@ -89,7 +89,8 @@
                                                     checked: $parent.rates().length == 1,
                                                     'value' : method.carrier_code + '_' + method.method_code,
                                                     'id': 's_method_' + method.method_code,
-                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                    'delivery-type': method_code == 'SERVICE_POINT' ? 'servicePoint' : 'home'
                                                  }" />
                                 <!-- /ko -->
                                 <!--ko ifnot: ($parent.rates().length == 1)-->
@@ -99,7 +100,8 @@
                                                 checked: $parent.isSelected,
                                                 attr: {
                                                     'id': 's_method_' + method.carrier_code + '_' + method.method_code,
-                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                    'delivery-type': method_code == 'SERVICE_POINT' ? 'servicePoint' : 'home'
                                                 },
                                                 click: $parent.selectShippingMethod"
                                        class="radio"/>
@@ -107,7 +109,6 @@
                                 <!-- /ko -->
                             </td>
                             <td class="col col-price">
-                                <div data-bind="text: console.log(method)"></div>
                                 <!-- ko if: method.carrier_code == 'paazlp' -->
                                     <!-- ko if: method.extension_attributes.paazl_method == 'servicepoint' -->
                                 <span><!-- ko i18n: 'Pick Up:'--><!-- /ko --></span>

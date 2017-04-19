@@ -32,6 +32,7 @@ define(
                 this._super();
                 var self = this;
                 var paazlPerfectLoaded = false;
+                self.deliveryType = false;
 
                 shippingService.getShippingRates().subscribe(function (rates) {
                     var dataProcessed = false;
@@ -69,6 +70,22 @@ define(
                                             var key = Object.keys(paazlData['checkoutRequest'])[0];
                                             var url = paazlData['checkoutRequest'][key]['url'];
 
+                                            if (self.deliveryType == 'home') {
+                                                // select delivery radio option
+                                                domObserver.get('input[delivery-type="home"]',function () {
+                                                    $('input[delivery-type="home"]').attr('checked', 'checked');
+                                                    $('input[delivery-type="servicePoint"]').attr('checked', false);
+                                                });
+                                            }
+                                            if (self.deliveryType == 'servicePoint') {
+                                                // select pickup radio option
+                                                domObserver.get('input[delivery-type="servicePoint"]',function () {
+                                                    $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
+                                                    $('input[delivery-type="home"]').attr('checked', false);
+                                                });
+                                            }
+
+
                                             if (self.paazlPerfectLoaded != true) {
                                                 // load the url and show
                                                 $('input[name="postcode"]').attr('data-pcm-input', 'consigneePostalCode');
@@ -92,7 +109,7 @@ define(
 
                                                             $('#checkout-paazl-type').attr('data-pcm-input', 'deliveryType');
 
-                                                            PaazlCheckoutModuleLoader.show(self.handlePaazlPerfect);
+                                                            PaazlCheckoutModuleLoader.show($.proxy(self.handlePaazlPerfect, self));
                                                         });
                                                     }.bind(this));
                                                 });
@@ -199,6 +216,9 @@ define(
             },
 
             handlePaazlPerfect: function (data) {
+                var self = this;
+                self.deliveryType = data.deliveryType;
+
                 console.log(data);
 
                 // set email and phone when entered in paazl perfect.
