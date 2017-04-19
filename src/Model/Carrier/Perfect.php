@@ -131,7 +131,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         } else {
                             $title = $data['delivery']['description'];
                             if ($deliveryType == 'servicepoint') {
-                                $method = $methodChosen;
+                                $method = 'SERVICE_POINT';
                                 $methodData = [
                                     'distributor' => 'SERVICE_POINT',
                                     'title' => $data['delivery']['option'],
