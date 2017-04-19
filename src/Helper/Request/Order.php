@@ -55,10 +55,15 @@ class Order extends Generic
 
         $namespace = 'http://www.paazl.com/schemas/matrix';
         $products = [];
+
         foreach ($request->getAllItems() as $item) {
             if ($item->getProductType() == 'simple') {
                 $productData = [];
                 $productData['quantity'] = $item->getQty();
+                if ($item->getParentItem()) {
+                    $productData['quantity'] = $item->getParentItem()->getQty();
+                }
+
                 $productData['unitPriceCurrency'] = $item->getQuoteCurrencyCode();
 
                 $product = $this->productFactory->create()->load($item->getProductId());
