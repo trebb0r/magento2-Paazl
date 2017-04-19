@@ -68,10 +68,15 @@ class Order extends Generic
                 }
 
                 $productData = array_merge($productData, $storeData);
-                $products[] = $productData;
+                $var = new \SoapVar($productData,SOAP_ENC_OBJECT,NULL,NULL,'product');
+
+                // Remove empty values or the order and update call don't work in Paazl?
+                //$productData = array_filter($productData, function($value) { return !is_null($value) && $value !== ''; });
+
+                $products[] = $var;
             }
         }
 
-        return $products;
+        return new \SoapVar($products,SOAP_ENC_OBJECT,null,null,'products');
     }
 }

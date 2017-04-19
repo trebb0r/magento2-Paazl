@@ -127,7 +127,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         if (isset($allMethods[$methodChosen])) {
                             $method = $methodChosen;
                             $methodData = $allMethods[$methodChosen];
-                            $title = $methodData['description'] . ' - ' . $data['delivery']['description'];
+                            $title = $methodData['description'];
                         } else {
                             $title = $data['delivery']['description'];
                             if ($deliveryType == 'servicepoint') {
