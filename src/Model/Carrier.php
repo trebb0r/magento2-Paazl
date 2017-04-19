@@ -268,6 +268,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                         $firstServicePoint = $shippingOption['servicePoints']['servicePoint'][0];
                         $methods[$shippingOption['type']]['servicePoint'] = $firstServicePoint;
 
+                        // If there is no price than the shipping option is free.
+                        if (!isset($firstServicePoint['price'])) {
+                            $firstServicePoint['price'] = 0.0;
+                        }
+
                         $methods[$shippingOption['type']] = [
                             'distributor' =>  $firstServicePoint['distributor'],
                             'title' => $firstServicePoint['distributor'],
@@ -281,6 +286,11 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                     }
                 } else {
                     if (isset($shippingOption['distributor'])) {
+                        // If there is no price than the shipping option is free.
+                        if (!isset($shippingOption['price'])) {
+                            $shippingOption['price'] = 0.0;
+                        }
+
                         $methods[$shippingOption['type']] = [
                             'distributor' =>  $shippingOption['distributor'],
                             'title' => $shippingOption['distributor'],
