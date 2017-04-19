@@ -97,6 +97,17 @@ interface Delivery
     /**
      * @return string|null
      */
+    public function getDeliveryWindowText();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowText($data);
+
+    /**
+     * @return string|null
+     */
     public function getServicePointCode();
 
     /**

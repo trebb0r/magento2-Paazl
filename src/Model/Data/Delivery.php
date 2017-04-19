@@ -145,6 +145,23 @@ class Delivery implements \Paazl\Shipping\Api\Data\Delivery
     /**
      * @return string|null
      */
+    public function getDeliveryWindowText()
+    {
+        return isset($this->_data['delivery_window_text'])? $this->_data['delivery_window_text'] : null;
+    }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setDeliveryWindowText($data)
+    {
+        $this->_data['delivery_window_text'] = $data;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getServicePointCode()
     {
         return isset($this->_data['service_point_code'])? $this->_data['service_point_code'] : null;

@@ -103,18 +103,19 @@ class ShippingMethodConverterPlugin
                     $dateTime = $firstShippingOption['deliveryDate'];
                     $dateAsTimeZone = $this->timezoneInterface
                         ->date(new \DateTime($dateTime))
-                        ->format('d-m-Y');
+                        ->format('l j F');
                     $delivery->setDeliveryDate($dateAsTimeZone);
 
                     if (isset($firstShippingOption['deliveryTimeRange'])) {
                         $startTimeAsTimeZone = $this->timezoneInterface
                             ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['lowerBound']))
-                            ->format('H:i:s');
+                            ->format('H:i');
                         $endTimeAsTimeZone = $this->timezoneInterface
                             ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['upperBound']))
-                            ->format('H:i:s');
+                            ->format('H:i');
                         $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                         $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
+                        $delivery->setDeliveryWindowText(__('between %1 and %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
                     }
                 }
 
@@ -175,13 +176,14 @@ class ShippingMethodConverterPlugin
                                 if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
                                     $startTimeAsTimeZone = $this->timezoneInterface
                                         ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
-                                        ->format('H:i:s');
+                                        ->format('H:i');
                                     $endTimeAsTimeZone = $this->timezoneInterface
                                         ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['upperBound']))
-                                        ->format('H:i:s');
+                                        ->format('H:i');
 
                                     $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                                     $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
+                                    $delivery->setDeliveryWindowText(__('between %1 and %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
                                 }
                             }
                         }
@@ -189,7 +191,7 @@ class ShippingMethodConverterPlugin
 
                     $dateAsTimeZone = $this->timezoneInterface
                         ->date(new \DateTime($dateTime))
-                        ->format('d-m-Y');
+                        ->format('l j F');
 
                     $delivery->setDeliveryDate($dateAsTimeZone);
                 }

@@ -131,10 +131,10 @@
                                     <!-- /ko -->
 
                                     <!-- ko if: method.extension_attributes.delivery.delivery_date -->
-                                        <!-- ko if: method.extension_attributes.delivery.delivery_window_start -->
-                                    <div><span data-bind="text: method.extension_attributes.delivery.delivery_date + ' ' + method.extension_attributes.delivery.delivery_window_start + ' - ' + method.extension_attributes.delivery.delivery_window_end"></span></div>
+                                        <!-- ko if: method.extension_attributes.delivery.delivery_window_text -->
+                                    <div><span data-bind="text: method.extension_attributes.delivery.delivery_date + ' ' + method.extension_attributes.delivery.delivery_window_text"></span></div>
                                         <!-- /ko -->
-                                        <!-- ko ifnot: method.extension_attributes.delivery.delivery_window_start -->
+                                        <!-- ko ifnot: method.extension_attributes.delivery.delivery_window_text -->
                                     <div><span data-bind="text: method.extension_attributes.delivery.delivery_date"></span></div>
                                         <!-- /ko -->
 
