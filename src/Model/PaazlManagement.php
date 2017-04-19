@@ -107,7 +107,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             'code' => 'sku',
             'description' => 'customs_message',
             'countryOfManufacture' => 'country_of_manufacture',
-            'unitPrice' => 'price_including_tax',
+            'unitPrice' => 'price_incl_tax',
             'hsTariffCode' => 'hsTariffCode',
             'processingDays' => 'processingDays'
         ];

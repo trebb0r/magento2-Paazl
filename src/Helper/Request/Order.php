@@ -73,6 +73,11 @@ class Order extends Generic
                     $productData[$nodeName] = $product->getData($attributeCode);
                 }
 
+                $productData['unitPrice'] = $item->getData('price_incl_tax');
+                if ($item->getParentItem()) {
+                    $productData['unitPrice'] = $item->getParentItem()->getData('price_incl_tax');
+                }
+
                 $productData = array_merge($productData, $storeData);
 
                 array_walk($productData, array('\Paazl\Shipping\Helper\Request\order', 'soapvar'));
