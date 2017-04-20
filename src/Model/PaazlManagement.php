@@ -13,6 +13,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     const XML_PATH_ORDER_REFERENCE_ADD_PREFIX = 'paazl/order/add_prefix';
     const XML_PATH_ORDER_REFERENCE_PREFIX = 'paazl/order/reference_prefix';
     const XML_PATH_WEIGHT_CONVERSION_RATIO = 'paazl/locale/weight_conversion';
+    const XML_PATH_ASSURED_AMOUNT = 'paazl/order/assured_amount';
+    const XML_PATH_SINGLE_LABEL_PER_ORDER = 'paazl/order/single_label_per_order';
 
     /** @var float */
     protected $weightConversion;
@@ -174,7 +176,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         $assuredAmount = 0;
         if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {
-            $assuredAmount = (int)$this->_scopeConfig->getValue(self::XML_PATH_ASSURED_AMOUNT, StoreScopeInterface::SCOPE_STORE, $order->getStoreId());
+            $assuredAmount = (int)$this->_scopeConfig->getValue(self::XML_PATH_ASSURED_AMOUNT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
         }
 
         $requestData = [
@@ -209,7 +211,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             ]
         ];
 
-        if ($this->_scopeConfig->getValue('single_label_per_order', StoreScopeInterface::SCOPE_STORE, $order->getStoreId())) {
+        if ($this->_scopeConfig->getValue(self::XML_PATH_SINGLE_LABEL_PER_ORDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId())) {
             $requestData['body']['shippingMethod']['maxLabels'] = 1;
         }
 

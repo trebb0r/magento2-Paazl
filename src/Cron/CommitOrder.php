@@ -11,7 +11,6 @@ class CommitOrder
 {
     /** Webshop Identifier config path */
     const XML_PATH_CRON_COMMIT_ORDERS = 'paazl/order/cron_export';
-    const XML_PATH_ASSURED_AMOUNT = 'paazl/order/assured_amount';
 
     /** @var \Magento\Sales\Api\OrderRepositoryInterface */
     protected $_orderRepository;
