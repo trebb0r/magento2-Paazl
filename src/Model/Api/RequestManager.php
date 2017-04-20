@@ -182,6 +182,9 @@ class RequestManager
         $context = (string)$requestObject->getContext();
 
         $body = $requestObject->getBody();
+        if ($requestObject->getMethod() == 'listOrders') {
+            $context = date('Ymd');
+        }
 
         $body['hash'] = sha1($this->webshopId . $this->password . $context);
         $body['webshop'] = (isset($clientConfig['webshop'])) ? $clientConfig['webshop'] : $this->webshopId;

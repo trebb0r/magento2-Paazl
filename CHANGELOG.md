@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.3] - 2017-04-20
+### Changed
+- Added preferred delivery date to commitOrder
+
 ## [1.0.1] - 2017-04-18
 ### Changed
 - Don't show carrier title
