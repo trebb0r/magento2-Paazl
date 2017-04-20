@@ -224,10 +224,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         }
         // Preferred delivery date
         if ($rate && $rate['paazl_preferred_date'] != '') {
-            $preferredDate = $this->timezoneInterface
-                ->date(new \DateTime($rate['paazl_preferred_date']))
-                ->format('d-m-Y');
-            $requestData['body']['shippingMethod']['preferredDeliveryDate'] = $preferredDate;
+            $requestData['body']['shippingMethod']['preferredDeliveryDate'] = $rate['paazl_preferred_date'];
         }
 
         $orderCommitRequest = $this->_requestBuilder->build('PaazlOrderCommitRequest', $requestData);

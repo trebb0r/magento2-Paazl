@@ -26,8 +26,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getTable('quote_shipping_rate'),
                 'paazl_preferred_date',
                 [
-                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATETIME,
-                    'default' => null,
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 255,
                     'nullable' => true,
                     'comment' => 'Preferred date'
                 ]
