@@ -190,7 +190,6 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'identifier' => null,
                     'option' => $shippingMethod->getMethod(),
                     'orderWeight' => $this->getConvertedWeight($order->getWeight()),
-                    'maxLabels' => 1, //@todo Support for shipments having multiple packages
                     'description' => 'Delivery', //@todo Find out what description is expected
                     'assuredAmount' => $assuredAmount,
                     'assuredAmountCurrency' => 'EUR'
@@ -209,6 +208,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 ]
             ]
         ];
+
+        if ($this->_scopeConfig->getValue('single_label_per_order', StoreScopeInterface::SCOPE_STORE, $order->getStoreId())) {
+            $requestData['body']['shippingMethod']['maxLabels'] = 1;
+        }
+
         // Service points
         if ($rate && $rate['identifier'] != '') {
             $requestData['body']['shippingMethod']['identifier'] = $rate['identifier'];

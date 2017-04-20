@@ -70,6 +70,11 @@
                     <label>Assured amount</label>
                     <comment>Insured amount if applicable</comment>
                 </field>
+                <field id="single_label_per_order" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Single label per order</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>set a maximum of 1 label per webshop order</comment>
+                </field>
             </group>
             <group id="locale" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Locale settings</label>

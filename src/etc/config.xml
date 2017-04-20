@@ -10,6 +10,9 @@
                 <staging_url>http://staging.paazl.com/parcelshipperservice/orderRequest.wsdl</staging_url>
                 <production_url>https://ost.paazl.com/parcelshipperservice/orderRequest.wsdl</production_url>
             </api_advanced>
+            <order>
+                <single_label_per_order>1</single_label_per_order>
+            </order>
         </paazl>
         <carriers>
             <paazl>
