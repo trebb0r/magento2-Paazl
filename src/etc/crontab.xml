@@ -8,5 +8,8 @@
         <job name="paazl_commit_orders" instance="Paazl\Shipping\Cron\CommitOrder" method="execute">
             <schedule>* * * * *</schedule>
         </job>
+        <job name="paazl_check_shipping" instance="Paazl\Shipping\Cron\Shipping" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
     </group>
 </config>
