@@ -139,7 +139,12 @@ class ShippingMethodConverterPlugin
                             $delivery->setDeliveryWindowText(__('%1 - %2', $deliveryWindowTimes[0], $deliveryWindowTimes[1]));
                         }
                         else {
-                            $delivery->setDeliveryWindowText(__('%1', $deliveryWindowTimes[0]));
+                            if (isset($startTimeAsTimeZone)) {
+                                $delivery->setDeliveryWindowText(__('after %1', $deliveryWindowTimes[0]));
+                            }
+                            else {
+                                $delivery->setDeliveryWindowText(__('before %1', $deliveryWindowTimes[0]));
+                            }
                         }
                     }
                 }
@@ -218,7 +223,12 @@ class ShippingMethodConverterPlugin
                                         $delivery->setDeliveryWindowText(__('%1 - %2', $deliveryWindowTimes[0], $deliveryWindowTimes[1]));
                                     }
                                     else {
-                                        $delivery->setDeliveryWindowText(__('%1', $deliveryWindowTimes[0]));
+                                        if (isset($startTimeAsTimeZone)) {
+                                            $delivery->setDeliveryWindowText(__('after %1', $deliveryWindowTimes[0]));
+                                        }
+                                        else {
+                                            $delivery->setDeliveryWindowText(__('before %1', $deliveryWindowTimes[0]));
+                                        }
                                     }
                                 }
                             }
