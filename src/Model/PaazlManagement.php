@@ -321,7 +321,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'country' => (string)$request->getDestCountryId(),
                     'extendedDeliveryDateDetails' => true,
                     'shippingOption' => null,
-                    'deliveryDateRange' => null
+                    'deliveryDateRange' => null,
+                    'deliveryEstimate' => true,
                 ]
             ];
             $shippingOptionRequest = $this->_requestBuilder->build('PaazlShippingOptionRequest', $data);
