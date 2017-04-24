@@ -302,7 +302,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                             'description' => $shippingOption['description'],
                         ];
 
-                        if ($shippingOption['deliveryDates']) {
+                        if (isset($shippingOption['deliveryDates']) && $shippingOption['deliveryDates']) {
                             $methods[$shippingOption['type']]['deliveryDates'] = $shippingOption['deliveryDates']['deliveryDateOption'];
                         }
                     } else {
