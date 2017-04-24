@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Bugfix when there is no lowerBound delivery time.
 
 ## [1.0.3] - 2017-04-20
 ### Changed
