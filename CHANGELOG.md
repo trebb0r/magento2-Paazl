@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Bugfix when there is no lowerBound delivery time.
 - Set same text as in popup when only lowerBound or upperBound is available
+- Bugfix "Undefined index: deliveryDates" when a delivery has no dates
 
 ## [1.0.3] - 2017-04-20
 ### Changed
