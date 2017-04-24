@@ -120,15 +120,27 @@ class ShippingMethodConverterPlugin
                     $delivery->setDeliveryDate($dateAsTimeZone);
 
                     if (isset($firstShippingOption['deliveryTimeRange'])) {
-                        $startTimeAsTimeZone = $this->timezoneInterface
-                            ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['lowerBound']))
-                            ->format('H:i');
-                        $endTimeAsTimeZone = $this->timezoneInterface
-                            ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['upperBound']))
-                            ->format('H:i');
-                        $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
-                        $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
-                        $delivery->setDeliveryWindowText(__('%1 - %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
+                        $deliveryWindowTimes = [];
+                        if (isset($firstShippingOption['deliveryTimeRange']['lowerBound'])) {
+                            $startTimeAsTimeZone = $this->timezoneInterface
+                                ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['lowerBound']))
+                                ->format('H:i');
+                            $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
+                            $deliveryWindowTimes[] = $startTimeAsTimeZone;
+                        }
+                        if (isset($firstShippingOption['deliveryTimeRange']['upperBound'])) {
+                            $endTimeAsTimeZone = $this->timezoneInterface
+                                ->date(new \DateTime($firstShippingOption['deliveryTimeRange']['upperBound']))
+                                ->format('H:i');
+                            $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
+                            $deliveryWindowTimes[] = $endTimeAsTimeZone;
+                        }
+                        if (count($deliveryWindowTimes) == 2) {
+                            $delivery->setDeliveryWindowText(__('%1 - %2', $deliveryWindowTimes[0], $deliveryWindowTimes[1]));
+                        }
+                        else {
+                            $delivery->setDeliveryWindowText(__('%1', $deliveryWindowTimes[0]));
+                        }
                     }
                 }
 
@@ -187,16 +199,27 @@ class ShippingMethodConverterPlugin
                         if ($shippingOption['type'] == $result->getMethodCode()) {
                             foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
                                 if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
-                                    $startTimeAsTimeZone = $this->timezoneInterface
-                                        ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
-                                        ->format('H:i');
-                                    $endTimeAsTimeZone = $this->timezoneInterface
-                                        ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['upperBound']))
-                                        ->format('H:i');
-
-                                    $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
-                                    $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
-                                    $delivery->setDeliveryWindowText(__('%1 - %2', $startTimeAsTimeZone, $endTimeAsTimeZone));
+                                    $deliveryWindowTimes = [];
+                                    if (isset($deliveryDateOption['deliveryTimeRange']['lowerBound'])) {
+                                        $startTimeAsTimeZone = $this->timezoneInterface
+                                            ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
+                                            ->format('H:i');
+                                        $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
+                                        $deliveryWindowTimes[] = $startTimeAsTimeZone;
+                                    }
+                                    if (isset($deliveryDateOption['deliveryTimeRange']['upperBound'])) {
+                                        $endTimeAsTimeZone = $this->timezoneInterface
+                                            ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['upperBound']))
+                                            ->format('H:i');
+                                        $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
+                                        $deliveryWindowTimes[] = $endTimeAsTimeZone;
+                                    }
+                                    if (count($deliveryWindowTimes) == 2) {
+                                        $delivery->setDeliveryWindowText(__('%1 - %2', $deliveryWindowTimes[0], $deliveryWindowTimes[1]));
+                                    }
+                                    else {
+                                        $delivery->setDeliveryWindowText(__('%1', $deliveryWindowTimes[0]));
+                                    }
                                 }
                             }
                         }
