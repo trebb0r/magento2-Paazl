@@ -6,9 +6,9 @@
 namespace Paazl\Shipping\Model\Source\Method;
 
 /**
- * Class Freemethod
+ * Class FreeMethod
  */
-class Freemethod extends \Magento\Ups\Model\Config\Source\Method
+class FreeMethod extends \Magento\Ups\Model\Config\Source\Method
 {
     /**
      * {@inheritdoc}
