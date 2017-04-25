@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - Bugfix for checkoutRequest with error code 1053
+- Bugfix class name
 
 ## [1.0.4] - 2017-04-24
 ### Changed
