@@ -209,7 +209,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->registry->unregister('paazlData');
         $this->registry->register('paazlData', $this->_paazlManagement->getPaazlData());
 
-        // If we have access to Paazl Perfect dan disable Paazl Default
+        // If we have access to Paazl Perfect than disable Paazl Default
         if ($this->hasAccessToPaazlPerfect()) {
             return false;
         }
