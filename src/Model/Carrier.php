@@ -473,6 +473,17 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                     }
                 }
             }
+
+            if (isset($this->_paazlData['results']) && isset($this->_paazlData['results']['checkoutRequest'])) {
+                $key = key($this->_paazlData['results']['checkoutRequest']);
+                $checkoutStatusRequest = $this->_paazlData['results']['checkoutRequest'][$key];
+
+                if (isset($checkoutStatusRequest['error'])) {
+                    if ($checkoutStatusRequest['error']['code'] == 1053) {
+                        $this->accessToPaazlPerfect = false;
+                    }
+                }
+            }
         }
 
         return $this->accessToPaazlPerfect;
