@@ -206,7 +206,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             ];
                         }
 
-                        if (isset($methodData['deliveryDates']) && $methodData['deliveryDates'][0]['deliveryDate']) {
+                        if (isset($methodData['deliveryDates']) && isset($methodData['deliveryDates'][0]['deliveryDate'])) {
                             $this->_paazlData['delivery'][$methodData['method']] = [
                                 'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
                             ];
@@ -235,6 +235,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         // Before choosing something in Paazl Perfect
         foreach ($allowedMethods as $method => $methodData) {
             $title = $methodData['description'];
+            $this->_paazlData['delivery'][$methodData['method']] = [];
 
             $methodPrice = (in_array($method, $this->getCode('free_methods')))
                 ? 0
