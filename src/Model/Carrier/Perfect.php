@@ -170,7 +170,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             $rate->setPaazlNotification(current($data['notification']));
                         }
                         else {
-                            $rate->setPaazlPreferredDate($data['delivery']['preferredDeliveryDate']);
+                            if (isset($data['delivery']['preferredDeliveryDate'])) {
+                                $rate->setPaazlPreferredDate($data['delivery']['preferredDeliveryDate']);
+                            }
                         }
                         $rate->setMethodTitle($title);
                         $rate->setCarrierTitle('');
@@ -204,7 +206,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                             ];
                         }
 
-                        if (isset($methodData['deliveryDates'])) {
+                        if (isset($methodData['deliveryDates']) && $methodData['deliveryDates'][0]['deliveryDate']) {
                             $this->_paazlData['delivery'][$methodData['method']] = [
                                 'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
                             ];
@@ -253,7 +255,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 ];
             }
 
-            if (isset($methodData['deliveryDates'])) {
+            if (isset($methodData['deliveryDates']) && isset($methodData['deliveryDates'][0]['deliveryDate'])) {
                 $this->_paazlData['delivery'][$methodData['method']] = [
                     'preferredDeliveryDate' => $methodData['deliveryDates'][0]['deliveryDate'],
                 ];
@@ -274,7 +276,9 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 $rate->setPaazlNotification($quote->getShippingAddress()->getTelephone()); // Set default to telephone
             }
             else {
-                $rate->setPaazlPreferredDate($methodData['deliveryDates'][0]['deliveryDate']);
+                if (isset($methodData['deliveryDates']) && isset($methodData['deliveryDates'][0]['deliveryDate'])) {
+                    $rate->setPaazlPreferredDate($methodData['deliveryDates'][0]['deliveryDate']);
+                }
             }
             $rate->setMethodTitle($title);
             $rate->setCarrierTitle('');
