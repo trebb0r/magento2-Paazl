@@ -519,12 +519,12 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             $label = $response['label'];
             $result->setShippingLabelContent($label[0]['_']);
             $result->setTrackingNumber($label[0]['trackingNumber']);
+            $result->setGatewayResponse($response);
         }
         catch (\Exception $e) {
             $result->setErrors($e->getMessage());
         }
 
-        $result->setGatewayResponse($response);
         return $result;
     }
 }
