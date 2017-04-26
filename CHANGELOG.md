@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.5] - 2017-04-26
+### Changed
+- Bugfix for checkoutRequest with error code 1053
+- Bugfix class name
+- Allow shipping methods who don't have a delivery date
+
 ## [1.0.4] - 2017-04-24
 ### Changed
 - Bugfix when there is no lowerBound delivery time.
