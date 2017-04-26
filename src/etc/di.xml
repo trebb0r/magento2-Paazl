@@ -66,6 +66,12 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="PaazlGenerateImageLabelsRequest" type="Paazl\Shipping\Model\Api\Request">
+        <arguments>
+            <argument name="method" xsi:type="string">generateImageLabels</argument>
+        </arguments>
+    </virtualType>
+
     <type name="Magento\Checkout\Model\DefaultConfigProvider">
         <plugin name="paalz_shipping_configprovider_plugin" type="Paazl\Shipping\Model\Plugin\Checkout\ConfigProviderPlugin" />
     </type>

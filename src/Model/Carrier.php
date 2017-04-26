@@ -495,6 +495,36 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
-        //
+        $result = new \Magento\Framework\DataObject();
+        $context = $request->getOrderShipment()->getOrder()->getExtOrderId();
+
+        $requestData = [
+            'context' => $context,
+            'body' => [
+                'order' => [
+                    'hash' => $this->_requestManager->getHash($context),
+                    'orderReference' => $request->getOrderShipment()->getOrder()->getExtOrderId()
+                ],
+            ]
+        ];
+
+        array_walk($requestData['body']['order'], array($this->_orderHelper, 'soapvar'));
+
+        array_walk($requestData['body'], array($this->_orderHelper, 'soapvarObj'));
+
+        $generateImageLabelsRequest = $this->_requestBuilder->build('PaazlGenerateImageLabelsRequest', $requestData);
+        try {
+            $response = $this->_requestManager->doRequest($generateImageLabelsRequest)->getResponse();
+
+            $label = $response['label'];
+            $result->setShippingLabelContent($label[0]['_']);
+            $result->setTrackingNumber($label[0]['trackingNumber']);
+        }
+        catch (\Exception $e) {
+            $result->setErrors($e->getMessage());
+        }
+
+        $result->setGatewayResponse($response);
+        return $result;
     }
 }

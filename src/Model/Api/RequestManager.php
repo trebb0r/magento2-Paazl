@@ -205,4 +205,12 @@ class RequestManager
 
         $requestObject->setBody($body);
     }
+
+    /**
+     * @param $context
+     * @return string
+     */
+    public function getHash($context) {
+        return sha1($this->webshopId . $this->password . $context);
+    }
 }
