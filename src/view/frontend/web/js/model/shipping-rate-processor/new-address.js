@@ -14,9 +14,10 @@ define(
         'mage/storage',
         'Magento_Checkout/js/model/shipping-service',
         'Magento_Checkout/js/model/shipping-rate-registry',
-        'Magento_Checkout/js/model/error-processor'
+        'Magento_Checkout/js/model/error-processor',
+        'jquery'
     ],
-    function (resourceUrlManager, quote, storage, shippingService, rateRegistry, errorProcessor) {
+    function (resourceUrlManager, quote, storage, shippingService, rateRegistry, errorProcessor, $) {
         'use strict';
 
         return {
@@ -57,6 +58,7 @@ define(
                 if (cache) {
                     shippingService.setShippingRates(cache);
                     shippingService.isLoading(false);
+                    $(".table-checkout-shipping-method input[type=radio]").prop("disabled", false);
                 } else {
                     storage.post(
                         serviceUrl, payload, false
@@ -64,11 +66,13 @@ define(
                         function (result) {
                             rateRegistry.set(address.getCacheKey(), result);
                             shippingService.setShippingRates(result);
+                            $(".table-checkout-shipping-method input[type=radio]").prop("disabled", false);
                         }
                     ).fail(
                         function (response) {
                             shippingService.setShippingRates([]);
                             errorProcessor.process(response);
+                            $(".table-checkout-shipping-method input[type=radio]").prop("disabled", false);
                         }
                     ).always(
                         function () {
