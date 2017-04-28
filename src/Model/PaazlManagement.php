@@ -190,7 +190,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 'shippingMethod' => [
                     'type' => 'delivery',
                     'identifier' => null,
-                    'option' => $shippingMethod->getMethod(),
+                    'option' => $rate['method'],
                     'orderWeight' => $this->getConvertedWeight($order->getWeight()),
                     'description' => 'Delivery', //@todo Find out what description is expected
                     'assuredAmount' => $assuredAmount,
