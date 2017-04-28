@@ -60,6 +60,16 @@ class Shipping
     protected $trackFactory;
 
     /**
+     * @var \Magento\Shipping\Model\Shipping\LabelsFactory
+     */
+    protected $labelFactory;
+
+    /**
+     * @var \Magento\User\Model\UserFactory
+     */
+    protected $userFactory;
+
+    /**
      * CommitOrder constructor.
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
@@ -74,6 +84,8 @@ class Shipping
      * @param \Magento\Sales\Model\Convert\OrderFactory $convertOrderFactory
      * @param \Magento\Shipping\Model\ShipmentNotifier $notifier
      * @param \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory
+     * @param \Magento\Shipping\Model\Shipping\LabelsFactory $labelFactory
+     * @param \Magento\User\Model\UserFactory $userFactory
      */
     public function __construct(
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
@@ -88,7 +100,9 @@ class Shipping
         \Psr\Log\LoggerInterface $logger,
         \Magento\Sales\Model\Convert\OrderFactory $convertOrderFactory,
         \Magento\Shipping\Model\ShipmentNotifier $notifier,
-        \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory
+        \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory,
+        \Magento\Shipping\Model\Shipping\LabelsFactory $labelFactory,
+        \Magento\User\Model\UserFactory $userFactory
     ) {
         $this->_orderRepository = $orderRepository;
         $this->_orderFactory = $orderFactory;
@@ -103,6 +117,8 @@ class Shipping
         $this->convertOrderFactory = $convertOrderFactory;
         $this->notifier = $notifier;
         $this->trackFactory = $trackFactory;
+        $this->labelFactory = $labelFactory;
+        $this->userFactory = $userFactory;
     }
 
     public function execute()
@@ -120,8 +136,14 @@ class Shipping
             // In case of 1 order, ['orders']['order'] is the first result (object conversion)
             if (!isset($orders[0])) $orders = [$orders];
             foreach ($orders as $order) {
-                if (strpos($order['status'], 'LABELS_CREATED') !== false) {
+                if (strpos($order['status'], 'LABELS_CREATED') !== false && strpos($order['orderReference'], 'pascal_box2000000028') === false) {
                     $extOrderId = $order['orderReference'];
+
+                    // Check if more than 1 label then get the first label
+                    if (!isset($order['label']['trackingNumber'])) {
+                        $order['label'] = $order['label'][0];
+                    }
+
                     $trackingNr = $order['label']['trackingNumber'];
                     $shippingOption = $order['shippingOption'];
 
@@ -132,6 +154,7 @@ class Shipping
                     $filters = $this->_buildFilters($filterData);
                     $searchCriteria = $this->_buildSearchCriteria($filters);
                     $ordersToCreateShipment = $this->_orderRepository->getList($searchCriteria);
+                    $packages = [];
                     foreach ($ordersToCreateShipment as $orderToCreateShipment) {
                         // get the carrier (Paazl or Paazl Perfect)
                         $shippingMethod = $orderToCreateShipment->getShippingMethod();
@@ -141,8 +164,12 @@ class Shipping
                         if ($orderToCreateShipment->canShip()) {
                             $shipment = $convertor->toShipment($orderToCreateShipment);
 
+                            $items = [];
+                            $totalWeigth = 0;
                             // Loop through order items
                             foreach ($orderToCreateShipment->getAllItems() AS $orderItem) {
+
+
                                 // Check if order item has qty to ship or is virtual
                                 if (! $orderItem->getQtyToShip() || $orderItem->getIsVirtual()) {
                                     continue;
@@ -155,9 +182,57 @@ class Shipping
 
                                 // Add shipment item to shipment
                                 $shipment->addItem($shipmentItem);
+                                $items[] = [
+                                    'qty' => $qtyShipped,
+                                    'customs_value' => $orderItem->getProduct()->getCustomsMessage(),
+                                    'price' => $orderItem->getPrice(),
+                                    'name' => $orderItem->getName(),
+                                    'weight' => $orderItem->getWeight(),
+                                    'product_id' => $orderItem->getProductId(),
+                                    'order_item_id' => $orderItem->getItemId(),
+                                ];
+                                $totalWeigth += $orderItem->getWeight();
+                            }
+                            $packages[] = [
+                                'items' => $items,
+                                'params' => [
+                                    'container' => '',
+                                    'weight' => $totalWeigth,
+                                    'custom_value' => '',
+                                    'length' => '',
+                                    'width' => '',
+                                    'height' => '',
+                                    'weight_units' => 'KILOGRAM',
+                                    'dimension_units' => 'CENTIMETER',
+                                    'content_type' => '',
+                                    'content_type_other' => '',
+                                    'delivery_confirmation' => 'True',
+                                ],
+                            ];
+
+                            // if we add package and create the shipping label then we don't need to add track data
+                            $shipment->setPackages($packages);
+                            // issue with admin user not logged in from cron in requestToShipment
+                            $admin = $this->userFactory->create()->loadByUsername('admin');
+
+                            $response = $this->labelFactory->create()->requestToShipmentWithUser($shipment, $admin);
+                            if ($response->hasErrors()) {
+                                throw new \Magento\Framework\Exception\LocalizedException(__($response->getErrors()));
+                            }
+                            if (!$response->hasInfo()) {
+                                throw new \Magento\Framework\Exception\LocalizedException(__('Response info is not exist.'));
+                            }
+                            $labelsContent = [];
+                            $trackingNumbers = [];
+                            $info = $response->getInfo();
+                            foreach ($info as $inf) {
+                                if (!empty($inf['tracking_number']) && !empty($inf['label_content'])) {
+                                    $labelsContent[] = $inf['label_content'];
+                                    $trackingNumbers[] = $inf['tracking_number'];
+                                }
                             }
 
-                            // @todo: $shipment->setPackages($package); needed? https://magento.stackexchange.com/questions/135142/magento-2-how-to-programmatically-ship-an-order
+                            $shipment->setShippingLabel($labelsContent[0]);
 
                             // Add track data
                             $trackData = array(
@@ -184,6 +259,7 @@ class Shipping
 
                                 $shipment->save();
                             } catch (\Exception $e) {
+                                // @todo: sometimes the creation of the shipment remains when an error occurs. Maybe thrown somewhere else.
                                 throw new \Magento\Framework\Exception\LocalizedException(
                                     __($e->getMessage())
                                 );
