@@ -167,12 +167,14 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         if (isset($methodData['servicePoint'])) {
                             $rate->setIdentifier($data['delivery']['servicePoint']['code']);
                             $rate->setPaazlOption($data['delivery']['option']);
-                            $rate->setPaazlNotification(current($data['notification']));
                         }
                         else {
                             if (isset($data['delivery']['preferredDeliveryDate'])) {
                                 $rate->setPaazlPreferredDate($data['delivery']['preferredDeliveryDate']);
                             }
+                        }
+                        if (isset($data['notification'])) {
+                            $rate->setPaazlNotification(current($data['notification']));
                         }
                         $rate->setMethodTitle($title);
                         $rate->setCarrierTitle('');
