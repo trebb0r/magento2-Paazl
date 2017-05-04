@@ -13,16 +13,19 @@ use Paazl\Shipping\Model\Api\Request as PaazlRequest;
 class RequestManager
 {
     /** Webshop Identifier config path */
-    const XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID      = 'paazl/api/webshop_id';
+    const XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID       = 'paazl/api/webshop_id';
     /** Password for API calls config path */
-    const XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD        = 'paazl/api/password';
+    const XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD         = 'paazl/api/password';
     /** Staging/Production config path */
-    const XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE        = 'paazl/api/api_type';
+    const XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE         = 'paazl/api/api_type';
     /** Debug mode config path */
-    const XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG       = 'paazl/debug/log';
+    const XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG        = 'paazl/debug/log';
+
+    const XML_PATH_STORECONFIGURATION_PAAZL_DISPLAY_REAL_ERR = 'paazl/debug/display_real_error_msg';
+    const XML_PATH_STORECONFIGURATION_PAAZL_CUSTOM_ERR       = 'paazl/debug/custom_error_msg';
     /** Staging/Production URL config path */
-    const XML_PATH_STORECONFIGURATION_PAAZL_PRODUCTION_WSDL = 'paazl/api_advanced/production_url';
-    const XML_PATH_STORECONFIGURATION_PAAZL_STAGING_WSDL    = 'paazl/api_advanced/staging_url';
+    const XML_PATH_STORECONFIGURATION_PAAZL_PRODUCTION_WSDL  = 'paazl/api_advanced/production_url';
+    const XML_PATH_STORECONFIGURATION_PAAZL_STAGING_WSDL     = 'paazl/api_advanced/staging_url';
 
     /** @var string $webshopId */
     protected $webshopId;
@@ -72,10 +75,13 @@ class RequestManager
         $this->paazlError = $paazlError;
         $this->log = $log;
 
-        $this->debugMode = $this->scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG);
-        $this->apiType = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE);
-        $this->webshopId = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID);
-        $this->password =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD);
+        $this->debugMode = $this->scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+        $this->apiType = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+        $this->webshopId = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+        $this->password =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+        $this->showRealErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_DISPLAY_REAL_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+        $this->customErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_CUSTOM_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
+
     }
 
     /**
@@ -109,7 +115,7 @@ class RequestManager
                 [$requestObject->getBody()]
             );
 
-            if(isset($response->error) && !in_array($response->error->code, [1053, 1003])) { // 1053 = missing permission for Paazl Perfect, 1003 = An order with this reference already exists
+            if (isset($response->error) && !in_array($response->error->code, [1003,1053])) { // 1053 = missing permission for Paazl Perfect, 1003 = An order with this reference already exists
                 $paazlError = [
                     'log_type'  =>  'Paazl Error',
                     'log_code'  =>  $response->error->code,
@@ -145,12 +151,20 @@ class RequestManager
         } catch (\Exception $e) {
             $errors = [$e->getMessage()];
             $requestObject->setLastRequest($client->__getLastRequest());
-            //throw $e;
         }
 
         $requestObject->setErrors($errors);
         if (count($errors)) {
-            //$this->log->write($errors);
+            if ($this->showRealErrorMsg) {
+                $throwMsg = $errors[0]['message'];
+            }
+            else {
+                $throwMsg = $this->customErrorMsg;
+            }
+
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __($throwMsg)
+            );
         }
 
         return $requestObject;
@@ -190,5 +204,13 @@ class RequestManager
         $body['webshop'] = (isset($clientConfig['webshop'])) ? $clientConfig['webshop'] : $this->webshopId;
 
         $requestObject->setBody($body);
+    }
+
+    /**
+     * @param $context
+     * @return string
+     */
+    public function getHash($context) {
+        return sha1($this->webshopId . $this->password . $context);
     }
 }

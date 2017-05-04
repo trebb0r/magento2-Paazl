@@ -209,7 +209,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         $this->registry->unregister('paazlData');
         $this->registry->register('paazlData', $this->_paazlManagement->getPaazlData());
 
-        // If we have access to Paazl Perfect dan disable Paazl Default
+        // If we have access to Paazl Perfect than disable Paazl Default
         if ($this->hasAccessToPaazlPerfect()) {
             return false;
         }
@@ -495,6 +495,41 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
-        //
+        $result = new \Magento\Framework\DataObject();
+        $context = $request->getOrderShipment()->getOrder()->getExtOrderId();
+
+        $requestData = [
+            'context' => $context,
+            'body' => [
+                'order' => [
+                    'hash' => $this->_requestManager->getHash($context),
+                    'orderReference' => $request->getOrderShipment()->getOrder()->getExtOrderId()
+                ],
+            ]
+        ];
+
+        array_walk($requestData['body']['order'], array($this->_orderHelper, 'soapvar'));
+
+        array_walk($requestData['body'], array($this->_orderHelper, 'soapvarObj'));
+
+        $generateImageLabelsRequest = $this->_requestBuilder->build('PaazlGenerateImageLabelsRequest', $requestData);
+        try {
+            $response = $this->_requestManager->doRequest($generateImageLabelsRequest)->getResponse();
+
+            $label = $response['label'];
+            // Check if more than 1 label then get the first label
+            if (!isset($label['trackingNumber'])) {
+                $label = $label[0];
+            }
+
+            $result->setShippingLabelContent($label['_']);
+            $result->setTrackingNumber($label['trackingNumber']);
+            $result->setGatewayResponse($response);
+        }
+        catch (\Exception $e) {
+            $result->setErrors($e->getMessage());
+        }
+
+        return $result;
     }
 }

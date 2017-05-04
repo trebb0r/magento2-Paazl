@@ -13,6 +13,10 @@
             <order>
                 <single_label_per_order>1</single_label_per_order>
             </order>
+            <debug>
+                <display_real_error_msg>0</display_real_error_msg>
+                <custom_error_msg>Something went wrong while processing your request</custom_error_msg>
+            </debug>
         </paazl>
         <carriers>
             <paazl>

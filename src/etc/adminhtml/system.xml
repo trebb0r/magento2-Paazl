@@ -89,6 +89,17 @@
                     <label>Enable Log</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="display_real_error_msg" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Actual error message in checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="custom_error_msg" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Always display this error message</label>
+                    <comment>When 'Display Actual error message' is set to no this text will be used</comment>
+                    <depends>
+                        <field id="display_real_error_msg">0</field>
+                    </depends>
+                </field>
             </group>
         </section>
 

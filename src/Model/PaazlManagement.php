@@ -207,9 +207,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'addition' => $shippingAddress->getStreetLine(3),
                     'zipcode' => $shippingAddress->getPostcode(),
                     'city' => $shippingAddress->getCity(),
-                    'province' => (strlen((string)$shippingAddress->getRegionCode()) < 3)
-                        ? $shippingAddress->getRegionCode()
-                        : null,
+                    'province' => $shippingAddress->getRegion(),
                     'country' => $shippingAddress->getCountryId()
                 ]
             ]
@@ -224,6 +222,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $requestData['body']['shippingMethod']['identifier'] = $rate['identifier'];
             $requestData['body']['shippingMethod']['type'] = 'servicepoint';
             $requestData['body']['shippingMethod']['option'] = $rate['paazl_option'];
+        }
+
+        if ($rate && $rate['paazl_notification'] != '') {
             $notification = $rate['paazl_notification'];
             if (strpos($notification, '@') !== false) {
                 $requestData['body']['shippingMethod']['servicepointNotificationEmail'] = $notification;
@@ -232,6 +233,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 $requestData['body']['shippingMethod']['servicepointNotificationMobile'] = $notification;
             }
         }
+
         // Preferred delivery date
         if ($rate && $rate['paazl_preferred_date'] != '') {
             $requestData['body']['shippingMethod']['preferredDeliveryDate'] = $rate['paazl_preferred_date'];

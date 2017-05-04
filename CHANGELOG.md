@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Set correct shipping method coming from Paazl
 - Add customsValue for Fedex orders
 
+## [1.2.0] - 2017-05-04
+### Changed
+- Add notification for delivery type IDM
+- Automatically create shipment
+- Automatically create shipping labels
+- Allow to show Paazl error messages in the checkout or display a custom message
+- Bugfix 'select a shipping method' after choosing something in paazl perfect popup
+
 ## [1.0.5] - 2017-04-26
 ### Changed
 - Bugfix for checkoutRequest with error code 1053

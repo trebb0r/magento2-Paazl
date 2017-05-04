@@ -80,7 +80,7 @@ class Order extends Generic
 
                 $productData = array_merge($productData, $storeData);
 
-                array_walk($productData, array('\Paazl\Shipping\Helper\Request\order', 'soapvar'));
+                array_walk($productData, array('\Paazl\Shipping\Helper\Request\Order', 'soapvar'));
 
                 $soapVar = new \SoapVar($productData,SOAP_ENC_OBJECT,NULL,NULL,'product',$namespace);
 
@@ -91,7 +91,7 @@ class Order extends Generic
             }
         }
 
-        array_walk($products, array('\Paazl\Shipping\Helper\Request\order', 'soapvarObj'));
+        array_walk($products, array('\Paazl\Shipping\Helper\Request\Order', 'soapvarObj'), 'product');
 
         return new \SoapVar($products,SOAP_ENC_OBJECT,null,null,'products',$namespace);
     }
@@ -103,8 +103,11 @@ class Order extends Generic
         $item = new \SoapVar($item, XSD_STRING,NULL,NULL,$key,$namespace);
     }
 
-    public function soapvarObj(&$item, $key) {
+    public function soapvarObj(&$item, $key, $userData = null) {
+        if ($userData) {
+            $key = $userData;
+        }
         $namespace = 'http://www.paazl.com/schemas/matrix';
-        $item = new \SoapVar($item, SOAP_ENC_OBJECT,NULL,NULL,'product',$namespace);
+        $item = new \SoapVar($item, SOAP_ENC_OBJECT,NULL,NULL,$key,$namespace);
     }
 }

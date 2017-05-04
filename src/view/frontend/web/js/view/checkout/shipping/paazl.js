@@ -73,15 +73,17 @@ define(
                                             if (self.deliveryType == 'home') {
                                                 // select delivery radio option
                                                 domObserver.get('input[delivery-type="home"]',function () {
-                                                    $('input[delivery-type="home"]').attr('checked', 'checked');
                                                     $('input[delivery-type="servicePoint"]').attr('checked', false);
+                                                    $('input[delivery-type="home"]').attr('checked', 'checked');
+                                                    $('input[delivery-type="home"]').click();
                                                 });
                                             }
                                             if (self.deliveryType == 'servicePoint') {
                                                 // select pickup radio option
                                                 domObserver.get('input[delivery-type="servicePoint"]',function () {
-                                                    $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
                                                     $('input[delivery-type="home"]').attr('checked', false);
+                                                    $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
+                                                    $('input[delivery-type="servicePoint"]').click();
                                                 });
                                             }
 
