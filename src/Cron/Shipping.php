@@ -136,7 +136,7 @@ class Shipping
             // In case of 1 order, ['orders']['order'] is the first result (object conversion)
             if (!isset($orders[0])) $orders = [$orders];
             foreach ($orders as $order) {
-                if (strpos($order['status'], 'LABELS_CREATED') !== false && strpos($order['orderReference'], 'pascal_box2000000028') === false) {
+                if (strpos($order['status'], 'LABELS_CREATED') !== false) {
                     $extOrderId = $order['orderReference'];
 
                     // Check if more than 1 label then get the first label
@@ -193,6 +193,7 @@ class Shipping
                                 ];
                                 $totalWeigth += $orderItem->getWeight();
                             }
+                            // Could also use orderDetails call with orderWeight to get the total weight but this would mean an extra call.
                             $packages[] = [
                                 'items' => $items,
                                 'params' => [
@@ -212,8 +213,22 @@ class Shipping
 
                             // if we add package and create the shipping label then we don't need to add track data
                             $shipment->setPackages($packages);
+
+                            // Register shipment
+                            try {
+                                $shipment->register();
+
+                                $shipment->getOrder()->setIsInProcess(true);
+                            }
+                            catch (\Exception $e) {
+                                throw new \Magento\Framework\Exception\LocalizedException(
+                                    __($e->getMessage())
+                                );
+                            }
+
                             // issue with admin user not logged in from cron in requestToShipment
-                            $admin = $this->userFactory->create()->loadByUsername('admin');
+                            // @todo: maybe let this be configurable.
+                            $admin = $this->userFactory->create()->load(1);
 
                             $response = $this->labelFactory->create()->requestToShipmentWithUser($shipment, $admin);
                             if ($response->hasErrors()) {
@@ -243,11 +258,6 @@ class Shipping
 
                             $track = $this->trackFactory->create()->addData($trackData);
                             $shipment->addTrack($track)->save();
-
-                            // Register shipment
-                            $shipment->register();
-
-                            $shipment->getOrder()->setIsInProcess(true);
 
                             try {
                                 // Save created shipment and order
