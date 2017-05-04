@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Automatically create shipment
 - Automatically create shipping labels
 - Allow to show Paazl error messages in the checkout or display a custom message
+- Bugfix 'select a shipping method' after choosing something in paazl perfect popup
 
 ## [1.0.5] - 2017-04-26
 ### Changed
