@@ -317,8 +317,11 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
 
         $data = [
             'delivery' => $methods[$key],
-            'servicepoint' => $methods['SERVICE_POINT'],
         ];
+
+        if (isset($methods['SERVICE_POINT'])) {
+            $data['servicepoint'] = $methods['SERVICE_POINT'];
+        }
 
         return $data;
     }
