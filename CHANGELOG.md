@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [1.2.1] - 2017-05-05
+### Changed
+- Make Matrix attribute into a select
+
 ## [1.2.0] - 2017-05-04
 ### Changed
 - Add notification for delivery type IDM
