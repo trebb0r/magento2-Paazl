@@ -5,11 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-### Changed
-- Bugfix issue radio buttons become disabled after page refresh. See: https://github.com/magento/magento2/issues/7497
-- Set correct shipping method coming from Paazl
-- Add customsValue for Fedex orders
-
+- Bugfix when there are no servicePoints in Paazl Perfect
 
 ## [1.2.1] - 2017-05-05
 ### Changed
