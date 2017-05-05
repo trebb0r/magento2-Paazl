@@ -110,10 +110,12 @@ class RequestManager
                 $client->__setSoapHeaders($requestObject->getHeaders());
             }
 
+            $startTime = microtime(true);
             $response = $client->__soapCall(
                 $requestObject->getMethod(),
                 [$requestObject->getBody()]
             );
+            $responseTime = microtime(true) - $startTime;
 
             if (isset($response->error) && !in_array($response->error->code, [1003,1053])) { // 1053 = missing permission for Paazl Perfect, 1003 = An order with this reference already exists
                 $paazlError = [
@@ -133,14 +135,16 @@ class RequestManager
                 $paazlLog = [
                     'log_type'  =>  'Paazl Request: ' . $requestObject->getMethod(),
                     'log_code'  =>  0,
-                    'message'   =>  print_r($requestObject->getBody(), true)
+                    'message'   =>  print_r($requestObject->getBody(), true),
+                    'response_time' => $responseTime,
                 ];
                 $this->log->write($paazlLog);
 
                 $paazlLog = [
                     'log_type'  =>  'Paazl Response: ' . $requestObject->getMethod(),
                     'log_code'  =>  0,
-                    'message'   =>  print_r($response, true)
+                    'message'   =>  print_r($response, true),
+                    'response_time' => $responseTime,
                 ];
                 $this->log->write($paazlLog);
             }
