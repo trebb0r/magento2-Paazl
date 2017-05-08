@@ -115,7 +115,11 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
 
         // Choose something in Paazl Perfect?
         if (isset($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['callbackUrl'])) {
-            if ($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['callbackUrl'] != "") {
+            if ($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['callbackUrl'] != "" &&
+                isset($this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['delivery']) &&
+                $this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['delivery']['option'] != "" &&
+                $this->_paazlData['results'][$requestMethod][$checkoutStatusKey]['delivery']['deliveryType'] != ""
+            ) {
                 $data = $this->_paazlData['results'][$requestMethod][$checkoutStatusKey];
                 $methodChosen = $data['delivery']['option'];
                 $deliveryType = $data['delivery']['deliveryType'];
