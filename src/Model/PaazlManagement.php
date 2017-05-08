@@ -362,8 +362,14 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             }
             // Try to get information from address?
             if ($houseNumber == '') {
-                $houseNumber = $address->getStreetLine(2);
-                $addition = $address->getStreetLine(3);
+                if ($address->getHouseNumber() != '') {
+                    $houseNumber = $address->getHouseNumber();
+                    $addition = $address->getHouseNumberAddition();
+                }
+                else {
+                    $houseNumber = $address->getStreetLine(2);
+                    $addition = $address->getStreetLine(3);
+                }
             }
             break;
         }

@@ -83,4 +83,6 @@
     </type>
 
     <preference for="Magento\Shipping\Model\Shipping\Labels" type="Paazl\Shipping\Model\Shipping\Labels"/>
+
+    <preference for="Magento\Quote\Model\ShippingMethodManagement" type="Paazl\Shipping\Model\Quote\ShippingMethodManagement"/>
 </config>
