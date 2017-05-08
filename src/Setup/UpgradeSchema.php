@@ -34,6 +34,19 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
+        if (version_compare($context->getVersion(), '1.2.2', '<')) {
+            $setup->getConnection()->addColumn(
+                $setup->getTable('paazl_log'),
+                'response_time',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_FLOAT,
+                    'length' => 255,
+                    'nullable' => true,
+                    'comment' => 'Response time'
+                ]
+            );
+        }
+
         $setup->endSetup();
     }
 }
