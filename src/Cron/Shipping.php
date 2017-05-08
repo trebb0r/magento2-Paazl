@@ -6,6 +6,7 @@
 namespace Paazl\Shipping\Cron;
 
 use Magento\Store\Model\ScopeInterface as StoreScopeInterface;
+use Paazl\Shipping\Helper\Log as LogHelper;
 
 class Shipping
 {
@@ -69,6 +70,9 @@ class Shipping
      */
     protected $userFactory;
 
+    /** @var LogHelper */
+    protected $paazlLog;
+
     /**
      * CommitOrder constructor.
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
@@ -86,6 +90,7 @@ class Shipping
      * @param \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory
      * @param \Magento\Shipping\Model\Shipping\LabelsFactory $labelFactory
      * @param \Magento\User\Model\UserFactory $userFactory
+     * @param LogHelper $log
      */
     public function __construct(
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
@@ -102,7 +107,8 @@ class Shipping
         \Magento\Shipping\Model\ShipmentNotifier $notifier,
         \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory,
         \Magento\Shipping\Model\Shipping\LabelsFactory $labelFactory,
-        \Magento\User\Model\UserFactory $userFactory
+        \Magento\User\Model\UserFactory $userFactory,
+        LogHelper $paazlLog
     ) {
         $this->_orderRepository = $orderRepository;
         $this->_orderFactory = $orderFactory;
@@ -119,6 +125,7 @@ class Shipping
         $this->trackFactory = $trackFactory;
         $this->labelFactory = $labelFactory;
         $this->userFactory = $userFactory;
+        $this->paazlLog = $paazlLog;
     }
 
     public function execute()
@@ -221,6 +228,8 @@ class Shipping
                                 $shipment->getOrder()->setIsInProcess(true);
                             }
                             catch (\Exception $e) {
+                                $this->addPaazlLog(__($e->getMessage()));
+
                                 throw new \Magento\Framework\Exception\LocalizedException(
                                     __($e->getMessage())
                                 );
@@ -229,12 +238,24 @@ class Shipping
                             // issue with admin user not logged in from cron in requestToShipment
                             // @todo: maybe let this be configurable.
                             $admin = $this->userFactory->create()->load(1);
+                            try {
+                                $response = $this->labelFactory->create()->requestToShipmentWithUser($shipment, $admin);
+                            }
+                            catch (\Exception $e) {
+                                $this->addPaazlLog(__($e->getMessage()));
 
-                            $response = $this->labelFactory->create()->requestToShipmentWithUser($shipment, $admin);
+                                throw new \Magento\Framework\Exception\LocalizedException(
+                                    __($e->getMessage())
+                                );
+                            }
+
                             if ($response->hasErrors()) {
+                                $this->addPaazlLog(__($response->getErrors()));
                                 throw new \Magento\Framework\Exception\LocalizedException(__($response->getErrors()));
                             }
                             if (!$response->hasInfo()) {
+                                $this->addPaazlLog(__('Response info is not exist.'));
+
                                 throw new \Magento\Framework\Exception\LocalizedException(__('Response info is not exist.'));
                             }
                             $labelsContent = [];
@@ -270,6 +291,8 @@ class Shipping
                                 $shipment->save();
                             } catch (\Exception $e) {
                                 // @todo: sometimes the creation of the shipment remains when an error occurs. Maybe thrown somewhere else.
+                                $this->addPaazlLog(__($e->getMessage()));
+
                                 throw new \Magento\Framework\Exception\LocalizedException(
                                     __($e->getMessage())
                                 );
@@ -319,5 +342,16 @@ class Shipping
     {
         $searchCriteria = $this->_searchCriteriaBuilder->addFilters($filters)->create();
         return $searchCriteria;
+    }
+
+    protected function addPaazlLog($message)
+    {
+        $paazlLog = [
+            'log_type'  =>  'Cron: paazl_check_shipping',
+            'log_code'  =>  0,
+            'message'   =>  $message,
+            'response_time' => NULL,
+        ];
+        $this->paazlLog->write($paazlLog);
     }
 }
