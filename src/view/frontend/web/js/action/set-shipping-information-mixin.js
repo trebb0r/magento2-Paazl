@@ -30,9 +30,11 @@ define([
             shippingAddress['extension_attributes']['house_number_addition'] = shippingAddress.customAttributes['house_number_addition'];
 
             shippingAddress['city'] = shippingAddress.city;
-            shippingAddress['street'][0] = shippingAddress['extension_attributes']['street_name'];
-            shippingAddress['street'][1] = shippingAddress.customAttributes['house_number'];
-            shippingAddress['street'][2] = shippingAddress.customAttributes['house_number_addition'];
+            if (shippingAddress.customAttributes['house_number']) {
+                shippingAddress['street'][0] = shippingAddress['extension_attributes']['street_name'];
+                shippingAddress['street'][1] = shippingAddress.customAttributes['house_number'];
+                shippingAddress['street'][2] = shippingAddress.customAttributes['house_number_addition'];
+            }
             // pass execution to original action ('Magento_Checkout/js/action/set-shipping-information')
             return originalAction();
         });
