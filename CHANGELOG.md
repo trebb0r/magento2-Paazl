@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Add magento errors to paazl_log for cronjobs
+- Bugfix no housenumber on payment step in checkout
 
 ## [1.2.2] - 2017-05-05
 ### Changed
