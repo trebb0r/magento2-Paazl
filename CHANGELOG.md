@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.2.4] - 2017-05-11
+### Changed
+- Bugfix logged in user could not go to Paazl Perfect popup with saved address
+
+## [1.2.3] - 2017-05-09
+### Changed
 - Add magento errors to paazl_log for cronjobs
+- Bugfix issue when adding address with wrong postcode + house nr or loading a saved adres.
+- Bugfix when checkoutStatus gives a half response
+- Bugfix no house number on payment step in checkout
 
 ## [1.2.2] - 2017-05-05
 ### Changed

@@ -13,7 +13,8 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Ui/js/lib/view/utils/dom-observer',
         'Paazl_Shipping/js/model/shipping-rate-processor/new-address',
-        'Magento_Checkout/js/model/shipping-rate-registry'
+        'Magento_Checkout/js/model/shipping-rate-registry',
+        'Magento_Customer/js/model/address-list'
     ],
     function (
         Component,
@@ -24,7 +25,8 @@ define(
         checkoutData,
         domObserver,
         shippingRateProcessorNewAddress,
-        rateRegistry
+        rateRegistry,
+        addressList
     ) {
         'use strict';
         return Component.extend({
@@ -46,16 +48,50 @@ define(
                                         if (paazlData.hasOwnProperty('addressRequest')) {
                                             var currentPostcode = quote.shippingAddress().postcode;
                                             var addressFromData = checkoutData.getShippingAddressFromData();
-                                            var houseNumber = '';
-                                            var houseNumberAddition = '';
-                                            if (addressFromData.hasOwnProperty('house_number')) {
-                                                houseNumber = addressFromData.house_number;
+                                            var selectedAddress = checkoutData.getSelectedShippingAddress();
+                                            if (selectedAddress) {
+                                                var selectedAddress = checkoutData.getSelectedShippingAddress();
+                                                addressList.some(function (address) {
+                                                    if (selectedAddress == address.getKey()) {
+                                                        addressFromData = address;
+                                                    }
+                                                });
+
+                                                var houseNumber = '';
+                                                var houseNumberAddition = '';
+                                                if (addressFromData.hasOwnProperty('houseNumber')) {
+                                                    houseNumber = addressFromData.houseNumber;
+                                                }
+                                                else if (addressFromData.street.length >= 2) {
+                                                    houseNumber = addressFromData.street[1];
+                                                }
+                                                if (addressFromData.hasOwnProperty('houseNumberAddition')) {
+                                                    houseNumberAddition = addressFromData.houseNumberAddition;
+                                                }
+                                                else if (addressFromData.street.length >= 3) {
+                                                    houseNumber = addressFromData.street[2];
+                                                }
+                                                var requestIdentifier = currentPostcode + '_' + houseNumber
+                                                    + '_' + houseNumberAddition + '_' + addressFromData.countryId;
                                             }
-                                            if (addressFromData.hasOwnProperty('house_number_addition')) {
-                                                houseNumberAddition = addressFromData.house_number_addition;
+                                            else {
+                                                var houseNumber = '';
+                                                var houseNumberAddition = '';
+                                                if (addressFromData.hasOwnProperty('house_number')) {
+                                                    houseNumber = addressFromData.house_number;
+                                                }
+                                                else if (addressFromData.street.length >= 2) {
+                                                    houseNumber = addressFromData.street[1];
+                                                }
+                                                if (addressFromData.hasOwnProperty('house_number_addition')) {
+                                                    houseNumberAddition = addressFromData.house_number_addition;
+                                                }
+                                                else if (addressFromData.street.length >= 3) {
+                                                    houseNumber = addressFromData.street[2];
+                                                }
+                                                var requestIdentifier = currentPostcode + '_' + houseNumber
+                                                    + '_' + houseNumberAddition + '_' + addressFromData.country_id;
                                             }
-                                            var requestIdentifier = currentPostcode + '_' + houseNumber
-                                                + '_' + houseNumberAddition + '_' + addressFromData.country_id;
 
                                             var address = {};
                                             _.each(paazlData['addressRequest'], function (request) {

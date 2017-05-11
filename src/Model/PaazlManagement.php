@@ -67,6 +67,12 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      */
     protected $timezoneInterface;
 
+
+    /**
+     * @var \Magento\Quote\Api\Data\AddressExtensionFactory
+     */
+    protected $addressExtensionFactory;
+
     /**
      * PaazlManagement constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -77,6 +83,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
      * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
+     * @param \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -86,7 +93,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         \Paazl\Shipping\Helper\Request\Order\Proxy $orderHelper,
         \Magento\Quote\Model\QuoteFactory $quoteFactory,
         \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory,
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
+        \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -97,6 +105,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->quoteFactory = $quoteFactory;
         $this->quoteAddressRateCollectionFactory = $quoteAddressRateCollectionFactory;
         $this->timezoneInterface = $timezoneInterface;
+        $this->addressExtensionFactory = $addressExtensionFactory;
     }
 
 
@@ -360,6 +369,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $houseNumber = '';
             $address = $item->getAddress();
             $extensionAttributes = $address->getExtensionAttributes();
+
+            $addressExtension = $extensionAttributes
+                ? $extensionAttributes
+                : $this->addressExtensionFactory->create();
+
             if (!is_null($extensionAttributes)) {
                 $houseNumber = $extensionAttributes->getHouseNumber();
                 $addition = $extensionAttributes->getHouseNumberAddition();
@@ -373,6 +387,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 else {
                     $houseNumber = $address->getStreetLine(2);
                     $addition = $address->getStreetLine(3);
+
+                    $addressExtension->setHouseNumber($houseNumber);
+                    $addressExtension->setHouseNumberAddition($addition);
+                    $address->setExtensionAttributes($addressExtension);
+                    $address->save();
                 }
             }
             break;
