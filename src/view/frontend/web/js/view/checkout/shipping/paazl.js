@@ -14,7 +14,8 @@ define(
         'Magento_Ui/js/lib/view/utils/dom-observer',
         'Paazl_Shipping/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/model/shipping-rate-registry',
-        'Magento_Customer/js/model/address-list'
+        'Magento_Customer/js/model/address-list',
+        'Magento_Customer/js/model/customer'
     ],
     function (
         Component,
@@ -26,7 +27,8 @@ define(
         domObserver,
         shippingRateProcessorNewAddress,
         rateRegistry,
-        addressList
+        addressList,
+        customer
     ) {
         'use strict';
         return Component.extend({
@@ -46,52 +48,10 @@ define(
                                     try {
                                         var paazlData = JSON.parse(rate['extension_attributes']['paazl_data']);
                                         if (paazlData.hasOwnProperty('addressRequest')) {
-                                            var currentPostcode = quote.shippingAddress().postcode;
-                                            var addressFromData = checkoutData.getShippingAddressFromData();
-                                            var selectedAddress = checkoutData.getSelectedShippingAddress();
-                                            if (selectedAddress) {
-                                                var selectedAddress = checkoutData.getSelectedShippingAddress();
-                                                addressList.some(function (address) {
-                                                    if (selectedAddress == address.getKey()) {
-                                                        addressFromData = address;
-                                                    }
-                                                });
+                                            var addressInfo = self.getAddressInfo();
 
-                                                var houseNumber = '';
-                                                var houseNumberAddition = '';
-                                                if (addressFromData.hasOwnProperty('houseNumber')) {
-                                                    houseNumber = addressFromData.houseNumber;
-                                                }
-                                                else if (addressFromData.street.length >= 2) {
-                                                    houseNumber = addressFromData.street[1];
-                                                }
-                                                if (addressFromData.hasOwnProperty('houseNumberAddition')) {
-                                                    houseNumberAddition = addressFromData.houseNumberAddition;
-                                                }
-                                                else if (addressFromData.street.length >= 3) {
-                                                    houseNumber = addressFromData.street[2];
-                                                }
-                                                var requestIdentifier = currentPostcode + '_' + houseNumber
-                                                    + '_' + houseNumberAddition + '_' + addressFromData.countryId;
-                                            }
-                                            else {
-                                                var houseNumber = '';
-                                                var houseNumberAddition = '';
-                                                if (addressFromData.hasOwnProperty('house_number')) {
-                                                    houseNumber = addressFromData.house_number;
-                                                }
-                                                else if (addressFromData.street.length >= 2) {
-                                                    houseNumber = addressFromData.street[1];
-                                                }
-                                                if (addressFromData.hasOwnProperty('house_number_addition')) {
-                                                    houseNumberAddition = addressFromData.house_number_addition;
-                                                }
-                                                else if (addressFromData.street.length >= 3) {
-                                                    houseNumber = addressFromData.street[2];
-                                                }
-                                                var requestIdentifier = currentPostcode + '_' + houseNumber
-                                                    + '_' + houseNumberAddition + '_' + addressFromData.country_id;
-                                            }
+                                            var requestIdentifier = addressInfo['postcode'] + '_' + addressInfo['house_number']
+                                                + '_' + addressInfo['house_number_addition'] + '_' + addressInfo['country_id'];
 
                                             var address = {};
                                             _.each(paazlData['addressRequest'], function (request) {
@@ -125,6 +85,13 @@ define(
 
 
                                             if (self.paazlPerfectLoaded != true) {
+                                                // For logged in users create a dummy email input form
+                                                if ($('#customer-email').length == 0) {
+                                                    $('body').append(
+                                                        '<input id="customer-email"/>'
+                                                    );
+                                                }
+
                                                 // load the url and show
                                                 $('input[name="postcode"]').attr('data-pcm-input', 'consigneePostalCode');
                                                 $('select[name="country_id"]').attr('data-pcm-input', 'consigneeCountryCode');
@@ -138,6 +105,13 @@ define(
                                                     domObserver.get('.paazlperfect-link',function () {
                                                         $('.paazlperfect-link').click(function (e) {
                                                             e.preventDefault();
+
+                                                            var addressInfo = self.getAddressInfo();
+                                                            $('input[name="postcode"]').val(addressInfo['postcode']);
+                                                            $('select[name="country_id"]').val(addressInfo['country_id']);
+                                                            $('#customer-email').val(addressInfo['email']);
+                                                            $('input[name="telephone"]').val(addressInfo['telephone']);
+
                                                             var methodCode = $(this).attr('method_code');
                                                             if (methodCode == 'SERVICE_POINT') {
                                                                 $('#checkout-paazl-type').val('servicePoint');
@@ -162,6 +136,78 @@ define(
                     });
                     return this;
                 });
+            },
+
+            getAddressInfo: function () {
+                var addressInfo = new Array();
+
+                var houseNumber = '';
+                var houseNumberAddition = '';
+                var currentCountryId = '';
+                var currentTelephone = '';
+                var currentEmail = '';
+                var currentPostcode = quote.shippingAddress().postcode;
+                var addressFromData = checkoutData.getShippingAddressFromData();
+                var selectedAddress = checkoutData.getSelectedShippingAddress();
+                if (selectedAddress) {
+                    // Logged in user with selected address
+                    var selectedAddress = checkoutData.getSelectedShippingAddress();
+                    addressList.some(function (address) {
+                        if (selectedAddress == address.getKey()) {
+                            addressFromData = address;
+                        }
+                    });
+
+                    if (addressFromData.hasOwnProperty('houseNumber')) {
+                        houseNumber = addressFromData.houseNumber;
+                    }
+                    else if (addressFromData.street.length >= 2) {
+                        houseNumber = addressFromData.street[1];
+                    }
+                    if (addressFromData.hasOwnProperty('houseNumberAddition')) {
+                        houseNumberAddition = addressFromData.houseNumberAddition;
+                    }
+                    else if (addressFromData.street.length >= 3) {
+                        houseNumberAddition = addressFromData.street[2];
+                    }
+                    var requestIdentifier = currentPostcode + '_' + houseNumber
+                        + '_' + houseNumberAddition + '_' + addressFromData.countryId;
+                    currentCountryId = addressFromData.countryId;
+                    currentTelephone = addressFromData.telephone;
+                    currentEmail = addressFromData.email ? addressFromData.email : customer.customerData.email;
+                    currentPostcode = addressFromData.postcode;
+                }
+                else {
+                    // Logged out user or new-address
+                    if (addressFromData.hasOwnProperty('house_number')) {
+                        houseNumber = addressFromData.house_number;
+                    }
+                    else if (addressFromData.street.length >= 2) {
+                        houseNumber = addressFromData.street[1];
+                    }
+                    if (addressFromData.hasOwnProperty('house_number_addition')) {
+                        houseNumberAddition = addressFromData.house_number_addition;
+                    }
+                    else if (addressFromData.street.length >= 3) {
+                        houseNumberAddition = addressFromData.street[2];
+                    }
+                    var requestIdentifier = currentPostcode + '_' + houseNumber
+                        + '_' + houseNumberAddition + '_' + addressFromData.country_id;
+                    currentCountryId = addressFromData.country_id;
+                    currentTelephone = addressFromData.telephone;
+                    currentEmail = addressFromData.email ? addressFromData.email : customer.customerData.email;
+                    currentEmail = currentEmail ? currentEmail : $('#customer-email').val();
+                    currentPostcode = addressFromData.postcode;
+                }
+
+                addressInfo['country_id'] = currentCountryId;
+                addressInfo['telephone'] = currentTelephone;
+                addressInfo['email'] = currentEmail;
+                addressInfo['postcode'] = currentPostcode;
+                addressInfo['house_number'] = houseNumber;
+                addressInfo['house_number_addition'] = houseNumberAddition;
+
+                return addressInfo;
             },
 
             processResult: function (address) {

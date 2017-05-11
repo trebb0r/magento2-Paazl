@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.2.4] - 2017-05-11
 ### Changed
 - Bugfix logged in user could not go to Paazl Perfect popup with saved address
+- Bugfix load correct address data for Paazl Perfect popup with saved address
 
 ## [1.2.3] - 2017-05-09
 ### Changed
