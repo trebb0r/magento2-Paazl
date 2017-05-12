@@ -179,8 +179,7 @@ define(
                 }
                 else {
                     // Logged out user or new-address
-                    if (addressFromData) {
-                        console.log('has addressFromData');
+                    if (addressFromData && (addressFromData.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
                         if (addressFromData.hasOwnProperty('house_number')) {
                             houseNumber = addressFromData.house_number;
                         }
@@ -203,13 +202,19 @@ define(
                         currentPostcode = addressFromData.postcode;
                     }
                     else {
-                        console.log('has quote shippingaddress');
                         if (quote.shippingAddress().street.length >= 2) {
                             houseNumber = quote.shippingAddress().street[1];
+
+                            if (quote.shippingAddress().street.length >= 3) {
+                                houseNumberAddition = quote.shippingAddress().street[2];
+                            }
                         }
-                        if (quote.shippingAddress().street.length >= 3) {
-                            houseNumberAddition = quote.shippingAddress().street[2];
+                        else {
+                            var parts = this.getStreetParts(quote.shippingAddress().street);
+                            houseNumber = parts['house_number'];
+                            houseNumberAddition = parts['addition'];
                         }
+
                         var requestIdentifier = currentPostcode + '_' + houseNumber
                             + '_' + houseNumberAddition + '_' + quote.shippingAddress().countryId;
 
@@ -229,6 +234,22 @@ define(
                 addressInfo['house_number_addition'] = houseNumberAddition;
 
                 return addressInfo;
+            },
+
+            getStreetParts: function (street) {
+                street = $.trim(street);
+                var myRegexp = /^(\d*[\wäöüß\d '\-\.]+)[,\s]+(\d+)\s*([\wäöüß\d\-\/]*)$/i;
+                var matches = myRegexp.exec(street);
+                if (matches) {
+                    var parts = {'street': matches[1],'house_number':matches[2],'addition':matches[3]};
+                }
+                else {
+                    myRegexp = /^(\d+)([,\s])+([\wäöüß\d '\-\.]+)$/;
+                    matches = myRegexp.exec(street);
+                    var parts = {'house_number': matches[1],'addition':matches[2],'street':matches[3]};
+                }
+
+                return parts;
             },
 
             processResult: function (address) {
