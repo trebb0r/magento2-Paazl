@@ -179,25 +179,46 @@ define(
                 }
                 else {
                     // Logged out user or new-address
-                    if (addressFromData.hasOwnProperty('house_number')) {
-                        houseNumber = addressFromData.house_number;
+                    if (addressFromData) {
+                        console.log('has addressFromData');
+                        if (addressFromData.hasOwnProperty('house_number')) {
+                            houseNumber = addressFromData.house_number;
+                        }
+                        else if (addressFromData.street.length >= 2) {
+                            houseNumber = addressFromData.street[1];
+                        }
+                        if (addressFromData.hasOwnProperty('house_number_addition')) {
+                            houseNumberAddition = addressFromData.house_number_addition;
+                        }
+                        else if (addressFromData.street.length >= 3) {
+                            houseNumberAddition = addressFromData.street[2];
+                        }
+                        var requestIdentifier = currentPostcode + '_' + houseNumber
+                            + '_' + houseNumberAddition + '_' + addressFromData.country_id;
+
+                        currentCountryId = addressFromData.country_id;
+                        currentTelephone = addressFromData.telephone;
+                        currentEmail = addressFromData.email ? addressFromData.email : customer.customerData.email;
+                        currentEmail = currentEmail ? currentEmail : $('#customer-email').val();
+                        currentPostcode = addressFromData.postcode;
                     }
-                    else if (addressFromData.street.length >= 2) {
-                        houseNumber = addressFromData.street[1];
+                    else {
+                        console.log('has quote shippingaddress');
+                        if (quote.shippingAddress().street.length >= 2) {
+                            houseNumber = quote.shippingAddress().street[1];
+                        }
+                        if (quote.shippingAddress().street.length >= 3) {
+                            houseNumberAddition = quote.shippingAddress().street[2];
+                        }
+                        var requestIdentifier = currentPostcode + '_' + houseNumber
+                            + '_' + houseNumberAddition + '_' + quote.shippingAddress().countryId;
+
+                        currentCountryId = quote.shippingAddress().countryId;
+                        currentTelephone = quote.shippingAddress().telephone;
+                        currentEmail = quote.shippingAddress().email ? quote.shippingAddress().email : customer.customerData.email;
+                        currentEmail = currentEmail ? currentEmail : $('#customer-email').val();
+                        currentPostcode = quote.shippingAddress().postcode;
                     }
-                    if (addressFromData.hasOwnProperty('house_number_addition')) {
-                        houseNumberAddition = addressFromData.house_number_addition;
-                    }
-                    else if (addressFromData.street.length >= 3) {
-                        houseNumberAddition = addressFromData.street[2];
-                    }
-                    var requestIdentifier = currentPostcode + '_' + houseNumber
-                        + '_' + houseNumberAddition + '_' + addressFromData.country_id;
-                    currentCountryId = addressFromData.country_id;
-                    currentTelephone = addressFromData.telephone;
-                    currentEmail = addressFromData.email ? addressFromData.email : customer.customerData.email;
-                    currentEmail = currentEmail ? currentEmail : $('#customer-email').val();
-                    currentPostcode = addressFromData.postcode;
                 }
 
                 addressInfo['country_id'] = currentCountryId;

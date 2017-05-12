@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Bugfix error message when Paazl is offline
+- Bugfix logged in user could not go to Paazl Perfect popup with saved address when coming from product
+- Fixup region
 
 ## [1.2.4] - 2017-05-11
 ### Changed
