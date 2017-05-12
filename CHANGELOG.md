@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.5] - 2017-05-12
+### Changed
+- Bugfix error message when Paazl is offline
+- Bugfix logged in user could not go to Paazl Perfect popup with saved address when coming from product
+- Fixup region
+
 ## [1.2.4] - 2017-05-11
 ### Changed
 - Bugfix logged in user could not go to Paazl Perfect popup with saved address

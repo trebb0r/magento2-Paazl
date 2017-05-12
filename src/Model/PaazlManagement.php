@@ -386,11 +386,34 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 }
                 else {
                     $houseNumber = $address->getStreetLine(2);
-                    $addition = $address->getStreetLine(3);
+                    if ($houseNumber) {
+                        $addition = $address->getStreetLine(3);
 
-                    $addressExtension->setHouseNumber($houseNumber);
-                    $addressExtension->setHouseNumberAddition($addition);
-                    $address->setExtensionAttributes($addressExtension);
+                        $addressExtension->setHouseNumber($houseNumber);
+                        $addressExtension->setHouseNumberAddition($addition);
+                        $address->setExtensionAttributes($addressExtension);
+                    }
+                    else {
+                        // Get street, house number, etc from line 1
+                        $parts = $this->_addressHelper->getStreetParts($address->getStreet());
+
+                        $street = $parts['street'];
+                        $houseNumber = $parts['house_number'];
+                        $addition = $parts['addition'];
+
+                        $addressExtension->setHouseNumber($houseNumber);
+                        $addressExtension->setHouseNumberAddition($addition);
+
+                        // Fixup region
+                        if ($address->getRegion() != '') {
+                            $address->setRegion($address->getRegion()->getRegionId());
+                        }
+
+                        // @todo Should we fixup wrong format of street?
+                        //$address->setStreet(implode("\n", array_filter($parts)));
+                        $address->setExtensionAttributes($addressExtension);
+                    }
+
                     $address->save();
                 }
             }

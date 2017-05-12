@@ -160,7 +160,16 @@ class RequestManager
         $requestObject->setErrors($errors);
         if (count($errors)) {
             if ($this->showRealErrorMsg) {
-                $throwMsg = $errors[0]['message'];
+                if (isset($errors[0]['message'])) {
+                    $throwMsg = $errors[0]['message'];
+                }
+                elseif (is_string($errors[0])) {
+                    $throwMsg = $errors[0];
+                }
+                else {
+                    $throwMsg = $this->customErrorMsg;
+                }
+
             }
             else {
                 $throwMsg = $this->customErrorMsg;
