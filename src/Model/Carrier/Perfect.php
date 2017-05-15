@@ -48,6 +48,15 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                         $this->_setCachedQuotes($dataKey, $result);
                     }
                 }
+
+                // Make sure shippingOptionRequest is last and done after updateOrder again.
+                $shippingOptionRequest = $this->_paazlData['requests']['shippingOption'];
+                unset($this->_paazlData['requests']['shippingOption']);
+                $this->_paazlData['requests']['shippingOption'] = $shippingOptionRequest;
+                if (isset($this->_paazlData['requests']['updateOrderRequest'])) {
+                    $this->_setCachedQuotes($this->_paazlData['requests']['shippingOption']->getRequestKey(), null);
+                }
+
                 foreach ($this->_paazlData['requests'] as $requestMethod => $request) {
                     $response = $this->_getCachedQuotes($request->getRequestKey());
                     if (is_null($response)) {

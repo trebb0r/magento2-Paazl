@@ -33,6 +33,10 @@ class Matrix extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     {
         if (null === $this->_options) {
             $options = [];
+            $options[] = [
+                'label' => 'None',
+                'value' => '',
+            ];
             $alphas = range('A', 'Z');
             foreach ($alphas as $key => $alpha) {
                 $options[] = [
