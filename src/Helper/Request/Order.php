@@ -23,19 +23,27 @@ class Order extends Generic
     protected $productFactory;
 
     /**
+     * @var \Paazl\Shipping\Model\Attribute\Source\Matrix
+     */
+    protected $attributeSourceMatrix;
+
+    /**
      * Order constructor.
      * @param Context $context
      * @param \Paazl\Shipping\Model\PaazlManagement $_paazlManagement
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Paazl\Shipping\Model\Attribute\Source\Matrix $attributeSourceMatrix
      */
     public function __construct(
         Context $context,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
-        \Magento\Catalog\Model\ProductFactory $productFactory
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Paazl\Shipping\Model\Attribute\Source\Matrix $attributeSourceMatrix
     )
     {
         $this->_paazlManagement = $_paazlManagement;
         $this->productFactory = $productFactory;
+        $this->attributeSourceMatrix = $attributeSourceMatrix;
         parent::__construct($context);
     }
 
@@ -71,6 +79,13 @@ class Order extends Generic
                 foreach ($attributes as $nodeName => $attributeCode) {
                     $productData[$nodeName] = $item->getProduct()->getData($attributeCode);
                     $productData[$nodeName] = $product->getData($attributeCode);
+
+                    if ($attributeCode == 'matrix') {
+                        $productData[$nodeName] = $this->attributeSourceMatrix->getOptionText($productData[$nodeName]);
+                        if (!$productData[$nodeName]) {
+                            $productData[$nodeName] = '';
+                        }
+                    }
                 }
 
                 $productData['unitPrice'] = $item->getData('price_incl_tax');
