@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.8] - 2017-05-24
+### Changed
+- added body of request during exception logging
+
 ## [1.2.7] - 2017-05-24
 ### Changed
 - prevent undefined variable responseTime during exception

@@ -163,6 +163,14 @@ class RequestManager
                 'response_time' => '',
             ];
             $this->log->write($paazlLog);
+
+            $paazlLog = [
+                'log_type'  =>  'Request body',
+                'log_code'  =>  1,
+                'message'   =>  print_r($requestObject->getBody(), true),
+                'response_time' => '',
+            ];
+            $this->log->write($paazlLog);
         }
 
         $requestObject->setErrors($errors);
