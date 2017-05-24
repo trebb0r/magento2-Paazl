@@ -160,7 +160,7 @@ class RequestManager
                 'log_type'  =>  'Paazl Request: ' . $requestObject->getMethod(),
                 'log_code'  =>  1,
                 'message'   =>  print_r($client->__getLastRequest(), true),
-                'response_time' => $responseTime,
+                'response_time' => '',
             ];
             $this->log->write($paazlLog);
         }
