@@ -6,10 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.7] - 2017-05-24
+### Changed
+- prevent undefined variable responseTime during exception
+
 ## [1.2.6] - 2017-05-24
 ### Changed
 - Bugfix matrix code
-- Add more debug information to Paazl Log when Exception occurs
+- Add more debug information to Paazl Log when exception occurs
 
 ## [1.2.5] - 2017-05-12
 ### Changed
