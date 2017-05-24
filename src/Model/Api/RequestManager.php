@@ -155,6 +155,14 @@ class RequestManager
         } catch (\Exception $e) {
             $errors = [$e->getMessage()];
             $requestObject->setLastRequest($client->__getLastRequest());
+
+            $paazlLog = [
+                'log_type'  =>  'Paazl Request: ' . $requestObject->getMethod(),
+                'log_code'  =>  1,
+                'message'   =>  print_r($client->__getLastRequest(), true),
+                'response_time' => $responseTime,
+            ];
+            $this->log->write($paazlLog);
         }
 
         $requestObject->setErrors($errors);
