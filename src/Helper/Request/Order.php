@@ -82,7 +82,7 @@ class Order extends Generic
 
                     if ($attributeCode == 'matrix') {
                         $productData[$nodeName] = $this->attributeSourceMatrix->getOptionText($productData[$nodeName]);
-                        if (!$productData[$nodeName]) {
+                        if (!$productData[$nodeName] || $productData[$nodeName] == 'None') {
                             $productData[$nodeName] = '';
                         }
                     }

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.9] - 2017-06-02
+### Changed
+- Bugfix matrix code when empty
+
 ## [1.2.8] - 2017-05-24
 ### Changed
 - added body of request during exception logging
