@@ -299,6 +299,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $updateOrderRequest = $this->_requestBuilder->build('PaazlUpdateOrderRequest', $orderRequestData);
             $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
         }
+
+        // Always add a updateOrderRequest
+        $updateOrderRequest = $this->_requestBuilder->build('PaazlUpdateOrderRequest', $orderRequestData);
+        $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
+
         // "address" request
         if (!is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
             $dutchPostcode = $this->_addressHelper->isDutchPostcode($addressData['postcode'], true);

@@ -11,3 +11,9 @@ composer require paazl/magento2
 
 bin/magento setup:upgrade
 ```
+
+## Configure
+The following settings are required to be able to create shipments:
+
+- Configure Stores -> Configuration -> General -> Store Information
+- Configure Stores -> Configuration -> Shipping Settings -> Origin
