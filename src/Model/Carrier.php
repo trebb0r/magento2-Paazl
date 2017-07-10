@@ -196,6 +196,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
 
         $paazlData = $this->registry->registry('paazlData');
 
+        $this->registry->register('paazl_current_store', $request->getStoreId(), true);
+
         // If we switch Paazl account the session get's mixed up. Easiest to see if checkoutStatusRequest has more than 1 result
         if (isset($paazlData['results']) && isset($paazlData['results']['checkoutStatusRequest'])) {
             if (count($paazlData['results']['checkoutStatusRequest']) > 1) {

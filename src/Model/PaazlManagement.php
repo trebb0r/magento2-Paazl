@@ -74,6 +74,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     protected $addressExtensionFactory;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
      * PaazlManagement constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
@@ -84,6 +89,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
      * @param \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
+     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -94,7 +100,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         \Magento\Quote\Model\QuoteFactory $quoteFactory,
         \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
-        \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
+        \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory,
+        \Magento\Framework\Registry $registry
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -106,6 +113,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->quoteAddressRateCollectionFactory = $quoteAddressRateCollectionFactory;
         $this->timezoneInterface = $timezoneInterface;
         $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->registry = $registry;
     }
 
 
@@ -139,9 +147,10 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      */
     public function getReferencePrefix()
     {
+        $storeId = $this->registry->registry('paazl_current_store');
         $prefix = '';
-        if ($this->_scopeConfig->isSetFlag(self::XML_PATH_ORDER_REFERENCE_ADD_PREFIX)) {
-            $prefix = trim((string)$this->_scopeConfig->getValue(self::XML_PATH_ORDER_REFERENCE_PREFIX));
+        if ($this->_scopeConfig->isSetFlag(self::XML_PATH_ORDER_REFERENCE_ADD_PREFIX, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+            $prefix = trim((string)$this->_scopeConfig->getValue(self::XML_PATH_ORDER_REFERENCE_PREFIX, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId));
         }
         return $prefix;
     }
@@ -150,10 +159,10 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param $weight
      * @return float
      */
-    public function getConvertedWeight($weight)
+    public function getConvertedWeight($weight, $storeId = null)
     {
         if (is_null($this->weightConversion)) {
-            $weightConversion = $this->_scopeConfig->getValue(self::XML_PATH_WEIGHT_CONVERSION_RATIO);
+            $weightConversion = $this->_scopeConfig->getValue(self::XML_PATH_WEIGHT_CONVERSION_RATIO, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
             $this->weightConversion = (!is_null($weightConversion)) ? (float)$weightConversion : (float)1;
         }
 
@@ -184,7 +193,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         $rate = $rateCollection->fetchItem();
 
-        $extOrderId = $this->getReferencePrefix() . $order->getIncrementId();
+        $extOrderId = $this->getReferencePrefix() . $order->getQuoteId();
 
         $assuredAmount = 0;
         if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {
@@ -203,7 +212,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'type' => 'delivery',
                     'identifier' => null,
                     'option' => $rate['method'],
-                    'orderWeight' => $this->getConvertedWeight($order->getWeight()),
+                    'orderWeight' => $this->getConvertedWeight($order->getWeight(), $order->getStoreId()),
                     'description' => 'Delivery', //@todo Find out what description is expected
                     'assuredAmount' => $assuredAmount,
                     'assuredAmountCurrency' => 'EUR',

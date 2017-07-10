@@ -45,6 +45,11 @@ class CommitOrder
     protected $_logger;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
      * CommitOrder constructor.
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
@@ -56,6 +61,7 @@ class CommitOrder
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Paazl\Shipping\Model\PaazlManagement $paazlManagement
      * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
@@ -67,7 +73,8 @@ class CommitOrder
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Framework\Registry $registry
     ) {
         $this->_orderRepository = $orderRepository;
         $this->_orderFactory = $orderFactory;
@@ -79,6 +86,7 @@ class CommitOrder
         $this->_scopeConfig = $scopeConfig;
         $this->_paazlManagement = $_paazlManagement;
         $this->_logger = $logger;
+        $this->registry = $registry;
     }
 
     public function execute()
@@ -94,10 +102,12 @@ class CommitOrder
 
             foreach ($orders as $orderToCommit) {
                 $order = $this->_orderFactory->create()->loadByIncrementId($orderToCommit->getIncrementId());
+                $this->registry->unregister('paazl_current_store');
+                $this->registry->register('paazl_current_store', $order->getStoreId());
 
                 if ($order->getExtOrderId() == 'error-1002') continue;
 
-                $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getIncrementId();
+                $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getQuoteId();
 
                 $response = $this->_paazlManagement->processOrderCommitRequest($order);
                 if (isset($response['succes'])) {
