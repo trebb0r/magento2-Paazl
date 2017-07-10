@@ -158,14 +158,14 @@ define(
                         }
                     });
 
-                    if (addressFromData.hasOwnProperty('houseNumber')) {
-                        houseNumber = addressFromData.houseNumber;
+                    if (addressFromData.custom_attributes.hasOwnProperty('houseNumber')) {
+                        houseNumber = addressFromData.custom_attributes.houseNumber;
                     }
                     else if (addressFromData.street.length >= 2) {
                         houseNumber = addressFromData.street[1];
                     }
-                    if (addressFromData.hasOwnProperty('houseNumberAddition')) {
-                        houseNumberAddition = addressFromData.houseNumberAddition;
+                    if (addressFromData.custom_attributes.hasOwnProperty('houseNumberAddition')) {
+                        houseNumberAddition = addressFromData.custom_attributes.houseNumberAddition;
                     }
                     else if (addressFromData.street.length >= 3) {
                         houseNumberAddition = addressFromData.street[2];
@@ -179,15 +179,15 @@ define(
                 }
                 else {
                     // Logged out user or new-address
-                    if (addressFromData && (addressFromData.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
-                        if (addressFromData.hasOwnProperty('house_number')) {
-                            houseNumber = addressFromData.house_number;
+                    if (addressFromData && (addressFromData.custom_attributes.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number')) {
+                            houseNumber = addressFromData.custom_attributes.house_number;
                         }
                         else if (addressFromData.street.length >= 2) {
                             houseNumber = addressFromData.street[1];
                         }
-                        if (addressFromData.hasOwnProperty('house_number_addition')) {
-                            houseNumberAddition = addressFromData.house_number_addition;
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number_addition')) {
+                            houseNumberAddition = addressFromData.custom_attributes.house_number_addition;
                         }
                         else if (addressFromData.street.length >= 3) {
                             houseNumberAddition = addressFromData.street[2];
@@ -262,10 +262,10 @@ define(
                 });
 
                 var elements = {
-                    streetName: $("input[name='street_name']"),
+                    streetName: $("input[name='custom_attributes[street_name]']"),
                     street: $("input[name='street[0]']"),
-                    houseNumber: $("input[name='street[1]']"),
-                    houseNrAddition: $("input[name='street[2]']"),
+                    houseNumber: $("input[name='custom_attributes[house_number]']"),
+                    houseNrAddition: $("input[name='custom_attributes[house_number_addition]']"),
                     city: $("input[name='city']")
                 };
 
@@ -294,8 +294,8 @@ define(
                     // Enable elements
                     this.enableElements(elements, []); //  ['street', 'city']
                     var streetName = '';
-                    if (addressFromData.street_name !== undefined) {
-                        streetName = addressFromData.street_name;
+                    if (addressFromData.custom_attributes.street_name !== undefined || addressFromData.custom_attributes.street_name !== '') {
+                        streetName = addressFromData.custom_attributes.street_name;
                     }
                     shippingData = {
                         city: addressFromData.city,

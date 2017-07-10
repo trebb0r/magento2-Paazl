@@ -21,7 +21,11 @@ define(
                 var self = this;
                 this.validationErrors = [];
                 $.each(validationRules.getRules(), function(field, rule) {
-                    if (rule.required && utils.isEmpty(address[field])) {
+                    var addressField = address[field];
+                    if (rule.custom_attribute) {
+                        addressField = address['custom_attributes'][field];
+                    }
+                    if (rule.required && utils.isEmpty(addressField)) {
                         var message = $t('Field ') + field + $t(' is required.');
                         self.validationErrors.push(message);
                     }

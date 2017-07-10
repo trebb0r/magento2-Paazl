@@ -14,9 +14,9 @@ define([
 
     return function (defaultProcessor) {
         defaultProcessor.getRates = wrapper.wrap(defaultProcessor.getRates, function (originalAction, address) {
-            var streetName = $("input[name='street_name']").val();
-            var houseNumber = $("input[name='house_number']").val();
-            var houseNumberAddition = $("input[name='house_number_addition']").val();
+            var streetName = $("input[name='custom_attributes[street_name]']").val();
+            var houseNumber = $("input[name='custom_attributes[house_number]']").val();
+            var houseNumberAddition = $("input[name='custom_attributeshouse_number_addition]']").val();
 
             var localStorageData = checkoutData.getShippingAddressFromData();
 
@@ -43,7 +43,7 @@ define([
             if (address.extension_attributes === undefined) {
                 address.extension_attributes = {};
             }
-            address.extension_attributes.street_name = streetName;
+            address.customAttributes.street_name = streetName;
             address.customAttributes.house_number = houseNumber;
             address.customAttributes.house_number_addition = houseNumberAddition;
 

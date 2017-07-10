@@ -11,7 +11,7 @@
     <!-- ko text: currentBillingAddress().telephone --><!-- /ko --><br/>
     <!-- ko foreach: { data: currentBillingAddress().customAttributes, as: 'element' } -->
         <!-- ko foreach: { data: Object.keys(element), as: 'attribute' } -->
-            <!-- ko if: attribute != 'house_number' && attribute != 'house_number_addition' -->
+            <!-- ko if: attribute != 'street_name' && attribute != 'house_number' && attribute != 'house_number_addition' -->
                 <!-- ko text: attribute --><!-- /ko -->
                 <!-- ko if: element[attribute].value != null -->
                     <!-- ko text: element[attribute].value --><!-- /ko -->

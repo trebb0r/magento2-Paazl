@@ -389,20 +389,24 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 : $this->addressExtensionFactory->create();
 
             if (!is_null($extensionAttributes)) {
+                $streetName = $extensionAttributes->getStreetName();
                 $houseNumber = $extensionAttributes->getHouseNumber();
                 $addition = $extensionAttributes->getHouseNumberAddition();
             }
             // Try to get information from address?
             if ($houseNumber == '') {
                 if ($address->getHouseNumber() != '') {
+                    $streetName = $address->getStreetName();
                     $houseNumber = $address->getHouseNumber();
                     $addition = $address->getHouseNumberAddition();
                 }
                 else {
+                    $streetName = $address->getStreetLine(1);
                     $houseNumber = $address->getStreetLine(2);
                     if ($houseNumber) {
                         $addition = $address->getStreetLine(3);
 
+                        $addressExtension->setStreetName($streetName);
                         $addressExtension->setHouseNumber($houseNumber);
                         $addressExtension->setHouseNumberAddition($addition);
                         $address->setExtensionAttributes($addressExtension);
@@ -415,6 +419,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                         $houseNumber = $parts['house_number'];
                         $addition = $parts['addition'];
 
+                        $addressExtension->setStreetName($street);
                         $addressExtension->setHouseNumber($houseNumber);
                         $addressExtension->setHouseNumberAddition($addition);
 
@@ -435,12 +440,21 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         }
 
         $addressData = [
-            'street_parts' => $this->_addressHelper->getMultiLineStreetParts($request->getDestStreet()),
+            'street_parts' => [
+                'street' => (isset($streetName)) ? $streetName : null,
+                'house_number' => (isset($houseNumber)) ? $houseNumber : null,
+                'addition' => (isset($addition)) ? $addition : null,
+            ],
             'postcode' => $request->getDestPostcode(),
             'country_id' => $request->getDestCountryId(),
+            'street_name' => (isset($streetName)) ? $streetName : null,
             'house_number' => (isset($houseNumber)) ? $houseNumber : null,
-            'house_number_addition' => (isset($addition)) ? $addition : null
+            'house_number_addition' => (isset($addition)) ? $addition : null,
         ];
+
+        if (!$addressData['street_parts']['street']) {
+            $addressData['street_parts'] = $this->_addressHelper->getMultiLineStreetParts($request->getDestStreet());
+        }
 
         return $addressData;
     }
