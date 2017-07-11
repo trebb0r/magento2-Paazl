@@ -16,10 +16,16 @@ define(
                     'country_id': {
                         'required': true
                     },
+                    'street_name': {
+                        'required': false,
+                        'custom_attribute': true,
+                    },
                     'house_number': {
-                        'required': true
+                        'required': true,
+                        'custom_attribute': true,
                     },
                     'house_number_addition': {
+                        'custom_attribute': true,
                     }
                 };
             }

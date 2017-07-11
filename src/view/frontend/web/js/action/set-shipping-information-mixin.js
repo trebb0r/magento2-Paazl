@@ -26,12 +26,13 @@ define([
             if (shippingAddress.extension_attributes === undefined) {
                 shippingAddress.extension_attributes = {};
             }
+            shippingAddress['extension_attributes']['street_name'] = shippingAddress.customAttributes['street_name'];
             shippingAddress['extension_attributes']['house_number'] = shippingAddress.customAttributes['house_number'];
             shippingAddress['extension_attributes']['house_number_addition'] = shippingAddress.customAttributes['house_number_addition'];
 
             shippingAddress['city'] = shippingAddress.city;
             if (shippingAddress.customAttributes['house_number']) {
-                shippingAddress['street'][0] = shippingAddress['extension_attributes']['street_name'];
+                shippingAddress['street'][0] = shippingAddress.customAttributes['street_name'];
                 shippingAddress['street'][1] = shippingAddress.customAttributes['house_number'];
                 shippingAddress['street'][2] = shippingAddress.customAttributes['house_number_addition'];
             }

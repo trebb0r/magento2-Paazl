@@ -134,6 +134,9 @@ define(
                             }
                         }
                     });
+                    if (rates.length == 0) {
+                        self.processResult([]);
+                    }
                     return this;
                 });
             },
@@ -148,24 +151,33 @@ define(
                 var currentEmail = '';
                 var currentPostcode = quote.shippingAddress().postcode;
                 var addressFromData = checkoutData.getShippingAddressFromData();
-                var selectedAddress = checkoutData.getSelectedShippingAddress();
-                if (selectedAddress) {
-                    // Logged in user with selected address
-                    var selectedAddress = checkoutData.getSelectedShippingAddress();
+
+                var shippingAddress = quote.shippingAddress();
+
+                var selectedAddress = shippingAddress.getKey();
+                if (selectedAddress != 'new-customer-address') {
+                    // logged-in user with selected address
                     addressList.some(function (address) {
                         if (selectedAddress == address.getKey()) {
                             addressFromData = address;
                         }
                     });
+                }
+                else {
+                    // new address
+                    addressFromData = checkoutData.getShippingAddressFromData();
+                }
 
-                    if (addressFromData.hasOwnProperty('houseNumber')) {
-                        houseNumber = addressFromData.houseNumber;
+                if (shippingAddress.hasOwnProperty('customerAddressId')) {
+                    // Logged in user with selected address
+                    if (addressFromData.customAttributes.hasOwnProperty('house_number')) {
+                        houseNumber = addressFromData.customAttributes.house_number.value;
                     }
                     else if (addressFromData.street.length >= 2) {
                         houseNumber = addressFromData.street[1];
                     }
-                    if (addressFromData.hasOwnProperty('houseNumberAddition')) {
-                        houseNumberAddition = addressFromData.houseNumberAddition;
+                    if (addressFromData.customAttributes.hasOwnProperty('house_number_addition')) {
+                        houseNumberAddition = addressFromData.customAttributes.house_number_addition.value;
                     }
                     else if (addressFromData.street.length >= 3) {
                         houseNumberAddition = addressFromData.street[2];
@@ -179,15 +191,15 @@ define(
                 }
                 else {
                     // Logged out user or new-address
-                    if (addressFromData && (addressFromData.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
-                        if (addressFromData.hasOwnProperty('house_number')) {
-                            houseNumber = addressFromData.house_number;
+                    if (addressFromData && (addressFromData.custom_attributes.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number')) {
+                            houseNumber = addressFromData.custom_attributes.house_number;
                         }
                         else if (addressFromData.street.length >= 2) {
                             houseNumber = addressFromData.street[1];
                         }
-                        if (addressFromData.hasOwnProperty('house_number_addition')) {
-                            houseNumberAddition = addressFromData.house_number_addition;
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number_addition')) {
+                            houseNumberAddition = addressFromData.custom_attributes.house_number_addition;
                         }
                         else if (addressFromData.street.length >= 3) {
                             houseNumberAddition = addressFromData.street[2];
@@ -262,10 +274,10 @@ define(
                 });
 
                 var elements = {
-                    streetName: $("input[name='street_name']"),
+                    streetName: $("input[name='custom_attributes[street_name]']"),
                     street: $("input[name='street[0]']"),
-                    houseNumber: $("input[name='street[1]']"),
-                    houseNrAddition: $("input[name='street[2]']"),
+                    houseNumber: $("input[name='custom_attributes[house_number]']"),
+                    houseNrAddition: $("input[name='custom_attributes[house_number_addition]']"),
                     city: $("input[name='city']")
                 };
 
@@ -273,13 +285,17 @@ define(
                 var shippingData = {};
 
                 if (isValid) {
-                    // Disable elements and add result data
-                    elements.streetName.val(address.street);
-                    elements.street.val(address.street);
-                    elements.houseNumber.val(address.housenumber);
-                    elements.houseNrAddition.val(address.addition);
-                    elements.city.val(address.city);
-                    this.disableElements(elements);
+                    // Disable elements when new address. And add result data
+                    var shippingAddress = quote.shippingAddress();
+                    var selectedAddress = shippingAddress.getKey();
+                    if (selectedAddress == 'new-customer-address') {
+                        elements.streetName.val(address.street);
+                        elements.street.val(address.street);
+                        elements.houseNumber.val(address.housenumber);
+                        elements.houseNrAddition.val(address.addition);
+                        elements.city.val(address.city);
+                        this.disableElements(elements);
+                    }
 
                     shippingData = {
                         city: address.city,
@@ -288,14 +304,21 @@ define(
                             0: address.street,
                             1: address.housenumber,
                             2: address.addition
-                        }
+                        },
+                        postcode: address.zipcode
                     };
                 } else {
                     // Enable elements
                     this.enableElements(elements, []); //  ['street', 'city']
+
+                    if (address.length == 0) {
+                        // Rates did not return anything, must be a wrong address.
+                        return;
+                    }
+
                     var streetName = '';
-                    if (addressFromData.street_name !== undefined) {
-                        streetName = addressFromData.street_name;
+                    if (addressFromData.custom_attributes.street_name !== undefined || addressFromData.custom_attributes.street_name !== '') {
+                        streetName = addressFromData.custom_attributes.street_name;
                     }
                     shippingData = {
                         city: addressFromData.city,
@@ -304,7 +327,8 @@ define(
                             0: streetName,
                             1: addressFromData.house_number,
                             2: addressFromData.house_number_addition
-                        }
+                        },
+                        postcode: addressFromData.postcode
                     };
                 }
 
