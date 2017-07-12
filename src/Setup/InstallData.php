@@ -25,13 +25,36 @@ class InstallData implements InstallDataInterface
     private $eavSetupFactory;
 
     /**
+     * Customer setup factory
+     *
+     * @var CustomerSetupFactory
+     */
+    protected $customerSetupFactory;
+
+    /**
+     * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
+     */
+    protected $attributeSetFactory;
+
+    /**
+     * @var AttributeRepositoryInterface
+     */
+    protected $attributeRepository;
+
+    /**
      * Init
      *
      * @param PaazlSetupFactory $eavSetupFactory
      */
-    public function __construct(PaazlSetupFactory $eavSetupFactory)
+    public function __construct(PaazlSetupFactory $eavSetupFactory,
+\Magento\Customer\Setup\CustomerSetupFactory $customerSetupFactory,
+\Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory,
+\Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository)
     {
         $this->eavSetupFactory = $eavSetupFactory;
+        $this->customerSetupFactory = $customerSetupFactory;
+        $this->attributeSetFactory = $attributeSetFactory;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -81,6 +104,154 @@ class InstallData implements InstallDataInterface
             );
         }
 
+        // create Customer attributes
+        $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
+        $customerEntity = $customerSetup->getEavConfig()->getEntityType(
+            'customer_address'
+        );
+        $attributeSetId = $customerEntity->getDefaultAttributeSetId();
+        $attributeSet = $this->attributeSetFactory->create();
+        $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
+
+
+        if ($this->isAttributeAllowedForImport($customerEntity, 'street_name')) {
+            $attribute = $customerSetup->getEavConfig()->getAttribute(
+                                $customerEntity,
+                                'street_name'
+                            )
+                                ->addData(
+                                    [
+                                        'attribute_set_id'   => $attributeSetId,
+                                        'attribute_group_id' => $attributeGroupId,
+                                        'used_in_forms'      => [
+                                            'adminhtml_customer_address',
+                                            'customer_address_edit',
+                                            'customer_register_address'
+                                        ],
+                                    ]
+                                );
+                            $attribute->save();
+            $customerSetup->addAttribute(
+                'customer_address',
+                'street_name',
+                [
+                    'type'             => 'varchar',
+                    'label'            => 'Street Name',
+                    'input'            => 'text',
+                    'required'         => false,
+                    'visible'          => true,
+                    'visible_on_front' => true,
+                    'user_defined'     => true,
+                    'sort_order'       => 74,
+                    'system'           => 0,
+                    'input_filter'     => 'stripTags'
+                ]
+            );
+        }
+
+
+        if ($this->isAttributeAllowedForImport($customerEntity, 'house_number')) {
+            $attribute = $customerSetup->getEavConfig()
+                ->getAttribute(
+                    'customer_address',
+                    'house_number'
+                )
+                ->addData(
+                    [
+                        'attribute_set_id'   => $attributeSetId,
+                        'attribute_group_id' => $attributeGroupId,
+                        'used_in_forms'      => [
+                            'adminhtml_customer_address',
+                            'customer_address_edit',
+                            'customer_register_address'
+                        ],
+                    ]
+                );
+            $attribute->save();
+            $customerSetup->addAttribute(
+                'customer_address',
+                'house_number',
+                [
+                    'type'             => 'varchar',
+                    'label'            => 'House Number',
+                    'input'            => 'text',
+                    'required'         => true,
+                    'visible'          => true,
+                    'visible_on_front' => true,
+                    'user_defined'     => true,
+                    'sort_order'       => 75,
+                    'system'           => 0,
+                    'input_filter'     => 'stripTags'
+                ]
+            );
+        }
+
+
+        if ($this->isAttributeAllowedForImport($customerEntity, 'house_number_addition')) {
+            $attribute = $customerSetup->getEavConfig()->getAttribute(
+                'customer_address',
+                'house_number_addition'
+            )
+                ->addData(
+                    [
+                        'attribute_set_id'   => $attributeSetId,
+                        'attribute_group_id' => $attributeGroupId,
+                        'used_in_forms'      => [
+                            'adminhtml_customer_address',
+                            'customer_address_edit',
+                            'customer_register_address'
+                        ],
+                    ]
+                );
+            $attribute->save();
+            $customerSetup->addAttribute(
+                'customer_address',
+                'house_number_addition',
+                [
+                    'type'             => 'varchar',
+                    'label'            => 'House Number Addition',
+                    'input'            => 'text',
+                    'required'         => false,
+                    'visible'          => true,
+                    'visible_on_front' => true,
+                    'user_defined'     => true,
+                    'sort_order'       => 76,
+                    'system'           => 0,
+                    'input_filter'     => 'stripTags'
+                ]
+            );
+        }
+
         // @todo Need to do a reindex and clear cache. Maybe add to the readme?
+    }
+
+
+    /**
+     * @param $customerEntity
+     * @param $attributeCode
+     *
+     * @return bool
+     */
+    protected function isAttributeAllowedForImport($customerEntity, $attributeCode)
+    {
+        try {
+            $this->attributeRepository->get($customerEntity, $attributeCode);
+            return false;
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            $allowed = true;
+        }
+        foreach (explode(',', $this->scopeConfig->getValue('exclude/' . $attributeCode)) as $v)
+        {
+            try {
+                $this->attributeRepository->get($customerEntity, trim($v));
+                $allowed = false;
+                break;
+            }
+            catch (\Magento\Framework\Exception\NoSuchEntityException $e)
+            {
+                $allowed = true;
+            }
+        }
+        return $allowed;
     }
 }

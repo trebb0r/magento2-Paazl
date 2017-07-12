@@ -59,5 +59,10 @@
                 <debug>0</debug>
             </paazlp>
         </carriers>
+        <exclude>
+            <street_name></street_name>
+            <house_number></house_number>
+            <house_number_addition></house_number_addition>
+        </exclude>
     </default>
 </config>
