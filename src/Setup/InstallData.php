@@ -42,6 +42,11 @@ class InstallData implements InstallDataInterface
     protected $attributeRepository;
 
     /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * Init
      *
      * @param PaazlSetupFactory $eavSetupFactory
@@ -49,12 +54,14 @@ class InstallData implements InstallDataInterface
     public function __construct(PaazlSetupFactory $eavSetupFactory,
 \Magento\Customer\Setup\CustomerSetupFactory $customerSetupFactory,
 \Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory,
-\Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository)
+\Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository,
+\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
     {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory = $attributeSetFactory;
         $this->attributeRepository = $attributeRepository;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
