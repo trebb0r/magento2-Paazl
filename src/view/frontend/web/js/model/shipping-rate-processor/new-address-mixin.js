@@ -51,6 +51,12 @@ define([
             address.customAttributes.house_number = houseNumber;
             address.customAttributes.house_number_addition = houseNumberAddition;
             address.postcode = postcode;
+            address.street = new Array();
+            address.street[0] = streetName;
+            address.street[1] = houseNumber;
+            if (houseNumberAddition != '') {
+                address.street[2] = houseNumberAddition;
+            }
 
             return originalAction(address);
         });
