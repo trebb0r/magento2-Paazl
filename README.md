@@ -17,3 +17,13 @@ The following settings are required to be able to create shipments:
 
 - Configure Stores -> Configuration -> General -> Store Information
 - Configure Stores -> Configuration -> Shipping Settings -> Origin
+
+If you want to use custom street, housenumber and housenumber additional fields, you 
+may add field names in config.xml:
+```
+<exclude>
+	<street_name></street_name>
+	<house_number></house_number>
+	<house_number_addition></house_number_addition>
+</exclude>
+   ```
