@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [1.3.0] - 2017-07-12
+- moving from Extension Attributes to Custom Customer Attributes to resolve most issues with addresses
+- added functionality during module install/upgrade to not add Custom Customer Attributes. This will be further supported in a later release and is not fully working yet.
+
 ## [1.2.10] - 2017-07-06
 - Bugfix commit order would not use correct paazl account in a multistore setup
 

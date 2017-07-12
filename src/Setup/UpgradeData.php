@@ -76,7 +76,7 @@ class UpgradeData implements UpgradeDataInterface
             $eavSetup->updateAttribute(\Magento\Catalog\Model\Product::ENTITY, 'matrix', 'frontend_input', 'select');
             $eavSetup->updateAttribute(\Magento\Catalog\Model\Product::ENTITY, 'matrix', 'source_model', 'Paazl\Shipping\Model\Attribute\Source\Matrix');
         }
-        if (version_compare($context->getVersion(), '1.2.11') < 0) {
+        if (version_compare($context->getVersion(), '1.3.0') < 0) {
             // create Customer attributes
             $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
             $customerEntity = $customerSetup->getEavConfig()->getEntityType(
