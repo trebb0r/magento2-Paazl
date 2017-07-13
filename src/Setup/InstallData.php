@@ -247,15 +247,12 @@ class InstallData implements InstallDataInterface
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $allowed = true;
         }
-        foreach (explode(',', $this->scopeConfig->getValue('exclude/' . $attributeCode)) as $v)
-        {
+        foreach (explode(',', $this->scopeConfig->getValue('exclude/' . $attributeCode)) as $v) {
             try {
                 $this->attributeRepository->get($customerEntity, trim($v));
                 $allowed = false;
                 break;
-            }
-            catch (\Magento\Framework\Exception\NoSuchEntityException $e)
-            {
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
                 $allowed = true;
             }
         }
