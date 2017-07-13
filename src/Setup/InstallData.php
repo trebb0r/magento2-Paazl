@@ -149,7 +149,7 @@ class InstallData implements InstallDataInterface
                     'visible'          => true,
                     'visible_on_front' => true,
                     'user_defined'     => true,
-                    'sort_order'       => 74,
+                    'position'       => 74,
                     'system'           => 0,
                     'input_filter'     => 'stripTags'
                 ]
@@ -186,7 +186,7 @@ class InstallData implements InstallDataInterface
                     'visible'          => true,
                     'visible_on_front' => true,
                     'user_defined'     => true,
-                    'sort_order'       => 75,
+                    'position'       => 75,
                     'system'           => 0,
                     'input_filter'     => 'stripTags'
                 ]
@@ -222,7 +222,7 @@ class InstallData implements InstallDataInterface
                     'visible'          => true,
                     'visible_on_front' => true,
                     'user_defined'     => true,
-                    'sort_order'       => 76,
+                    'position'       => 76,
                     'system'           => 0,
                     'input_filter'     => 'stripTags'
                 ]
