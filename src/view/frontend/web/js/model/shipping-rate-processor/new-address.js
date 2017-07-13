@@ -55,6 +55,14 @@ define(
                         }
                     );
 
+                // We need house number to be able to get shipping options
+                if ((address.customAttributes && address.customAttributes.house_number == '') || typeof address.customAttributes.house_number == 'undefined') {
+                    shippingService.setShippingRates([]);
+                    $(".table-checkout-shipping-method input[type=radio]").prop("disabled", false);
+                    shippingService.isLoading(false);
+                    return;
+                }
+
                 if (cache) {
                     shippingService.setShippingRates(cache);
                     shippingService.isLoading(false);
