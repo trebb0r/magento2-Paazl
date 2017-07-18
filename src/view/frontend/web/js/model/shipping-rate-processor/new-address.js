@@ -55,8 +55,8 @@ define(
                         }
                     );
 
-                // We need house number to be able to get shipping options
-                if ((address.customAttributes && address.customAttributes.house_number == '') || typeof address.customAttributes.house_number == 'undefined') {
+                // We need house number to be able to get shipping options. Unless we are on cart page
+                if (((address.customAttributes && address.customAttributes.house_number == '') || typeof address.customAttributes.house_number == 'undefined') && $('input[name="custom_attributes[house_number]"]').length > 0) {
                     shippingService.setShippingRates([]);
                     $(".table-checkout-shipping-method input[type=radio]").prop("disabled", false);
                     shippingService.isLoading(false);

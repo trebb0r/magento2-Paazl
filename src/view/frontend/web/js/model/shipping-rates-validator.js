@@ -23,7 +23,13 @@ define(
                 $.each(validationRules.getRules(), function(field, rule) {
                     var addressField = address[field];
                     if (rule.custom_attribute) {
-                        addressField = address['custom_attributes'][field];
+                        if (address.hasOwnProperty('custom_attributes')) {
+                            addressField = address['custom_attributes'][field];
+                        }
+                        else {
+                            // Continue
+                            return true;
+                        }
                     }
                     if (rule.required && utils.isEmpty(addressField)) {
                         var message = $t('Field ') + field + $t(' is required.');

@@ -21,6 +21,8 @@ define(
         'use strict';
         defaultShippingRatesValidator.registerValidator('paazl', shippingRatesValidator);
         defaultShippingRatesValidationRules.registerRules('paazl', shippingRatesValidationRules);
+        defaultShippingRatesValidator.registerValidator('paazlp', shippingRatesValidator);
+        defaultShippingRatesValidationRules.registerRules('paazlp', shippingRatesValidationRules);
 
         return Component;
     }
