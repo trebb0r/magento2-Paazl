@@ -424,7 +424,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                         $addressExtension->setHouseNumberAddition($addition);
 
                         // Fixup region
-                        if ($address->getRegion() != '') {
+                        if ($address->getRegion() != '' && !is_string($address->getRegion())) {
                             $address->setRegion($address->getRegion()->getRegionId());
                         }
 
