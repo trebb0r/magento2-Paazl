@@ -39,9 +39,11 @@ class Customer extends \Paazl\Shipping\Helper\Data
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Framework\Filter\FilterManager $filterManager,
         Data $dataHelper,
-        \Magento\Eav\Model\Adminhtml\System\Config\Source\Inputtype\Validator $inputValidator
+        \Magento\Eav\Model\Adminhtml\System\Config\Source\Inputtype\Validator $inputValidator,
+        \Paazl\Shipping\Helper\Address\Proxy $customerAddress,
+        \Paazl\Shipping\Helper\Customer\Proxy $customerCustomer
     ) {
-        parent::__construct($context, $eavConfig, $localeDate, $filterManager);
+        parent::__construct($context, $eavConfig, $localeDate, $filterManager, $customerAddress, $customerCustomer);
         $this->_dataHelper = $dataHelper;
         $this->_inputValidator = $inputValidator;
     }
