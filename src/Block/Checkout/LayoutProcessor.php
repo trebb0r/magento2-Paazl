@@ -49,6 +49,7 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     public function process($jsLayout)
     {
+        // Start: Maybe check if EE is installed, then this part is not needed
         $attributes = $this->attributeMetadataDataProvider->loadAttributesCollection(
             'customer_address',
             'customer_register_address'
@@ -93,6 +94,7 @@ class LayoutProcessor implements LayoutProcessorInterface
                 $fields
             );
         }
+        // End: Maybe check if EE is installed, then this part is not needed
 
         $addressElements = $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']
         ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
