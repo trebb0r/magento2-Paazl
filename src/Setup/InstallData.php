@@ -151,7 +151,6 @@ class InstallData implements InstallDataInterface
                     'user_defined'     => true,
                     'position'       => 74,
                     'system'           => 0,
-                    'input_filter'     => 'stripTags'
                 ]
             );
         }
@@ -188,7 +187,6 @@ class InstallData implements InstallDataInterface
                     'user_defined'     => true,
                     'position'       => 75,
                     'system'           => 0,
-                    'input_filter'     => 'stripTags'
                 ]
             );
         }
@@ -224,7 +222,6 @@ class InstallData implements InstallDataInterface
                     'user_defined'     => true,
                     'position'       => 76,
                     'system'           => 0,
-                    'input_filter'     => 'stripTags'
                 ]
             );
         }
