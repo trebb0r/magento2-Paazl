@@ -37,7 +37,7 @@ class Matrix extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
                 'label' => 'None',
                 'value' => '',
             ];
-            $alphas = range('A', 'Z');
+            $alphas = $this->getcolumnrange('A', 'ZZ');
             foreach ($alphas as $key => $alpha) {
                 $options[] = [
                     'label' => $alpha,
@@ -96,5 +96,39 @@ class Matrix extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     public function getFlatUpdateSelect($store)
     {
         return $this->optionFactory->create()->getFlatUpdateSelect($this->getAttribute(), $store, false);
+    }
+
+    private function getcolumnrange($min, $max)
+    {
+        $pointer = strtoupper($min);
+        $output = array();
+        while ($this->positionalcomparison($pointer, strtoupper($max)) <= 0) {
+            array_push($output, $pointer);
+            $pointer++;
+        }
+        return $output;
+    }
+
+    private function positionalcomparison($a, $b)
+    {
+        $a1 = $this->stringtointvalue($a);
+        $b1 = $this->stringtointvalue($b);
+        if ($a1 > $b1) return 1;
+        else if ($a1 < $b1) return -1;
+        else return 0;
+    }
+
+    /*
+    * e.g. A=1 - B=2 - Z=26 - AA=27 - CZ=104 - DA=105 - ZZ=702 - AAA=703
+    */
+    private function stringtointvalue($str)
+    {
+        $amount = 0;
+        $strarra = array_reverse(str_split($str));
+
+        for ($i = 0; $i < strlen($str); $i++) {
+            $amount += (ord($strarra[$i]) - 64) * pow(26, $i);
+        }
+        return $amount;
     }
 }
