@@ -60,6 +60,7 @@ class LayoutProcessor implements LayoutProcessorInterface
                 continue;
             }
             $addressElements[$attribute->getAttributeCode()] = $this->attributeMapper->map($attribute);
+            $addressElements[$attribute->getAttributeCode()]['label'] = __($addressElements[$attribute->getAttributeCode()]['label']);
         }
 
         // The following code is a workaround for custom address attributes
