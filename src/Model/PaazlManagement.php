@@ -430,7 +430,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
                         // @todo Should we fixup wrong format of street?
                         //$address->setStreet(implode("\n", array_filter($parts)));
-                        $address->setExtensionAttributes($addressExtension);
+                        //$address->setExtensionAttributes($addressExtension);
                     }
 
                     $address->save();
