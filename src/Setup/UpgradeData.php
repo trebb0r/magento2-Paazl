@@ -111,7 +111,7 @@ class UpgradeData implements UpgradeDataInterface
                         'type'             => 'varchar',
                         'label'            => 'Street Name',
                         'input'            => 'text',
-                        'required'         => false,
+                        'required'         => true,
                         'visible'          => true,
                         'visible_on_front' => true,
                         'user_defined'     => true,
