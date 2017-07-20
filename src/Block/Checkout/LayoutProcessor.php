@@ -77,6 +77,15 @@ class LayoutProcessor implements LayoutProcessorInterface
                         $renderer['dataScopePrefix'] . '.custom_attributes',
                         $fields
                     );
+
+                    $formFields = $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']
+                    ['children']['payment']['children']['payments-list']['children'][$name]['children']
+                    ['form-fields']['children'];
+                    if (isset($formFields['postcode']) && isset($formFields['street'])) {
+                        unset($jsLayout['components']['checkout']['children']['steps']['children']['billing-step']
+                            ['children']['payment']['children']['payments-list']['children'][$name]['children']
+                            ['form-fields']['children']['street']);
+                    }
                 }
             }
         }

@@ -92,4 +92,13 @@
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="convertQuoteAddressToCustomerAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToCustomerAddress"/>
     </type>
+
+    <preference for="Magento\Customer\Api\AddressRepositoryInterface"
+                type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+    <preference for="\Magento\Customer\Model\ResourceModel\AddressRepository"
+                type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+
+    <preference for="Magento\Ui\Component\Layout\Tabs" type="Paazl\Shipping\Model\Ui\Component\Layout\Tabs" />
+
+    <preference for="Magento\Customer\Model\Metadata\Form" type="Paazl\Shipping\Model\Customer\Metadata\Form" />
 </config>
