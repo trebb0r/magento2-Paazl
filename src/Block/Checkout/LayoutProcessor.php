@@ -110,13 +110,12 @@ class LayoutProcessor implements LayoutProcessorInterface
         ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
 
         if (isset($addressElements['postcode']) && isset($addressElements['street'])) {
-            $originalStreetElement = $addressElements['street'];
             unset($addressElements['street']);
 
             // Config of existing fields to overwrite
             $elementConfig = [
                 'postcode' => [
-                    'sortOrder' => (int)$originalStreetElement['sortOrder'] - 4,
+                    'sortOrder' => (int)$addressElements['house_number_addition']['sortOrder'] - 1,
                 ],
             ];
             $addressElements = array_replace_recursive($addressElements, $elementConfig);
