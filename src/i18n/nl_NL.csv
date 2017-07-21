@@ -11,3 +11,5 @@
 "Street Name","Straatnaam"
 "House Number","Huisnummer"
 "House Number Addition","Huisnummer toevoeging"
+"Enable zipcode validation","Zet postcode validatie aan"
+"This will enable zipcode + house number validation in NL","Dit zet postcode + huisnummer validatie aan in Nederland"
