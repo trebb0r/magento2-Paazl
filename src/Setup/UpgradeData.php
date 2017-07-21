@@ -192,6 +192,29 @@ class UpgradeData implements UpgradeDataInterface
                 );
             }
         }
+        if (version_compare($context->getVersion(), '1.3.1') < 0) {
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
+            $customerEntity = $customerSetup->getEavConfig()->getEntityType(
+                'customer_address'
+            );
+
+            if ($this->isAttributeAllowedForImport($customerEntity, 'house_number', true)) {
+                $attribute = $customerSetup->getEavConfig()
+                    ->getAttribute(
+                        'customer_address',
+                        'house_number'
+                    )
+                    ->addData(
+                        [
+                            'validate_rules'   => serialize([
+                                'input_validation' => 'numeric',
+                            ]),
+                        ]
+                    );
+                $attribute->save();
+            }
+        }
+
         $setup->endSetup();
     }
 
@@ -202,10 +225,13 @@ class UpgradeData implements UpgradeDataInterface
      *
      * @return bool
      */
-    protected function isAttributeAllowedForImport($customerEntity, $attributeCode)
+    protected function isAttributeAllowedForImport($customerEntity, $attributeCode, $existingAllowed = false)
     {
         try {
             $this->attributeRepository->get($customerEntity, $attributeCode);
+            if ($existingAllowed) {
+                return true;
+            }
             return false;
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $allowed = true;
