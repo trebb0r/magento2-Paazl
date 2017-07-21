@@ -101,6 +101,7 @@
 
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Billing\Address" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Shipping\Address" />
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Address\Form" type="Paazl\Shipping\Block\Adminhtml\Order\Address\Form" />
 
     <preference for="Magento\Ui\Component\Layout\Tabs" type="Paazl\Shipping\Model\Ui\Component\Layout\Tabs" />
 

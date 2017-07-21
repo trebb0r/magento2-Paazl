@@ -7,6 +7,9 @@
     <event name="sales_order_save_before">
         <observer name="paazl_before_order_save" instance="Paazl\Shipping\Observer\OrderSaveObserver" />
     </event>
+    <event name="sales_order_address_save_before">
+        <observer name="paazl_before_order_save" instance="Paazl\Shipping\Observer\SalesOrderAddressSaveObserver" />
+    </event>
     <event name="customer_address_save_before">
         <observer name="paazl_before_customer_address_save" instance="Paazl\Shipping\Observer\CustomerAddressSaveObserver" />
     </event>
