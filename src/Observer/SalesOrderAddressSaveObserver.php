@@ -59,8 +59,6 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
         $address->setHouseNumber($streetParts['house_number']);
         $address->setHouseNumberAddition($streetParts['addition']);
 
-
-
         $address->setStreet($streetParts['street'] . " " . $houseNumberFull);
     }
 }
