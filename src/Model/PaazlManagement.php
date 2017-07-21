@@ -15,6 +15,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     const XML_PATH_WEIGHT_CONVERSION_RATIO = 'paazl/locale/weight_conversion';
     const XML_PATH_ASSURED_AMOUNT = 'paazl/order/assured_amount';
     const XML_PATH_SINGLE_LABEL_PER_ORDER = 'paazl/order/single_label_per_order';
+    const XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION = 'paazl/api/zipcode_validation';
 
     /** @var float */
     protected $weightConversion;
@@ -290,6 +291,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     {
         $this->_request = $request;
         $this->_paazlData['requests'] = [];
+        $storeId = $this->registry->registry('paazl_current_store');
 
         $addressData = $this->_getAddressData($request);
 
@@ -318,7 +320,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
 
         // "address" request
-        if (!is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
+        $zipcodeValidation = $this->_scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $storeId);
+
+        if ($zipcodeValidation && !is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
             $dutchPostcode = $this->_addressHelper->isDutchPostcode($addressData['postcode'], true);
             if ($dutchPostcode !== false) {
                 // Dutch address-request
