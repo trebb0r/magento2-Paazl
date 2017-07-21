@@ -1,5 +1,5 @@
 # magento2-Paazl
-Magento 2 Paazl integration
+The Paazl Magento 2 extension gives you instant access to the services of over 50 leading (parcel) carriers worldwide, offering you and your customers ultimate delivery flexibility. This allows you to expand cross-border faster, ship all products using a single solution and always meet your customers’ delivery demands.
 
 [Changelog](CHANGELOG.md)
 
