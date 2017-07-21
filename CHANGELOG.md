@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Remove old street field in forms and use new street fields for saving
 - Prevent error during reorder
 - Add zipcode validation switch
+- Add validator for Paazl carrier on the cart page so VAT is calculated correctly
+- Bugfix when region/province is filled in and estimate shipping would give an error
 
 ## [1.3.0] - 2017-07-12
 ### Changed
