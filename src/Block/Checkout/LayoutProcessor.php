@@ -49,6 +49,7 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     public function process($jsLayout)
     {
+        // Start: Maybe check if EE is installed, then this part is not needed
         $attributes = $this->attributeMetadataDataProvider->loadAttributesCollection(
             'customer_address',
             'customer_register_address'
@@ -59,6 +60,7 @@ class LayoutProcessor implements LayoutProcessorInterface
                 continue;
             }
             $addressElements[$attribute->getAttributeCode()] = $this->attributeMapper->map($attribute);
+            $addressElements[$attribute->getAttributeCode()]['label'] = __($addressElements[$attribute->getAttributeCode()]['label']);
         }
 
         // The following code is a workaround for custom address attributes
@@ -76,6 +78,15 @@ class LayoutProcessor implements LayoutProcessorInterface
                         $renderer['dataScopePrefix'] . '.custom_attributes',
                         $fields
                     );
+
+                    $formFields = $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']
+                    ['children']['payment']['children']['payments-list']['children'][$name]['children']
+                    ['form-fields']['children'];
+                    if (isset($formFields['postcode']) && isset($formFields['street'])) {
+                        unset($jsLayout['components']['checkout']['children']['steps']['children']['billing-step']
+                            ['children']['payment']['children']['payments-list']['children'][$name]['children']
+                            ['form-fields']['children']['street']);
+                    }
                 }
             }
         }
@@ -93,18 +104,18 @@ class LayoutProcessor implements LayoutProcessorInterface
                 $fields
             );
         }
+        // End: Maybe check if EE is installed, then this part is not needed
 
         $addressElements = $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']
         ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
 
         if (isset($addressElements['postcode']) && isset($addressElements['street'])) {
-            $originalStreetElement = $addressElements['street'];
             unset($addressElements['street']);
 
             // Config of existing fields to overwrite
             $elementConfig = [
                 'postcode' => [
-                    'sortOrder' => (int)$originalStreetElement['sortOrder'] - 4,
+                    'sortOrder' => (int)$addressElements['house_number_addition']['sortOrder'] - 1,
                 ],
             ];
             $addressElements = array_replace_recursive($addressElements, $elementConfig);

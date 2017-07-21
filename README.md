@@ -1,5 +1,5 @@
 # magento2-Paazl
-Magento 2 Paazl integration
+The Paazl Magento 2 extension gives you instant access to the services of over 50 leading (parcel) carriers worldwide, offering you and your customers ultimate delivery flexibility. This allows you to expand cross-border faster, ship all products using a single solution and always meet your customers’ delivery demands.
 
 [Changelog](CHANGELOG.md)
 
@@ -27,3 +27,9 @@ may add field names in config.xml:
 	<house_number_addition></house_number_addition>
 </exclude>
    ```
+   
+## Note
+The default Magento street field (multiline) will be removed in forms including it's validation. Instead seperate field will be used: Street Name, House Number and House Number Addition.
+This module will save the information from these seperate fields back into the default Magento street field on the first line using a customer_address_save_before event.
+
+If you are using Magento Enterprise and are already using certain fields for House Number, etc. see the usage of the `<exclude>` config and convert your fields to have to following attribute_code: street_name, house_number, house_number_addition.

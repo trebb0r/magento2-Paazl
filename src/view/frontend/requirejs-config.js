@@ -16,12 +16,17 @@ var config = {
             }
         }
     },
-    'map': {
+    map: {
         '*': {
+            fileElement: 'Paazl_Shipping/file-element',
             'Magento_Checkout/js/model/shipping-rate-processor/new-address':
                 'Paazl_Shipping/js/model/shipping-rate-processor/new-address',
             'Magento_Checkout/template/billing-address/details.html':
-                'Paazl_Shipping/template/billing-address/details.html'
+                'Paazl_Shipping/template/billing-address/details.html',
+            'Magento_Checkout/template/shipping-address/address-renderer/default.html':
+                'Paazl_Shipping/template/shipping-address/address-renderer/default.html',
+            'Magento_Checkout/template/shipping-information/address-renderer/default.html':
+                'Paazl_Shipping/template/shipping-information/address-renderer/default.html'
         }
     }
 };

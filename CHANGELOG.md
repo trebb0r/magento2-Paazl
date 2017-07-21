@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Remove stripTags filter. Does not work in Magento Community
+- Make Matrix go from A to ZZ
+- Add logic for custom customer address attributes
+- Add plugin and observers to save the custom customer address fields
+- Remove old street field in forms and use new street fields for saving
+- Prevent error during reorder
+- Add zipcode validation switch
 
 ## [1.3.0] - 2017-07-12
 ### Changed

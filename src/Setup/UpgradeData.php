@@ -111,13 +111,12 @@ class UpgradeData implements UpgradeDataInterface
                         'type'             => 'varchar',
                         'label'            => 'Street Name',
                         'input'            => 'text',
-                        'required'         => false,
+                        'required'         => true,
                         'visible'          => true,
                         'visible_on_front' => true,
                         'user_defined'     => true,
-                        'position'       => 74,
+                        'position'       => 76,
                         'system'           => 0,
-                        'input_filter'     => 'stripTags'
                     ]
                 );
             }
@@ -152,9 +151,8 @@ class UpgradeData implements UpgradeDataInterface
                         'visible'          => true,
                         'visible_on_front' => true,
                         'user_defined'     => true,
-                        'position'       => 75,
+                        'position'       => 74,
                         'system'           => 0,
-                        'input_filter'     => 'stripTags'
                     ]
                 );
             }
@@ -188,9 +186,8 @@ class UpgradeData implements UpgradeDataInterface
                         'visible'          => true,
                         'visible_on_front' => true,
                         'user_defined'     => true,
-                        'position'       => 76,
+                        'position'       => 75,
                         'system'           => 0,
-                        'input_filter'     => 'stripTags'
                     ]
                 );
             }

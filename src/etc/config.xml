@@ -6,6 +6,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <paazl>
+            <api>
+                <zipcode_validation>0</zipcode_validation>
+            </api>
             <api_advanced>
                 <staging_url>http://staging.paazl.com/parcelshipperservice/orderRequest.wsdl</staging_url>
                 <production_url>https://ost.paazl.com/parcelshipperservice/orderRequest.wsdl</production_url>

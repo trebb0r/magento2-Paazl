@@ -38,13 +38,18 @@ class Order extends Generic
         Context $context,
         \Paazl\Shipping\Model\PaazlManagement $_paazlManagement,
         \Magento\Catalog\Model\ProductFactory $productFactory,
-        \Paazl\Shipping\Model\Attribute\Source\Matrix $attributeSourceMatrix
+        \Paazl\Shipping\Model\Attribute\Source\Matrix $attributeSourceMatrix,
+        \Magento\Eav\Model\Config $eavConfig,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
+        \Magento\Framework\Filter\FilterManager $filterManager,
+        \Paazl\Shipping\Helper\Address\Proxy $customerAddress,
+        \Paazl\Shipping\Helper\Customer\Proxy $customerCustomer
     )
     {
         $this->_paazlManagement = $_paazlManagement;
         $this->productFactory = $productFactory;
         $this->attributeSourceMatrix = $attributeSourceMatrix;
-        parent::__construct($context);
+        parent::__construct($context, $eavConfig, $localeDate, $filterManager, $customerAddress, $customerCustomer);
     }
 
 
