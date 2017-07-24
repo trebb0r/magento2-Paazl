@@ -201,7 +201,7 @@ class ShippingMethodConverterPlugin
                     $shippingOptions = $this->_paazlManagement->getShippingOptions();
 
                     foreach($shippingOptions as $shippingOption) {
-                        if ($shippingOption['type'] == $result->getMethodCode()) {
+                        if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates']) && isset($shippingOption['deliveryDates']['deliveryDateOption'])) {
                             foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
                                 if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
                                     $deliveryWindowTimes = [];
