@@ -4,21 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
-- Remove stripTags filter. Does not work in Magento Community
-- Make Matrix go from A to ZZ
-- Add logic for custom customer address attributes
-- Add plugin and observers to save the custom customer address fields
-- Remove old street field in forms and use new street fields for saving
-- Prevent error during reorder
-- Add zipcode validation switch
-- Add validator for Paazl carrier on the cart page so VAT is calculated correctly
-- Bugfix when region/province is filled in and estimate shipping would give an error
+## [1.3.0-rc1] - To be released
 
-## [1.3.0] - 2017-07-12
-### Changed
-- moving from Extension Attributes to Custom Customer Attributes to resolve most issues with addresses
-- added functionality during module install/upgrade to not add Custom Customer Attributes. This will be further supported in a later release and is not fully working yet.
+With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
+
+*EE Only: If you're already using custom Customer attributes (e.g. `housenumber`), make sure it follows Paazl's exact naming convention (it are varchar fields).*
+
+- All UI components that have address fields are replaced with the new customer attributes (frontend / backend).
+- All existing addresses are automatically converted to the new format when they are loaded.
+- To maintain 100% compatibility, before saving the customer address a new flattened value is stored in the original street attribute.
+
+**Improvements / Bug fixes**
+A lot of bug fixes and small improvements are included in this release:
+- Make the product matrix configurable from A-ZZ instead of A-Z.
+- Added option to enable the postcode validation (disabled by default due to UI issues with addresses outside the Netherlands, better UI planned for a future release).
+- Checkout field sort order set to: Street Number, House Number, House Number Addition, Postcode, City, State, Country
+- Solve issue in the cart where the tax would not be calculated properly because Paazl expects a full address instead of only a postcode. (Reported by ISM e-Company)
+- Solve issue in the cart where filling in your state would throw a JS error.
+- Solve issue where saving a customer address would throw an exception. CE Only
+- Solve issue where a reorder would throw an exception. (Reported by Guapa)
+- Solve issue where having a different configuration per website would cause issues (Reported by Guapa).
+
+**Known Issues**
+- When the cron job is trying to communicate orders to Paazl and Paazl throws an error for a single order, the rest of the orders wont be processed.
+- 'Admin Panel Order Create' and 'Frontend multishipping' does not support Paazl Perfect, only basic functionality is supported
+- Multi Address Checkout: New address does not show house number. Confirmed as Magento Core bug.
+- Admin Panel View Order Edit address does not save house number. Confirmed as Magento Core bug.
 
 ## [1.2.10] - 2017-07-06
 ### Changed

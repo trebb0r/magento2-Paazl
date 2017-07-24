@@ -1,5 +1,5 @@
-# magento2-Paazl
-The Paazl Magento 2 extension gives you instant access to the services of over 50 leading (parcel) carriers worldwide, offering you and your customers ultimate delivery flexibility. This allows you to expand cross-border faster, ship all products using a single solution and always meet your customers’ delivery demands.
+# Paazl Magento 2 Module
+The Paazl Magento 2 module gives you instant access to the services of over 50 leading (parcel) carriers worldwide, offering you and your customers ultimate delivery flexibility. This allows you to expand cross-border faster, ship all products using a single solution and always meet your customers’ delivery demands.
 
 [Changelog](CHANGELOG.md)
 
@@ -12,24 +12,9 @@ composer require paazl/magento2
 bin/magento setup:upgrade
 ```
 
-## Configure
-The following settings are required to be able to create shipments:
+*For extra configuration instructions, please contact Paazl directly for more information about this.*
 
-- Configure Stores -> Configuration -> General -> Store Information
-- Configure Stores -> Configuration -> Shipping Settings -> Origin
+### Migrating from 1.2.x to a newer version
+With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
 
-If you want to use custom street, housenumber and housenumber additional fields, you 
-may add field names in config.xml:
-```
-<exclude>
-	<street_name></street_name>
-	<house_number></house_number>
-	<house_number_addition></house_number_addition>
-</exclude>
-   ```
-   
-## Note
-The default Magento street field (multiline) will be removed in forms including it's validation. Instead seperate field will be used: Street Name, House Number and House Number Addition.
-This module will save the information from these seperate fields back into the default Magento street field on the first line using a customer_address_save_before event.
-
-If you are using Magento Enterprise and are already using certain fields for House Number, etc. see the usage of the `<exclude>` config and convert your fields to have to following attribute_code: street_name, house_number, house_number_addition.
+If you're already using custom Customer attributes (EE only, e.g. `housenumber`). You can use your own fields by simply renaming your attributes to Paazl's exact naming convention (all should be simple varchar fields), the module will not overwrite your attributes.
