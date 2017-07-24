@@ -47,10 +47,12 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
         }
         if ($address->getHouseNumber() != '') {
             $streetParts['house_number'] = $address->getHouseNumber();
-            $houseNumberFull = $streetParts['house_number'];
         }
         if ($address->getHouseNumberAddition() != '') {
             $streetParts['addition'] = $address->getHouseNumberAddition();
+        }
+        $houseNumberFull = $streetParts['house_number'];
+        if ($streetParts['addition'] != '') {
             $houseNumberFull .= ' ' . $streetParts['addition'];
         }
 
