@@ -14,7 +14,7 @@ With the 1.3.0 release we're introducing a better way for Paazl to store custome
 - All existing addresses are automatically converted to the new format when they are loaded.
 - To maintain 100% compatibility, before saving the customer address a new flattened value is stored in the original street attribute.
 
-**Improvements / Bug fixes**
+### Improvements / Bug fixes
 A lot of bug fixes and small improvements are included in this release:
 - Make the product matrix configurable from A-ZZ instead of A-Z.
 - Added option to enable the postcode validation (disabled by default due to UI issues with addresses outside the Netherlands, better UI planned for a future release).
@@ -25,7 +25,7 @@ A lot of bug fixes and small improvements are included in this release:
 - Solve issue where a reorder would throw an exception. (Reported by Guapa)
 - Solve issue where having a different configuration per website would cause issues (Reported by Guapa).
 
-**Known Issues**
+### Known Issues
 - When the cron job is trying to communicate orders to Paazl and Paazl throws an error for a single order, the rest of the orders wont be processed.
 - 'Admin Panel Order Create' and 'Frontend multishipping' does not support Paazl Perfect, only basic functionality is supported
 - Multi Address Checkout: New address does not show house number. Confirmed as Magento Core bug.
