@@ -47,10 +47,12 @@ class CustomerAddressSaveObserver implements ObserverInterface
         }
         if ($address->getHouseNumber() != '') {
             $streetParts['house_number'] = $address->getHouseNumber();
-            $houseNumberFull = $streetParts['house_number'];
         }
         if ($address->getHouseNumberAddition() != '') {
             $streetParts['addition'] = $address->getHouseNumberAddition();
+        }
+        $houseNumberFull = $streetParts['house_number'];
+        if ($streetParts['addition'] != '') {
             $houseNumberFull .= ' ' . $streetParts['addition'];
         }
 
@@ -58,8 +60,6 @@ class CustomerAddressSaveObserver implements ObserverInterface
         $address->setStreetName($streetParts['street']);
         $address->setHouseNumber($streetParts['house_number']);
         $address->setHouseNumberAddition($streetParts['addition']);
-
-
 
         $address->setStreet($streetParts['street'] . " " . $houseNumberFull);
     }
