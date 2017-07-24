@@ -216,8 +216,8 @@ define(
                 else {
                     // Logged out user or new-address
                     if (addressFromData && (addressFromData.custom_attributes.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
-                        if (addressFromData.customAttributes.hasOwnProperty('street_name')) {
-                            streetName = addressFromData.customAttributes.street_name;
+                        if (addressFromData.custom_attributes.hasOwnProperty('street_name')) {
+                            streetName = addressFromData.custom_attributes.street_name;
                         }
                         else if (addressFromData.street.length >= 0) {
                             streetName = addressFromData.street[0];
