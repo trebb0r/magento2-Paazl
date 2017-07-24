@@ -25,7 +25,7 @@ define([
                 if (localStorageData) {
                     if (localStorageData.street_name !== undefined) streetName = localStorageData.street_name;
                 }
-                if ((typeof streetName == "undefined" || streetName == '') && localStorageData.street[0] !== '') {
+                if ((typeof streetName == "undefined" || streetName == '') && localStorageData.street && localStorageData.street[0] !== '') {
                     streetName = localStorageData.street[0];
                 }
             }
@@ -33,7 +33,7 @@ define([
                 if (localStorageData) {
                     if (localStorageData.house_number !== undefined) houseNumber = localStorageData.house_number;
                 }
-                if ((typeof houseNumber == "undefined" || houseNumber == '') && localStorageData.street[1] !== '') {
+                if ((typeof houseNumber == "undefined" || houseNumber == '') && localStorageData.street && localStorageData.street[1] !== '') {
                     houseNumber = localStorageData.street[1];
                 }
             }
@@ -41,7 +41,7 @@ define([
                 if (localStorageData) {
                     if (localStorageData.house_number_addition !== undefined) houseNumberAddition = localStorageData.house_number_addition;
                 }
-                if ((typeof houseNumberAddition == "undefined" || houseNumberAddition == '') && localStorageData.street[2] !== '') {
+                if ((typeof houseNumberAddition == "undefined" || houseNumberAddition == '') && localStorageData.street && localStorageData.street[2] !== '') {
                     houseNumberAddition = localStorageData.street[2];
                 }
             }
