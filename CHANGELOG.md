@@ -16,7 +16,7 @@ With the 1.3.0 release we're introducing a better way for Paazl to store custome
 
 ### Improvements / Bug fixes
 A lot of bug fixes and small improvements are included in this release:
-- Make the product matrix configurable from A-ZZ instead of A-Z.
+- The product matrix is now configurable from A-ZZ instead of A-Z.
 - Added option to enable the postcode validation (disabled by default due to UI issues with addresses outside the Netherlands, better UI planned for a future release).
 - Checkout field sort order set to: Street Number, House Number, House Number Addition, Postcode, City, State, Country
 - Solve issue in the cart where the tax would not be calculated properly because Paazl expects a full address instead of only a postcode. (Reported by ISM e-Company)
