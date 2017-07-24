@@ -61,7 +61,10 @@ define(
                                             });
 
                                             self.processResult(address);
-                                        };
+                                        }
+                                        else {
+                                            self.processResult([]);
+                                        }
                                         if (paazlData.hasOwnProperty('checkoutRequest')) {
                                             var key = Object.keys(paazlData['checkoutRequest'])[0];
                                             var url = paazlData['checkoutRequest'][key]['url'];
@@ -143,7 +146,7 @@ define(
 
             getAddressInfo: function () {
                 var addressInfo = new Array();
-
+                var streetName = '';
                 var houseNumber = '';
                 var houseNumberAddition = '';
                 var currentCountryId = '';
@@ -170,14 +173,35 @@ define(
 
                 if (shippingAddress.hasOwnProperty('customerAddressId')) {
                     // Logged in user with selected address
+                    if (addressFromData.customAttributes.hasOwnProperty('street_name')) {
+                        if (typeof addressFromData.customAttributes.street_name == 'string') {
+                            streetName = addressFromData.customAttributes.street_name;
+                        }
+                        else {
+                            streetName = addressFromData.customAttributes.street_name.value;
+                        }
+                    }
+                    else if (addressFromData.street.length >= 0) {
+                        streetName = addressFromData.street[0];
+                    }
                     if (addressFromData.customAttributes.hasOwnProperty('house_number')) {
-                        houseNumber = addressFromData.customAttributes.house_number.value;
+                        if (typeof addressFromData.customAttributes.house_number == 'string') {
+                            houseNumber = addressFromData.customAttributes.house_number;
+                        }
+                        else {
+                            houseNumber = addressFromData.customAttributes.house_number.value;
+                        }
                     }
                     else if (addressFromData.street.length >= 2) {
                         houseNumber = addressFromData.street[1];
                     }
                     if (addressFromData.customAttributes.hasOwnProperty('house_number_addition')) {
-                        houseNumberAddition = addressFromData.customAttributes.house_number_addition.value;
+                        if (typeof addressFromData.customAttributes.house_number_addition == 'string') {
+                            houseNumberAddition = addressFromData.customAttributes.house_number_addition;
+                        }
+                        else {
+                            houseNumberAddition = addressFromData.customAttributes.house_number_addition.value;
+                        }
                     }
                     else if (addressFromData.street.length >= 3) {
                         houseNumberAddition = addressFromData.street[2];
@@ -192,6 +216,12 @@ define(
                 else {
                     // Logged out user or new-address
                     if (addressFromData && (addressFromData.custom_attributes.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
+                        if (addressFromData.customAttributes.hasOwnProperty('street_name')) {
+                            streetName = addressFromData.customAttributes.street_name;
+                        }
+                        else if (addressFromData.street.length >= 0) {
+                            streetName = addressFromData.street[0];
+                        }
                         if (addressFromData.custom_attributes.hasOwnProperty('house_number')) {
                             houseNumber = addressFromData.custom_attributes.house_number;
                         }
@@ -215,6 +245,7 @@ define(
                     }
                     else {
                         if (quote.shippingAddress().street.length >= 2) {
+                            streetName = quote.shippingAddress().street[0];
                             houseNumber = quote.shippingAddress().street[1];
 
                             if (quote.shippingAddress().street.length >= 3) {
@@ -223,6 +254,7 @@ define(
                         }
                         else {
                             var parts = this.getStreetParts(quote.shippingAddress().street);
+                            streetName = parts['street'];
                             houseNumber = parts['house_number'];
                             houseNumberAddition = parts['addition'];
                         }
@@ -242,6 +274,7 @@ define(
                 addressInfo['telephone'] = currentTelephone;
                 addressInfo['email'] = currentEmail;
                 addressInfo['postcode'] = currentPostcode;
+                addressInfo['street_name'] = streetName;
                 addressInfo['house_number'] = houseNumber;
                 addressInfo['house_number_addition'] = houseNumberAddition;
 
@@ -265,6 +298,7 @@ define(
             },
 
             processResult: function (address) {
+                var self = this;
                 var isValid = true;
                 var dataKeys = ['city', 'street'];
                 _.each(dataKeys, function (i) {
@@ -311,25 +345,38 @@ define(
                     // Enable elements
                     this.enableElements(elements, []); //  ['street', 'city']
 
-                    if (address.length == 0) {
-                        // Rates did not return anything, must be a wrong address.
-                        return;
+                    if (address.length == 0 || !address.hasOwnProperty('street')) {
+                        // Rates did not return anything, must be a wrong address. Try to get info from getAddressInfo
+
+                        var addressInfo = self.getAddressInfo();
+                        addressFromData = {};
+                        addressFromData.custom_attributes = {};
+                        addressFromData.custom_attributes.street_name = addressInfo.street_name;
+                        addressFromData.street_name = addressInfo.street_name;
+                        addressFromData.custom_attributes.house_number = addressInfo.house_number;
+                        addressFromData.house_number = addressInfo.house_number;
+                        addressFromData.custom_attributes.house_number_addition = addressInfo.house_number_addition;
+                        addressFromData.house_number_addition = addressInfo.house_number_addition;
+                        addressFromData.postcode = addressInfo.postcode;
                     }
 
                     var streetName = '';
-                    if (addressFromData.custom_attributes.street_name !== undefined || addressFromData.custom_attributes.street_name !== '') {
+                    if (addressFromData && addressFromData.custom_attributes.street_name !== undefined && addressFromData.custom_attributes.street_name !== '') {
                         streetName = addressFromData.custom_attributes.street_name;
+
                     }
-                    shippingData = {
-                        city: addressFromData.city,
-                        street_name: streetName,
-                        street: {
-                            0: streetName,
-                            1: addressFromData.house_number,
-                            2: addressFromData.house_number_addition
-                        },
-                        postcode: addressFromData.postcode
-                    };
+                    if (addressFromData) {
+                        shippingData = {
+                            city: addressFromData.city,
+                            street_name: streetName,
+                            street: {
+                                0: streetName,
+                                1: addressFromData.house_number,
+                                2: addressFromData.house_number_addition
+                            },
+                            postcode: addressFromData.postcode
+                        };
+                    }
                 }
 
                 shippingData = $.extend(addressFromData, shippingData);
