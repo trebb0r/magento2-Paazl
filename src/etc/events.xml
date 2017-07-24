@@ -10,8 +10,14 @@
     <event name="sales_order_address_save_before">
         <observer name="paazl_before_order_save" instance="Paazl\Shipping\Observer\SalesOrderAddressSaveObserver" />
     </event>
+    <event name="sales_order_address_load_after">
+        <observer name="paazl_before_order_load" instance="Paazl\Shipping\Observer\SalesOrderAddressLoadObserver" />
+    </event>
     <event name="customer_address_save_before">
         <observer name="paazl_before_customer_address_save" instance="Paazl\Shipping\Observer\CustomerAddressSaveObserver" />
+    </event>
+    <event name="customer_address_load_after">
+        <observer name="paazl_before_customer_address_load" instance="Paazl\Shipping\Observer\CustomerAddressLoadObserver" />
     </event>
     <event name="core_copy_fieldset_sales_convert_quote_to_order">
         <observer name="paazl_shipping" instance="Paazl\Shipping\Observer\CoreCopyFieldsetSalesConvertQuoteToOrder" />
