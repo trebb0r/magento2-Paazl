@@ -27,6 +27,14 @@ define([
                     if ((typeof streetName == "undefined" || streetName == '') && localStorageData.street && localStorageData.street[0] !== '') {
                         streetName = localStorageData.street[0];
                     }
+                    if (streetName == '') {
+                        if (address.hasOwnProperty('customerAddressId')) {
+                            streetName = address.customAttributes.street_name.value;
+                        }
+                        else {
+                            streetName = address.custom_attributes.street_name;
+                        }
+                    }
                 }
             }
             if (typeof houseNumber == "undefined" || houseNumber == '') {
@@ -35,6 +43,14 @@ define([
                     if ((typeof houseNumber == "undefined" || houseNumber == '') && localStorageData.street && localStorageData.street[1] !== '') {
                         houseNumber = localStorageData.street[1];
                     }
+                    if (houseNumber == '') {
+                        if (address.hasOwnProperty('customerAddressId')) {
+                            if (address.customAttributes.hasOwnProperty('house_number')) houseNumber = address.customAttributes.house_number.value;
+                        }
+                        else {
+                            if (address.custom_attributes.hasOwnProperty('house_number')) houseNumber = address.custom_attributes.house_number;
+                        }
+                    }
                 }
             }
             if (typeof houseNumberAddition == "undefined" || houseNumberAddition == '') {
@@ -42,6 +58,14 @@ define([
                     if (localStorageData.house_number_addition !== undefined) houseNumberAddition = localStorageData.house_number_addition;
                     if ((typeof houseNumberAddition == "undefined" || houseNumberAddition == '') && localStorageData.street && localStorageData.street[2] !== '') {
                         houseNumberAddition = localStorageData.street[2];
+                    }
+                    if (houseNumberAddition == '') {
+                        if (address.hasOwnProperty('customerAddressId')) {
+                            if (address.customAttributes.hasOwnProperty('house_number_addition')) houseNumberAddition = address.customAttributes.house_number_addition.value;
+                        }
+                        else {
+                            if (address.custom_attributes.hasOwnProperty('house_number_addition')) houseNumberAddition = address.custom_attributes.house_number_addition;
+                        }
                     }
                 }
             }
