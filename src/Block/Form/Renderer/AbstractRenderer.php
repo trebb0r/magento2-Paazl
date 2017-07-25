@@ -247,7 +247,7 @@ abstract class AbstractRenderer extends \Magento\Framework\View\Element\Template
      */
     public function getLabel()
     {
-        return $this->getAttributeObject()->getStoreLabel();
+        return __($this->getAttributeObject()->getStoreLabel());
     }
 
     /**
