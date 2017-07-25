@@ -4,10 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.3.1-rc1] - To be released
-### Changed
-- House number now has numeric validation on the frontend
-
 ## [1.3.0-rc1] - To be released
 
 With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
@@ -24,6 +20,7 @@ A lot of bug fixes and small improvements are included in this release:
 - Added option to enable the postcode validation (disabled by default due to UI issues with addresses outside the Netherlands, better UI planned for a future release).
 - Checkout field sort order set to: Street Number, House Number, House Number Addition, Postcode, City, State, Country
 - Solve issue in the cart where the tax would not be calculated properly because Paazl expects a full address instead of only a postcode. (Reported by ISM e-Company)
+- House number now has numeric validation on the frontend
 - Solve issue in the cart where filling in your state would throw a JS error.
 - Solve issue where saving a customer address would throw an exception. CE Only
 - Solve issue where a reorder would throw an exception. (Reported by Guapa)
