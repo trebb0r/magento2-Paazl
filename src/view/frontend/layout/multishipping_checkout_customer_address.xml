@@ -12,9 +12,12 @@
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">Paazl_Shipping::customer/address/edit.phtml</argument>
             </action>
-            <block class="Paazl\Shipping\Block\Form" name="customer_form_user_attributes" template="form/userattributes.phtml" cacheable="false">
+            <block class="Paazl\Shipping\Block\Form" name="customer_form_address_user_attributes" template="form/userattributes.phtml" cacheable="false">
                 <action method="setFormCode">
                     <argument name="code" xsi:type="string">customer_address_edit</argument>
+                </action>
+                <action method="setEntityModelClass">
+                    <argument name="code" xsi:type="string">Magento\Customer\Model\Address</argument>
                 </action>
             </block>
         </referenceBlock>
