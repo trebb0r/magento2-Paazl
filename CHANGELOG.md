@@ -27,7 +27,6 @@ A lot of bug fixes and small improvements are included in this release:
 - Solve issue where having a different configuration per website would cause issues (Reported by Guapa).
 
 ### Known Issues
-- When the cron job is trying to communicate orders to Paazl and Paazl throws an error for a single order, the rest of the orders wont be processed.
 - 'Admin Panel Order Create' and 'Frontend multishipping' does not support Paazl Perfect, only basic functionality is supported
 - Admin Panel View Order Edit address does not save house number. Confirmed as Magento Core bug.
 
