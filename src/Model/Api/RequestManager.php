@@ -60,6 +60,11 @@ class RequestManager
     protected $registry;
 
     /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $state;
+
+    /**
      * RequestManager constructor.
      * @param ClientFactory $clientFactory
      * @param ScopeConfigInterface $scopeConfig
@@ -67,6 +72,7 @@ class RequestManager
      * @param PaazlSoapError $paazlError
      * @param LogHelper $log
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\App\State $state
      */
     public function __construct(
         ClientFactory $clientFactory,
@@ -74,7 +80,8 @@ class RequestManager
         \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
         \Paazl\Shipping\Model\Api\PaazlSoapError $paazlError,
         LogHelper $log,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\App\State $state
     ) {
         $this->clientFactory = $clientFactory;
         $this->scopeConfig = $scopeConfig;
@@ -82,6 +89,7 @@ class RequestManager
         $this->paazlError = $paazlError;
         $this->log = $log;
         $this->registry = $registry;
+        $this->state = $state;
     }
 
     /**
@@ -176,7 +184,7 @@ class RequestManager
 
         $requestObject->setErrors($errors);
         if (count($errors)) {
-            if ($this->showRealErrorMsg) {
+            if ($this->showRealErrorMsg || $this->state->getAreaCode() == \Magento\Framework\App\Area::AREA_CRONTAB) {
                 if (isset($errors[0]['message'])) {
                     $throwMsg = $errors[0]['message'];
                 }
@@ -192,9 +200,11 @@ class RequestManager
                 $throwMsg = $this->customErrorMsg;
             }
 
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __($throwMsg)
-            );
+            if ($this->state->getAreaCode() !== \Magento\Framework\App\Area::AREA_CRONTAB) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __($throwMsg)
+                );
+            }
         }
 
         return $requestObject;

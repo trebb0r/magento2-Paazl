@@ -234,7 +234,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         $zipcodeValidation = $this->_scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $order->getStoreId());
         if (!$zipcodeValidation) {
-            $requestData['body']['shippingAddress']['localAddressValidation'] = false;
+            $requestData['body']['shippingAddress']['localAddressValidation'] = 0;
         }
 
         if ($this->_scopeConfig->getValue(self::XML_PATH_SINGLE_LABEL_PER_ORDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId())) {

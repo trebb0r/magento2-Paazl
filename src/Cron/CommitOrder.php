@@ -105,7 +105,7 @@ class CommitOrder
                 $this->registry->unregister('paazl_current_store');
                 $this->registry->register('paazl_current_store', $order->getStoreId());
 
-                if ($order->getExtOrderId() == 'error-1002') continue;
+                if (strpos('error-', $order->getExtOrderId() !== false)) continue;
 
                 $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getQuoteId();
 
@@ -114,9 +114,9 @@ class CommitOrder
                     $order->setExtOrderId($extOrderId);
                     $this->_orderResource->save($order);
                 } else {
-                    if (isset($response['error']['code']) && $response['error']['code'] == '1002') {
+                    if (isset($response['error']['code'])) {
                         //@todo create new order reference and redo commit
-                        $order->setExtOrderId('error-1002');
+                        $order->setExtOrderId('error-' . $response['error']['code']);
                         $this->_orderResource->save($order);
                     }
                 }
