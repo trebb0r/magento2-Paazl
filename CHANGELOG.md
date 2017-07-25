@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.1-rc1] - To be released
+### Changed
+- House number now has numeric validation on the frontend
+
 ## [1.3.0-rc1] - To be released
 
 With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
 
-*EE Only: If you're already using custom Customer attributes (e.g. `housenumber`), make sure it follows Paazl's exact naming convention (it are varchar fields).*
+*EE Only: If you're already using custom Customer attributes (e.g. `house number`), make sure it follows Paazl's exact naming convention (it are varchar fields).*
 
 - All UI components that have address fields are replaced with the new customer attributes (frontend / backend).
 - All existing addresses are automatically converted to the new format when they are loaded.
