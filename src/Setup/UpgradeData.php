@@ -191,12 +191,6 @@ class UpgradeData implements UpgradeDataInterface
                     ]
                 );
             }
-        }
-        if (version_compare($context->getVersion(), '1.3.1') < 0) {
-            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-            $customerEntity = $customerSetup->getEavConfig()->getEntityType(
-                'customer_address'
-            );
 
             if ($this->isAttributeAllowedForImport($customerEntity, 'house_number', true)) {
                 $attribute = $customerSetup->getEavConfig()
@@ -222,6 +216,7 @@ class UpgradeData implements UpgradeDataInterface
     /**
      * @param $customerEntity
      * @param $attributeCode
+     * @param $existingAllowed
      *
      * @return bool
      */
