@@ -110,10 +110,10 @@ define(
                                                             e.preventDefault();
 
                                                             var addressInfo = self.getAddressInfo();
-                                                            $('input[name="postcode"]').val(addressInfo['postcode']);
-                                                            $('select[name="country_id"]').val(addressInfo['country_id']);
-                                                            $('#customer-email').val(addressInfo['email']);
-                                                            $('input[name="telephone"]').val(addressInfo['telephone']);
+                                                            if (addressInfo['postcode'] !== undefined) $('input[name="postcode"]').val(addressInfo['postcode']);
+                                                            if (addressInfo['country_id'] !== undefined) $('select[name="country_id"]').val(addressInfo['country_id']);
+                                                            if (addressInfo['email'] !== undefined) $('#customer-email').val(addressInfo['email']);
+                                                            if (addressInfo['telephone'] !== undefined) $('input[name="telephone"]').val(addressInfo['telephone']);
 
                                                             var methodCode = $(this).attr('method_code');
                                                             if (methodCode == 'SERVICE_POINT') {
