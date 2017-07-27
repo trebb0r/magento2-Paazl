@@ -201,6 +201,13 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $assuredAmount = (int)$this->_scopeConfig->getValue(self::XML_PATH_ASSURED_AMOUNT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
         }
 
+        // convert old address to new format
+        $streetParts = $this->_addressHelper->getMultiLineStreetParts($shippingAddress->getStreet());
+        if (!$streetParts['house_number']) {
+            // Get street, house number, etc from line 1
+            $streetParts = $this->_addressHelper->getStreetParts($shippingAddress->getStreet());
+        }
+
         $requestData = [
             'context' => $this->getReferencePrefix() . $order->getQuoteId(),
             'body' => [
@@ -221,9 +228,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 ],
                 'shippingAddress' => [
                     'customerName' => $shippingAddress->getName(),
-                    'street' => $shippingAddress->getStreetLine(1),
-                    'housenumber' => $shippingAddress->getStreetLine(2),
-                    'addition' => $shippingAddress->getStreetLine(3),
+                    'street' => $streetParts['street'],
+                    'housenumber' => $streetParts['house_number'],
+                    'addition' => $streetParts['addition'],
                     'zipcode' => $shippingAddress->getPostcode(),
                     'city' => $shippingAddress->getCity(),
                     'province' => $shippingAddress->getRegion(),
