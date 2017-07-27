@@ -197,13 +197,19 @@ class ShippingMethodConverterPlugin
 
                 if (isset($paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'])) {
                     $dateTime = $paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'];
+                    $dateTimeAsTimeZone = $this->timezoneInterface
+                        ->date(new \DateTime($dateTime))
+                        ->format('d-m-Y');
 
                     $shippingOptions = $this->_paazlManagement->getShippingOptions();
 
                     foreach($shippingOptions as $shippingOption) {
                         if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates']) && isset($shippingOption['deliveryDates']['deliveryDateOption'])) {
                             foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
-                                if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
+                                $deliveryDateOptionAsTimeZone = $this->timezoneInterface
+                                    ->date(new \DateTime($deliveryDateOption['deliveryDate']))
+                                    ->format('d-m-Y');
+                                if ($deliveryDateOptionAsTimeZone == $dateTimeAsTimeZone && isset($deliveryDateOption['deliveryTimeRange'])) {
                                     $deliveryWindowTimes = [];
                                     if (isset($deliveryDateOption['deliveryTimeRange']['lowerBound'])) {
                                         $startTimeAsTimeZone = $this->timezoneInterface
