@@ -224,6 +224,22 @@ class InstallData implements InstallDataInterface
                     'system'           => 0,
                 ]
             );
+
+            if ($this->isAttributeAllowedForImport($customerEntity, 'house_number', true)) {
+                $attribute = $customerSetup->getEavConfig()
+                    ->getAttribute(
+                        'customer_address',
+                        'house_number'
+                    )
+                    ->addData(
+                        [
+                            'validate_rules'   => serialize([
+                                'input_validation' => 'numeric',
+                            ]),
+                        ]
+                    );
+                $attribute->save();
+            }
         }
 
         // @todo Need to do a reindex and clear cache. Maybe add to the readme?
@@ -233,13 +249,17 @@ class InstallData implements InstallDataInterface
     /**
      * @param $customerEntity
      * @param $attributeCode
+     * @param $existingAllowed
      *
      * @return bool
      */
-    protected function isAttributeAllowedForImport($customerEntity, $attributeCode)
+    protected function isAttributeAllowedForImport($customerEntity, $attributeCode, $existingAllowed = false)
     {
         try {
             $this->attributeRepository->get($customerEntity, $attributeCode);
+            if ($existingAllowed) {
+                return true;
+            }
             return false;
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $allowed = true;
