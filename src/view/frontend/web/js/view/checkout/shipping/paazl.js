@@ -72,17 +72,23 @@ define(
                                             if (self.deliveryType == 'home') {
                                                 // select delivery radio option
                                                 domObserver.get('input[delivery-type="home"]',function () {
-                                                    $('input[delivery-type="servicePoint"]').attr('checked', false);
-                                                    $('input[delivery-type="home"]').attr('checked', 'checked');
-                                                    $('input[delivery-type="home"]').click();
+                                                    // When user chose something different in Paazl Perfect multiple times check for deliveryType
+                                                    if (self.deliveryType == 'home') {
+                                                        $('input[delivery-type="servicePoint"]').attr('checked', false);
+                                                        $('input[delivery-type="home"]').attr('checked', 'checked');
+                                                        $('input[delivery-type="home"]').click();
+                                                    }
                                                 });
                                             }
                                             if (self.deliveryType == 'servicePoint') {
                                                 // select pickup radio option
                                                 domObserver.get('input[delivery-type="servicePoint"]',function () {
-                                                    $('input[delivery-type="home"]').attr('checked', false);
-                                                    $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
-                                                    $('input[delivery-type="servicePoint"]').click();
+                                                    // When user chose something different in Paazl Perfect multiple times check for deliveryType
+                                                    if (self.deliveryType == 'servicePoint') {
+                                                        $('input[delivery-type="home"]').attr('checked', false);
+                                                        $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
+                                                        $('input[delivery-type="servicePoint"]').click();
+                                                    }
                                                 });
                                             }
 
