@@ -13,6 +13,9 @@ var config = {
             },
             'Magento_Checkout/js/action/set-shipping-information': {
                 'Paazl_Shipping/js/action/set-shipping-information-mixin': true
+            },
+            'Magento_Checkout/js/view/shipping': {
+                'Paazl_Shipping/js/view/shipping-mixin': true
             }
         }
     },
