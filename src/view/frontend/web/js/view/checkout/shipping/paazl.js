@@ -61,7 +61,10 @@ define(
                                             });
 
                                             self.processResult(address);
-                                        };
+                                        }
+                                        else {
+                                            self.processResult([]);
+                                        }
                                         if (paazlData.hasOwnProperty('checkoutRequest')) {
                                             var key = Object.keys(paazlData['checkoutRequest'])[0];
                                             var url = paazlData['checkoutRequest'][key]['url'];
@@ -69,17 +72,23 @@ define(
                                             if (self.deliveryType == 'home') {
                                                 // select delivery radio option
                                                 domObserver.get('input[delivery-type="home"]',function () {
-                                                    $('input[delivery-type="servicePoint"]').attr('checked', false);
-                                                    $('input[delivery-type="home"]').attr('checked', 'checked');
-                                                    $('input[delivery-type="home"]').click();
+                                                    // When user chose something different in Paazl Perfect multiple times check for deliveryType
+                                                    if (self.deliveryType == 'home') {
+                                                        $('input[delivery-type="servicePoint"]').attr('checked', false);
+                                                        $('input[delivery-type="home"]').attr('checked', 'checked');
+                                                        $('input[delivery-type="home"]').click();
+                                                    }
                                                 });
                                             }
                                             if (self.deliveryType == 'servicePoint') {
                                                 // select pickup radio option
                                                 domObserver.get('input[delivery-type="servicePoint"]',function () {
-                                                    $('input[delivery-type="home"]').attr('checked', false);
-                                                    $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
-                                                    $('input[delivery-type="servicePoint"]').click();
+                                                    // When user chose something different in Paazl Perfect multiple times check for deliveryType
+                                                    if (self.deliveryType == 'servicePoint') {
+                                                        $('input[delivery-type="home"]').attr('checked', false);
+                                                        $('input[delivery-type="servicePoint"]').attr('checked', 'checked');
+                                                        $('input[delivery-type="servicePoint"]').click();
+                                                    }
                                                 });
                                             }
 
@@ -107,10 +116,10 @@ define(
                                                             e.preventDefault();
 
                                                             var addressInfo = self.getAddressInfo();
-                                                            $('input[name="postcode"]').val(addressInfo['postcode']);
-                                                            $('select[name="country_id"]').val(addressInfo['country_id']);
-                                                            $('#customer-email').val(addressInfo['email']);
-                                                            $('input[name="telephone"]').val(addressInfo['telephone']);
+                                                            if (addressInfo['postcode'] !== undefined) $('input[name="postcode"]').val(addressInfo['postcode']);
+                                                            if (addressInfo['country_id'] !== undefined) $('select[name="country_id"]').val(addressInfo['country_id']);
+                                                            if (addressInfo['email'] !== undefined) $('#customer-email').val(addressInfo['email']);
+                                                            if (addressInfo['telephone'] !== undefined) $('input[name="telephone"]').val(addressInfo['telephone']);
 
                                                             var methodCode = $(this).attr('method_code');
                                                             if (methodCode == 'SERVICE_POINT') {
@@ -134,13 +143,16 @@ define(
                             }
                         }
                     });
+                    if (rates.length == 0) {
+                        self.processResult([]);
+                    }
                     return this;
                 });
             },
 
             getAddressInfo: function () {
                 var addressInfo = new Array();
-
+                var streetName = '';
                 var houseNumber = '';
                 var houseNumberAddition = '';
                 var currentCountryId = '';
@@ -148,24 +160,54 @@ define(
                 var currentEmail = '';
                 var currentPostcode = quote.shippingAddress().postcode;
                 var addressFromData = checkoutData.getShippingAddressFromData();
-                var selectedAddress = checkoutData.getSelectedShippingAddress();
-                if (selectedAddress) {
-                    // Logged in user with selected address
-                    var selectedAddress = checkoutData.getSelectedShippingAddress();
+
+                var shippingAddress = quote.shippingAddress();
+
+                var selectedAddress = shippingAddress.getKey();
+                if (selectedAddress != 'new-customer-address') {
+                    // logged-in user with selected address
                     addressList.some(function (address) {
                         if (selectedAddress == address.getKey()) {
                             addressFromData = address;
                         }
                     });
+                }
+                else {
+                    // new address
+                    addressFromData = checkoutData.getShippingAddressFromData();
+                }
 
-                    if (addressFromData.hasOwnProperty('houseNumber')) {
-                        houseNumber = addressFromData.houseNumber;
+                if (shippingAddress.hasOwnProperty('customerAddressId')) {
+                    // Logged in user with selected address
+                    if (addressFromData.customAttributes.hasOwnProperty('street_name')) {
+                        if (typeof addressFromData.customAttributes.street_name == 'string') {
+                            streetName = addressFromData.customAttributes.street_name;
+                        }
+                        else {
+                            if (addressFromData.customAttributes.street_name !== undefined) streetName = addressFromData.customAttributes.street_name.value;
+                        }
+                    }
+                    else if (addressFromData.street.length >= 0) {
+                        streetName = addressFromData.street[0];
+                    }
+                    if (addressFromData.customAttributes.hasOwnProperty('house_number')) {
+                        if (typeof addressFromData.customAttributes.house_number == 'string') {
+                            houseNumber = addressFromData.customAttributes.house_number;
+                        }
+                        else {
+                            if (addressFromData.customAttributes.house_number !== undefined) houseNumber = addressFromData.customAttributes.house_number.value;
+                        }
                     }
                     else if (addressFromData.street.length >= 2) {
                         houseNumber = addressFromData.street[1];
                     }
-                    if (addressFromData.hasOwnProperty('houseNumberAddition')) {
-                        houseNumberAddition = addressFromData.houseNumberAddition;
+                    if (addressFromData.customAttributes.hasOwnProperty('house_number_addition')) {
+                        if (typeof addressFromData.customAttributes.house_number_addition == 'string') {
+                            houseNumberAddition = addressFromData.customAttributes.house_number_addition;
+                        }
+                        else {
+                            if (addressFromData.customAttributes.house_number_addition !== undefined) houseNumberAddition = addressFromData.customAttributes.house_number_addition.value;
+                        }
                     }
                     else if (addressFromData.street.length >= 3) {
                         houseNumberAddition = addressFromData.street[2];
@@ -179,15 +221,21 @@ define(
                 }
                 else {
                     // Logged out user or new-address
-                    if (addressFromData && (addressFromData.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
-                        if (addressFromData.hasOwnProperty('house_number')) {
-                            houseNumber = addressFromData.house_number;
+                    if (addressFromData && (addressFromData.custom_attributes.hasOwnProperty('house_number') || addressFromData.street.length >= 2)) {
+                        if (addressFromData.custom_attributes.hasOwnProperty('street_name') && addressFromData.custom_attributes.street_name !== undefined) {
+                            streetName = addressFromData.custom_attributes.street_name;
+                        }
+                        else if (addressFromData.street.length >= 0) {
+                            streetName = addressFromData.street[0];
+                        }
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number') && addressFromData.custom_attributes.house_number !== undefined) {
+                            houseNumber = addressFromData.custom_attributes.house_number;
                         }
                         else if (addressFromData.street.length >= 2) {
                             houseNumber = addressFromData.street[1];
                         }
-                        if (addressFromData.hasOwnProperty('house_number_addition')) {
-                            houseNumberAddition = addressFromData.house_number_addition;
+                        if (addressFromData.custom_attributes.hasOwnProperty('house_number_addition') && addressFromData.custom_attributes.house_number_addition !== undefined) {
+                            houseNumberAddition = addressFromData.custom_attributes.house_number_addition;
                         }
                         else if (addressFromData.street.length >= 3) {
                             houseNumberAddition = addressFromData.street[2];
@@ -203,6 +251,7 @@ define(
                     }
                     else {
                         if (quote.shippingAddress().street.length >= 2) {
+                            streetName = quote.shippingAddress().street[0];
                             houseNumber = quote.shippingAddress().street[1];
 
                             if (quote.shippingAddress().street.length >= 3) {
@@ -211,6 +260,7 @@ define(
                         }
                         else {
                             var parts = this.getStreetParts(quote.shippingAddress().street);
+                            streetName = parts['street'];
                             houseNumber = parts['house_number'];
                             houseNumberAddition = parts['addition'];
                         }
@@ -230,6 +280,7 @@ define(
                 addressInfo['telephone'] = currentTelephone;
                 addressInfo['email'] = currentEmail;
                 addressInfo['postcode'] = currentPostcode;
+                addressInfo['street_name'] = streetName;
                 addressInfo['house_number'] = houseNumber;
                 addressInfo['house_number_addition'] = houseNumberAddition;
 
@@ -253,6 +304,7 @@ define(
             },
 
             processResult: function (address) {
+                var self = this;
                 var isValid = true;
                 var dataKeys = ['city', 'street'];
                 _.each(dataKeys, function (i) {
@@ -262,10 +314,10 @@ define(
                 });
 
                 var elements = {
-                    streetName: $("input[name='street_name']"),
+                    streetName: $("input[name='custom_attributes[street_name]']"),
                     street: $("input[name='street[0]']"),
-                    houseNumber: $("input[name='street[1]']"),
-                    houseNrAddition: $("input[name='street[2]']"),
+                    houseNumber: $("input[name='custom_attributes[house_number]']"),
+                    houseNrAddition: $("input[name='custom_attributes[house_number_addition]']"),
                     city: $("input[name='city']")
                 };
 
@@ -273,13 +325,17 @@ define(
                 var shippingData = {};
 
                 if (isValid) {
-                    // Disable elements and add result data
-                    elements.streetName.val(address.street);
-                    elements.street.val(address.street);
-                    elements.houseNumber.val(address.housenumber);
-                    elements.houseNrAddition.val(address.addition);
-                    elements.city.val(address.city);
-                    this.disableElements(elements);
+                    // Disable elements when new address. And add result data
+                    var shippingAddress = quote.shippingAddress();
+                    var selectedAddress = shippingAddress.getKey();
+                    if (selectedAddress == 'new-customer-address') {
+                        elements.streetName.val(address.street);
+                        elements.street.val(address.street);
+                        elements.houseNumber.val(address.housenumber);
+                        elements.houseNrAddition.val(address.addition);
+                        elements.city.val(address.city);
+                        this.disableElements(elements);
+                    }
 
                     shippingData = {
                         city: address.city,
@@ -288,24 +344,45 @@ define(
                             0: address.street,
                             1: address.housenumber,
                             2: address.addition
-                        }
+                        },
+                        postcode: address.zipcode
                     };
                 } else {
                     // Enable elements
                     this.enableElements(elements, []); //  ['street', 'city']
-                    var streetName = '';
-                    if (addressFromData.street_name !== undefined) {
-                        streetName = addressFromData.street_name;
+
+                    if (address.length == 0 || !address.hasOwnProperty('street')) {
+                        // Rates did not return anything, must be a wrong address. Try to get info from getAddressInfo
+
+                        var addressInfo = self.getAddressInfo();
+                        addressFromData = {};
+                        addressFromData.custom_attributes = {};
+                        addressFromData.custom_attributes.street_name = addressInfo.street_name;
+                        addressFromData.street_name = addressInfo.street_name;
+                        addressFromData.custom_attributes.house_number = addressInfo.house_number;
+                        addressFromData.house_number = addressInfo.house_number;
+                        addressFromData.custom_attributes.house_number_addition = addressInfo.house_number_addition;
+                        addressFromData.house_number_addition = addressInfo.house_number_addition;
+                        addressFromData.postcode = addressInfo.postcode;
                     }
-                    shippingData = {
-                        city: addressFromData.city,
-                        street_name: streetName,
-                        street: {
-                            0: streetName,
-                            1: addressFromData.house_number,
-                            2: addressFromData.house_number_addition
-                        }
-                    };
+
+                    var streetName = '';
+                    if (addressFromData && addressFromData.custom_attributes.street_name !== undefined && addressFromData.custom_attributes.street_name !== '') {
+                        streetName = addressFromData.custom_attributes.street_name;
+
+                    }
+                    if (addressFromData) {
+                        shippingData = {
+                            city: addressFromData.city,
+                            street_name: streetName,
+                            street: {
+                                0: streetName,
+                                1: addressFromData.house_number,
+                                2: addressFromData.house_number_addition
+                            },
+                            postcode: addressFromData.postcode
+                        };
+                    }
                 }
 
                 shippingData = $.extend(addressFromData, shippingData);

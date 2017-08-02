@@ -89,6 +89,13 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected $registry;
 
     /**
+     * Array of quotes
+     *
+     * @var array
+     */
+    protected $_quotesSharedCache;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -188,6 +195,8 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         }
 
         $paazlData = $this->registry->registry('paazlData');
+
+        $this->registry->register('paazl_current_store', $request->getStoreId(), true);
 
         // If we switch Paazl account the session get's mixed up. Easiest to see if checkoutStatusRequest has more than 1 result
         if (isset($paazlData['results']) && isset($paazlData['results']['checkoutStatusRequest'])) {
@@ -539,5 +548,36 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
         }
 
         return $result;
+    }
+
+    /**
+     * Checks whether some request to rates have already been done, so we have cache for it
+     * Used to reduce number of same requests done to carrier service during one session
+     *
+     * Returns cached response or null
+     *
+     * @param string|array $requestParams
+     * @return null|string
+     */
+    protected function _getCachedQuotes($requestParams)
+    {
+        $key = $this->_getQuotesCacheKey($requestParams);
+
+        return isset($this->_quotesSharedCache[$key]) ? $this->_quotesSharedCache[$key] : null;
+    }
+
+    /**
+     * Sets received carrier quotes to cache
+     *
+     * @param string|array $requestParams
+     * @param string $response
+     * @return $this
+     */
+    protected function _setCachedQuotes($requestParams, $response)
+    {
+        $key = $this->_getQuotesCacheKey($requestParams);
+        $this->_quotesSharedCache[$key] = $response;
+
+        return $this;
     }
 }

@@ -56,5 +56,9 @@ class Uninstall implements UninstallInterface
             $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeInfo['attributeCode']);
         }
         $eavSetup->removeAttributeGroup(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'Paazl');
+
+        $eavSetup->removeAttribute(\Magento\Customer\Api\AddressMetadataInterface::ENTITY_TYPE_ADDRESS, 'street_name');
+        $eavSetup->removeAttribute(\Magento\Customer\Api\AddressMetadataInterface::ENTITY_TYPE_ADDRESS, 'house_number');
+        $eavSetup->removeAttribute(\Magento\Customer\Api\AddressMetadataInterface::ENTITY_TYPE_ADDRESS, 'house_number_addition');
     }
 }

@@ -85,4 +85,25 @@
     <preference for="Magento\Shipping\Model\Shipping\Labels" type="Paazl\Shipping\Model\Shipping\Labels"/>
 
     <preference for="Magento\Quote\Model\ShippingMethodManagement" type="Paazl\Shipping\Model\Quote\ShippingMethodManagement"/>
+
+    <type name="Magento\Quote\Model\Quote\Address\ToOrderAddress">
+        <plugin name="convertQuoteAddressToOrderAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToOrderAddress"/>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin name="convertQuoteAddressToCustomerAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToCustomerAddress"/>
+    </type>
+
+    <preference for="Magento\Customer\Api\AddressRepositoryInterface"
+                type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+    <preference for="\Magento\Customer\Model\ResourceModel\AddressRepository"
+                type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+    <preference for="Magento\Quote\Model\Quote\Address" type="Paazl\Shipping\Model\Quote\Address" />
+
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Billing\Address" />
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Shipping\Address" />
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Address\Form" type="Paazl\Shipping\Block\Adminhtml\Order\Address\Form" />
+
+    <preference for="Magento\Ui\Component\Layout\Tabs" type="Paazl\Shipping\Model\Ui\Component\Layout\Tabs" />
+
+    <preference for="Magento\Customer\Model\Metadata\Form" type="Paazl\Shipping\Model\Customer\Metadata\Form" />
 </config>

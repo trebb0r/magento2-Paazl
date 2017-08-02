@@ -55,33 +55,41 @@ class RequestManager
     protected $log;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $state;
+
+    /**
      * RequestManager constructor.
      * @param ClientFactory $clientFactory
      * @param ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter
      * @param PaazlSoapError $paazlError
      * @param LogHelper $log
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\App\State $state
      */
     public function __construct(
         ClientFactory $clientFactory,
         ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Api\SimpleDataObjectConverter $objectConverter,
         \Paazl\Shipping\Model\Api\PaazlSoapError $paazlError,
-        LogHelper $log
+        LogHelper $log,
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\App\State $state
     ) {
         $this->clientFactory = $clientFactory;
         $this->scopeConfig = $scopeConfig;
         $this->objectConverter = $objectConverter;
         $this->paazlError = $paazlError;
         $this->log = $log;
-
-        $this->debugMode = $this->scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-        $this->apiType = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-        $this->webshopId = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-        $this->password =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-        $this->showRealErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_DISPLAY_REAL_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-        $this->customErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_CUSTOM_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE);
-
+        $this->registry = $registry;
+        $this->state = $state;
     }
 
     /**
@@ -90,6 +98,7 @@ class RequestManager
      */
     public function doRequest(PaazlRequest $requestObject)
     {
+        $this->setupVars();
         $errors = [];
         $clientConfig = $requestObject->getClientConfig();
 
@@ -175,7 +184,7 @@ class RequestManager
 
         $requestObject->setErrors($errors);
         if (count($errors)) {
-            if ($this->showRealErrorMsg) {
+            if ($this->showRealErrorMsg || $this->state->getAreaCode() == \Magento\Framework\App\Area::AREA_CRONTAB) {
                 if (isset($errors[0]['message'])) {
                     $throwMsg = $errors[0]['message'];
                 }
@@ -191,9 +200,11 @@ class RequestManager
                 $throwMsg = $this->customErrorMsg;
             }
 
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __($throwMsg)
-            );
+            if ($this->state->getAreaCode() !== \Magento\Framework\App\Area::AREA_CRONTAB) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __($throwMsg)
+                );
+            }
         }
 
         return $requestObject;
@@ -221,6 +232,7 @@ class RequestManager
      */
     private function prepareFixedElements(&$requestObject)
     {
+        $this->setupVars();
         $clientConfig = $requestObject->getClientConfig();
         $context = (string)$requestObject->getContext();
 
@@ -239,7 +251,20 @@ class RequestManager
      * @param $context
      * @return string
      */
-    public function getHash($context) {
+    public function getHash($context)
+    {
+        $this->setupVars();
         return sha1($this->webshopId . $this->password . $context);
+    }
+
+    protected function setupVars()
+    {
+        $currentStoreId = $this->registry->registry('paazl_current_store');
+        $this->debugMode = $this->scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_DEBUG, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
+        $this->apiType = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_API_TYPE, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
+        $this->webshopId = $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_WEBSHOP_ID, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
+        $this->password =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_PASSWORD, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
+        $this->showRealErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_DISPLAY_REAL_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
+        $this->customErrorMsg =  $this->scopeConfig->getValue(self::XML_PATH_STORECONFIGURATION_PAAZL_CUSTOM_ERR, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $currentStoreId);
     }
 }

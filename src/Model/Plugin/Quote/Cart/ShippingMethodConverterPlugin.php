@@ -197,25 +197,23 @@ class ShippingMethodConverterPlugin
 
                 if (isset($paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'])) {
                     $dateTime = $paazlData['delivery'][$result->getMethodCode()]['preferredDeliveryDate'];
+                    $dateTimeAsTimeZone = $this->convertToLocalTime($dateTime, 'd-m-Y');
 
                     $shippingOptions = $this->_paazlManagement->getShippingOptions();
 
                     foreach($shippingOptions as $shippingOption) {
-                        if ($shippingOption['type'] == $result->getMethodCode()) {
+                        if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates']) && isset($shippingOption['deliveryDates']['deliveryDateOption'])) {
                             foreach ($shippingOption['deliveryDates']['deliveryDateOption'] as $deliveryDateOption) {
-                                if ($deliveryDateOption['deliveryDate'] == $dateTime && isset($deliveryDateOption['deliveryTimeRange'])) {
+                                $deliveryDateOptionAsTimeZone = $this->convertToLocalTime($deliveryDateOption['deliveryDate'], 'd-m-Y');
+                                if ($deliveryDateOptionAsTimeZone == $dateTimeAsTimeZone && isset($deliveryDateOption['deliveryTimeRange'])) {
                                     $deliveryWindowTimes = [];
                                     if (isset($deliveryDateOption['deliveryTimeRange']['lowerBound'])) {
-                                        $startTimeAsTimeZone = $this->timezoneInterface
-                                            ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['lowerBound']))
-                                            ->format('H:i');
+                                        $startTimeAsTimeZone = $this->convertToLocalTime($deliveryDateOption['deliveryTimeRange']['lowerBound'], 'H:i');
                                         $delivery->setDeliveryWindowStart($startTimeAsTimeZone);
                                         $deliveryWindowTimes[] = $startTimeAsTimeZone;
                                     }
                                     if (isset($deliveryDateOption['deliveryTimeRange']['upperBound'])) {
-                                        $endTimeAsTimeZone = $this->timezoneInterface
-                                            ->date(new \DateTime($deliveryDateOption['deliveryTimeRange']['upperBound']))
-                                            ->format('H:i');
+                                        $endTimeAsTimeZone = $this->convertToLocalTime($deliveryDateOption['deliveryTimeRange']['upperBound'], 'H:i');
                                         $delivery->setDeliveryWindowEnd($endTimeAsTimeZone);
                                         $deliveryWindowTimes[] = $endTimeAsTimeZone;
                                     }
@@ -235,11 +233,12 @@ class ShippingMethodConverterPlugin
                         }
                     }
 
-                    $dateAsTimeZone = $this->timezoneInterface
-                        ->date(new \DateTime($dateTime))
-                        ->format('l j F');
-
-                    $dateAsTimeZone = $this->dateTimeFormatter->formatObject($this->timezoneInterface->date(new \DateTime($dateTime)), 'eeee d MMMM');
+                    if (strpos($dateTime, '+') === false) {
+                        $dateAsTimeZone = new \DateTime($dateTime);
+                        $dateAsTimeZone = $this->dateTimeFormatter->formatObject($dateAsTimeZone, 'eeee d MMMM');
+                    } else {
+                        $dateAsTimeZone = $this->dateTimeFormatter->formatObject($this->timezoneInterface->date(new \DateTime($dateTime)), 'eeee d MMMM');
+                    }
 
                     $delivery->setDeliveryDate($dateAsTimeZone);
                 }
@@ -254,5 +253,23 @@ class ShippingMethodConverterPlugin
         }
 
         return $result;
+    }
+
+    /**
+     * @param $dateTime
+     * @param $format
+     * @return string
+     */
+    public function convertToLocalTime($dateTime, $format)
+    {
+        if (strpos($dateTime, '+') === false) {
+            $dateTime = new \DateTime($dateTime);
+            $dateTimeAsTimeZone = $dateTime->format($format);
+        } else {
+            $dateTimeAsTimeZone = $this->timezoneInterface
+                ->date(new \DateTime($dateTime))
+                ->format($format);
+        }
+        return $dateTimeAsTimeZone;
     }
 }

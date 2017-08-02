@@ -32,6 +32,11 @@
                     <label>Type</label>
                     <source_model>Paazl\Shipping\Model\Source\ApiType</source_model>
                 </field>
+                <field id="zipcode_validation" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable zipcode validation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>This will enable zipcode + house number validation in NL</comment>
+                </field>
             </group>
             <group id="api_advanced" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>API (advanced)</label>

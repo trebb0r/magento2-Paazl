@@ -15,6 +15,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     const XML_PATH_WEIGHT_CONVERSION_RATIO = 'paazl/locale/weight_conversion';
     const XML_PATH_ASSURED_AMOUNT = 'paazl/order/assured_amount';
     const XML_PATH_SINGLE_LABEL_PER_ORDER = 'paazl/order/single_label_per_order';
+    const XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION = 'paazl/api/zipcode_validation';
 
     /** @var float */
     protected $weightConversion;
@@ -74,6 +75,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     protected $addressExtensionFactory;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
      * PaazlManagement constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Paazl\Shipping\Model\Api\RequestBuilder $requestBuilder
@@ -84,6 +90,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface
      * @param \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
+     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -94,7 +101,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         \Magento\Quote\Model\QuoteFactory $quoteFactory,
         \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $quoteAddressRateCollectionFactory,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneInterface,
-        \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory
+        \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory,
+        \Magento\Framework\Registry $registry
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -106,6 +114,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         $this->quoteAddressRateCollectionFactory = $quoteAddressRateCollectionFactory;
         $this->timezoneInterface = $timezoneInterface;
         $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->registry = $registry;
     }
 
 
@@ -139,9 +148,10 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      */
     public function getReferencePrefix()
     {
+        $storeId = $this->registry->registry('paazl_current_store');
         $prefix = '';
-        if ($this->_scopeConfig->isSetFlag(self::XML_PATH_ORDER_REFERENCE_ADD_PREFIX)) {
-            $prefix = trim((string)$this->_scopeConfig->getValue(self::XML_PATH_ORDER_REFERENCE_PREFIX));
+        if ($this->_scopeConfig->isSetFlag(self::XML_PATH_ORDER_REFERENCE_ADD_PREFIX, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+            $prefix = trim((string)$this->_scopeConfig->getValue(self::XML_PATH_ORDER_REFERENCE_PREFIX, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId));
         }
         return $prefix;
     }
@@ -150,10 +160,10 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      * @param $weight
      * @return float
      */
-    public function getConvertedWeight($weight)
+    public function getConvertedWeight($weight, $storeId = null)
     {
         if (is_null($this->weightConversion)) {
-            $weightConversion = $this->_scopeConfig->getValue(self::XML_PATH_WEIGHT_CONVERSION_RATIO);
+            $weightConversion = $this->_scopeConfig->getValue(self::XML_PATH_WEIGHT_CONVERSION_RATIO, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
             $this->weightConversion = (!is_null($weightConversion)) ? (float)$weightConversion : (float)1;
         }
 
@@ -166,6 +176,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      */
     public function processOrderCommitRequest($order)
     {
+        /**
+         * @var $order \Magento\Sales\Model\Order
+         */
         $shippingMethod = $order->getShippingMethod(true);
         $shippingAddress = $order->getShippingAddress();
         /**
@@ -181,11 +194,18 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         $rate = $rateCollection->fetchItem();
 
-        $extOrderId = $this->getReferencePrefix() . $order->getIncrementId();
+        $extOrderId = $this->getReferencePrefix() . $order->getQuoteId();
 
         $assuredAmount = 0;
         if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {
             $assuredAmount = (int)$this->_scopeConfig->getValue(self::XML_PATH_ASSURED_AMOUNT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
+        }
+
+        // convert old address to new format
+        $streetParts = $this->_addressHelper->getMultiLineStreetParts($shippingAddress->getStreet());
+        if (!$streetParts['house_number']) {
+            // Get street, house number, etc from line 1
+            $streetParts = $this->_addressHelper->getStreetParts($shippingAddress->getStreet());
         }
 
         $requestData = [
@@ -199,17 +219,18 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 'shippingMethod' => [
                     'type' => 'delivery',
                     'identifier' => null,
-                    'option' => $shippingMethod->getMethod(),
-                    'orderWeight' => $this->getConvertedWeight($order->getWeight()),
+                    'option' => $rate['method'],
+                    'orderWeight' => $this->getConvertedWeight($order->getWeight(), $order->getStoreId()),
                     'description' => 'Delivery', //@todo Find out what description is expected
                     'assuredAmount' => $assuredAmount,
-                    'assuredAmountCurrency' => 'EUR'
+                    'assuredAmountCurrency' => 'EUR',
+                    'customsValue' => $order->getSubtotal(),
                 ],
                 'shippingAddress' => [
                     'customerName' => $shippingAddress->getName(),
-                    'street' => $shippingAddress->getStreetLine(1),
-                    'housenumber' => $shippingAddress->getStreetLine(2),
-                    'addition' => $shippingAddress->getStreetLine(3),
+                    'street' => $streetParts['street'],
+                    'housenumber' => $streetParts['house_number'],
+                    'addition' => $streetParts['addition'],
                     'zipcode' => $shippingAddress->getPostcode(),
                     'city' => $shippingAddress->getCity(),
                     'province' => $shippingAddress->getRegion(),
@@ -217,6 +238,11 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 ]
             ]
         ];
+
+        $zipcodeValidation = $this->_scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $order->getStoreId());
+        if (!$zipcodeValidation) {
+            $requestData['body']['shippingAddress']['localAddressValidation'] = 0;
+        }
 
         if ($this->_scopeConfig->getValue(self::XML_PATH_SINGLE_LABEL_PER_ORDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId())) {
             $requestData['body']['shippingMethod']['maxLabels'] = 1;
@@ -277,6 +303,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
     {
         $this->_request = $request;
         $this->_paazlData['requests'] = [];
+        $storeId = $this->registry->registry('paazl_current_store');
 
         $addressData = $this->_getAddressData($request);
 
@@ -299,8 +326,15 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             $updateOrderRequest = $this->_requestBuilder->build('PaazlUpdateOrderRequest', $orderRequestData);
             $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
         }
+
+        // Always add a updateOrderRequest
+        $updateOrderRequest = $this->_requestBuilder->build('PaazlUpdateOrderRequest', $orderRequestData);
+        $this->_paazlData['requests']['updateOrderRequest'] = $updateOrderRequest;
+
         // "address" request
-        if (!is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
+        $zipcodeValidation = $this->_scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $storeId);
+
+        if ($zipcodeValidation && !is_null($addressData['postcode']) && !is_null($addressData['house_number']) && $addressData['country_id'] == 'NL') {
             $dutchPostcode = $this->_addressHelper->isDutchPostcode($addressData['postcode'], true);
             if ($dutchPostcode !== false) {
                 // Dutch address-request
@@ -371,23 +405,27 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                 : $this->addressExtensionFactory->create();
 
             if (!is_null($extensionAttributes)) {
+                $streetName = $extensionAttributes->getStreetName();
                 $houseNumber = $extensionAttributes->getHouseNumber();
                 $addition = $extensionAttributes->getHouseNumberAddition();
             }
             // Try to get information from address?
             if ($houseNumber == '') {
                 if ($address->getHouseNumber() != '') {
+                    $streetName = $address->getStreetName();
                     $houseNumber = $address->getHouseNumber();
                     $addition = $address->getHouseNumberAddition();
                 }
                 else {
+                    $streetName = $address->getStreetLine(1);
                     $houseNumber = $address->getStreetLine(2);
                     if ($houseNumber) {
                         $addition = $address->getStreetLine(3);
 
+                        $addressExtension->setStreetName($streetName);
                         $addressExtension->setHouseNumber($houseNumber);
                         $addressExtension->setHouseNumberAddition($addition);
-                        $address->setExtensionAttributes($addressExtension);
+                        //$address->setExtensionAttributes($addressExtension);
                     }
                     else {
                         // Get street, house number, etc from line 1
@@ -397,17 +435,18 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                         $houseNumber = $parts['house_number'];
                         $addition = $parts['addition'];
 
+                        $addressExtension->setStreetName($street);
                         $addressExtension->setHouseNumber($houseNumber);
                         $addressExtension->setHouseNumberAddition($addition);
 
                         // Fixup region
-                        if ($address->getRegion() != '') {
+                        if ($address->getRegion() != '' && !is_string($address->getRegion())) {
                             $address->setRegion($address->getRegion()->getRegionId());
                         }
 
                         // @todo Should we fixup wrong format of street?
                         //$address->setStreet(implode("\n", array_filter($parts)));
-                        $address->setExtensionAttributes($addressExtension);
+                        //$address->setExtensionAttributes($addressExtension);
                     }
 
                     $address->save();
@@ -417,12 +456,21 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
         }
 
         $addressData = [
-            'street_parts' => $this->_addressHelper->getMultiLineStreetParts($request->getDestStreet()),
+            'street_parts' => [
+                'street' => (isset($streetName)) ? $streetName : null,
+                'house_number' => (isset($houseNumber)) ? $houseNumber : null,
+                'addition' => (isset($addition)) ? $addition : null,
+            ],
             'postcode' => $request->getDestPostcode(),
             'country_id' => $request->getDestCountryId(),
+            'street_name' => (isset($streetName)) ? $streetName : null,
             'house_number' => (isset($houseNumber)) ? $houseNumber : null,
-            'house_number_addition' => (isset($addition)) ? $addition : null
+            'house_number_addition' => (isset($addition)) ? $addition : null,
         ];
+
+        if (!$addressData['street_parts']['street']) {
+            $addressData['street_parts'] = $this->_addressHelper->getMultiLineStreetParts($request->getDestStreet());
+        }
 
         return $addressData;
     }

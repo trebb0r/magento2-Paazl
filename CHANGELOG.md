@@ -4,7 +4,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.3.0-rc2] - To be released
+
+### Improvements / Bug fixes
+- House number now has numeric validation on the frontend
+- Cron jobs will now keep running when a single order fails to commit to Paazl.
+- Cron jobs will now log encountered error codes in the order.
+- My Account section translations
+- Solve issue where the address couldn't be rendered when using a newly entered address in the checkout when logged-in.
+- Solve issue where Street+Housenumber+Addition would be send to Paazl on a single line.
+- Solve issue where delivery dates weren't in the proper timezone
+- Solve issue where the shipping options were empty because timezone differences.
+- Solve issue where the pickup option would always be selected after the delivery type was changed
+multiple times in the popup.
+- Solve issue where opening the Paazl Perfect popup would reset the country.
+
+## [1.3.0-rc1] - To be released
+
+With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
+
+*EE Only: If you're already using custom Customer attributes (e.g. `house number`), make sure it follows Paazl's exact naming convention (it are varchar fields).*
+
+- All UI components that have address fields are replaced with the new customer attributes (frontend / backend).
+- All existing addresses are automatically converted to the new format when they are loaded.
+- To maintain 100% compatibility, before saving the customer address a new flattened value is stored in the original street attribute.
+
+### Improvements / Bug fixes
+A lot of bug fixes and small improvements are included in this release:
+- The product matrix is now configurable from A-ZZ instead of A-Z.
+- Added option to enable the postcode validation (disabled by default due to UI issues with addresses outside the Netherlands, better UI planned for a future release).
+- Checkout field sort order set to: Street Number, House Number, House Number Addition, Postcode, City, State, Country
+- Solve issue in the cart where the tax would not be calculated properly because Paazl expects a full address instead of only a postcode. (Reported by ISM e-Company)
+- Solve issue in the cart where filling in your state would throw a JS error.
+- Solve issue where saving a customer address would throw an exception. CE Only
+- Solve issue where a reorder would throw an exception. (Reported by Guapa)
+- Solve issue where having a different configuration per website would cause issues (Reported by Guapa).
+
+### Known Issues / Limitations
+- 'Admin Panel Order Create' and 'Frontend multishipping' does not support Paazl Perfect, only basic functionality is supported.
+- ~~When the cron job is trying to communicate orders to Paazl and Paazl throws an error for a single order, the rest of the orders wont be processed.~~ Solved in rc2
+- ~~Core Bug: Multi Address Checkout: New address does not show house number.~~ (Ticket #03212624) Solved in rc2
+- Core Bug: Customer Address field are not update for order edit address.  (Ticket #03212673)
+    - Backend, open order, choose ‘edit’ at billing address. change the house number, field is not updated for the order.
+    - If you order as logged-in customer and choose for a different billing address on the payment step then it does not save the house number.
+
+## [1.2.10] - 2017-07-06
+### Changed
+- Bugfix commit order would not use correct paazl account in a multistore setup
+
+## [1.2.9] - 2017-06-02
+### Changed
+- Bugfix matrix code when empty
 
 ## [1.2.8] - 2017-05-24
 ### Changed
