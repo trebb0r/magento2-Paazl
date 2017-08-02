@@ -425,7 +425,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                         $addressExtension->setStreetName($streetName);
                         $addressExtension->setHouseNumber($houseNumber);
                         $addressExtension->setHouseNumberAddition($addition);
-                        $address->setExtensionAttributes($addressExtension);
+                        //$address->setExtensionAttributes($addressExtension);
                     }
                     else {
                         // Get street, house number, etc from line 1

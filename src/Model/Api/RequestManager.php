@@ -253,6 +253,7 @@ class RequestManager
      */
     public function getHash($context)
     {
+        $this->setupVars();
         return sha1($this->webshopId . $this->password . $context);
     }
 
