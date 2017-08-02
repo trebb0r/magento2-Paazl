@@ -28,7 +28,7 @@ define([
                         streetName = localStorageData.street[0];
                     }
                     if (streetName == '') {
-                        if (address.hasOwnProperty('customAttributes')) {
+                        if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('street_name') && address.customAttributes.street_name !== undefined) streetName = address.customAttributes.street_name.value;
                         }
                         else {
@@ -44,7 +44,7 @@ define([
                         houseNumber = localStorageData.street[1];
                     }
                     if (houseNumber == '') {
-                        if (address.hasOwnProperty('customAttributes')) {
+                        if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('house_number') && address.customAttributes.house_number !== undefined) houseNumber = address.customAttributes.house_number.value;
                         }
                         else {
@@ -60,7 +60,7 @@ define([
                         houseNumberAddition = localStorageData.street[2];
                     }
                     if (houseNumberAddition == '') {
-                        if (address.hasOwnProperty('customAttributes')) {
+                        if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('house_number_addition') && address.customAttributes.house_number_addition !== undefined) houseNumberAddition = address.customAttributes.house_number_addition.value;
                         }
                         else {

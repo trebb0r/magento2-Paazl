@@ -24,7 +24,7 @@ define([
                 addressData = this.source.get('shippingAddress');
 
                 // fixup street
-                if (addressData.hasOwnProperty('custom_attributes')) {
+                if (addressData.hasOwnProperty('custom_attributes') && address.custom_attributes !== undefined) {
                     if (addressData.custom_attributes.hasOwnProperty('street_name') && addressData.custom_attributes.street_name !== undefined) streetName = addressData.custom_attributes.street_name;
                     if (addressData.custom_attributes.hasOwnProperty('house_number') && addressData.custom_attributes.house_number !== undefined) houseNumber = addressData.custom_attributes.house_number;
                     if (addressData.custom_attributes.hasOwnProperty('house_number_addition') && addressData.custom_attributes.house_number_addition !== undefined) houseNumberAddition = addressData.custom_attributes.house_number_addition;
