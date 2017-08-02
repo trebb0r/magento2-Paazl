@@ -31,8 +31,8 @@ define([
                         if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('street_name') && address.customAttributes.street_name !== undefined) streetName = address.customAttributes.street_name.value;
                         }
-                        else {
-                            if (address.customAttributes.hasOwnProperty('street_name') && address.custom_attributes.street_name !== undefined) streetName = address.custom_attributes.street_name;
+                        else if (address.hasOwnProperty('custom_attributes') && address.custom_attributes !== undefined) {
+                            if (address.custom_attributes.hasOwnProperty('street_name') && address.custom_attributes.street_name !== undefined) streetName = address.custom_attributes.street_name;
                         }
                     }
                 }
@@ -47,7 +47,7 @@ define([
                         if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('house_number') && address.customAttributes.house_number !== undefined) houseNumber = address.customAttributes.house_number.value;
                         }
-                        else {
+                        else if (address.hasOwnProperty('custom_attributes') && address.custom_attributes !== undefined) {
                             if (address.custom_attributes.hasOwnProperty('house_number') && address.custom_attributes.house_number !== undefined) houseNumber = address.custom_attributes.house_number;
                         }
                     }
@@ -63,7 +63,7 @@ define([
                         if (address.hasOwnProperty('customAttributes') && address.customAttributes !== undefined) {
                             if (address.customAttributes.hasOwnProperty('house_number_addition') && address.customAttributes.house_number_addition !== undefined) houseNumberAddition = address.customAttributes.house_number_addition.value;
                         }
-                        else {
+                        else if (address.hasOwnProperty('custom_attributes') && address.custom_attributes !== undefined) {
                             if (address.custom_attributes.hasOwnProperty('house_number_addition') && address.custom_attributes.house_number_addition !== undefined) houseNumberAddition = address.custom_attributes.house_number_addition;
                         }
                     }
