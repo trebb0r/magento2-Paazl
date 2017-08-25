@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.1]
+### Changed
+- Bugfix: The final order reference will use the order increment ID instead of quote ID.
+
 ## [1.3.0] - 2017-08-02
 With the 1.3.0 release we're introducing a better way for Paazl to store customer address information in Magento. By default, Magento handles the street information in a single field and uses multiple lines to store the information. This is considered suboptimal as it causes a lot of problems with compatibility. New separate Customer attributes are introduced: street_name, house_number, house_number_addition.
 
@@ -40,11 +44,6 @@ multiple times in the popup.
 - Core Bug: Customer Address field are not update for order edit address.  (Ticket #03212673)
     - Backend, open order, choose ‘edit’ at billing address. change the house number, field is not updated for the order.
     - If you order as logged-in customer and choose for a different billing address on the payment step then it does not save the house number.
-
-
-## [1.3.0-rc3] - To be released
-### Changed
-- Bugfix: The final order reference will use the order increment ID instead of quote ID.
 
 ## [1.3.0-rc2] - To be released
 
