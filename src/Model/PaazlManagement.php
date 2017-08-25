@@ -194,7 +194,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 
         $rate = $rateCollection->fetchItem();
 
-        $extOrderId = $this->getReferencePrefix() . $order->getQuoteId();
+        $extOrderId = $this->getReferencePrefix() . $order->getIncrementId();
 
         $assuredAmount = 0;
         if (strpos($shippingMethod->getMethod(), 'HIGH_LIABILITY') !== false) {

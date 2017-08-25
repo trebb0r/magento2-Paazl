@@ -6,7 +6,7 @@ The Paazl Magento 2 module gives you instant access to the services of over 50 l
 ## Installation
 
 ```BASH
-composer config repositories.honl/magento2-paazl vcs git@github.com:ho-nl/magento2-Paazl.git
+composer config repositories.paazl/magento2-paazl vcs git@github.com:paazl/magento2-Paazl.git
 composer require paazl/magento2
 
 bin/magento setup:upgrade
