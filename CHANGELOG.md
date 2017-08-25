@@ -42,6 +42,10 @@ multiple times in the popup.
     - If you order as logged-in customer and choose for a different billing address on the payment step then it does not save the house number.
 
 
+## [1.3.0-rc3] - To be released
+### Changed
+- Bugfix: The final order reference will use the order increment ID instead of quote ID.
+
 ## [1.3.0-rc2] - To be released
 
 ### Improvements / Bug fixes
