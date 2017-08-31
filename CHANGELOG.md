@@ -45,7 +45,6 @@ multiple times in the popup.
     - Backend, open order, choose ‘edit’ at billing address. change the house number, field is not updated for the order.
     - If you order as logged-in customer and choose for a different billing address on the payment step then it does not save the house number.
 
-
 ## [1.3.0-rc2] - To be released
 
 ### Improvements / Bug fixes
