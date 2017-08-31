@@ -26,6 +26,7 @@ define([
                 var streetName = shippingAddress.customAttributes['street_name'].value ? shippingAddress.customAttributes['street_name'].value : shippingAddress.customAttributes['street_name'];
                 var houseNumber = shippingAddress.customAttributes['house_number'].value ? shippingAddress.customAttributes['house_number'].value : shippingAddress.customAttributes['house_number'];
 
+                shippingAddress['street'] = [];
                 shippingAddress['street'][0] = streetName;
                 shippingAddress['street'][1] = houseNumber;
                 if (shippingAddress.customAttributes['house_number_addition']) {

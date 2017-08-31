@@ -50,6 +50,7 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
                 }
 
                 // Make sure shippingOptionRequest is last and done after updateOrder again.
+                // @todo: possibly not needed because this is already done in parent class.
                 $shippingOptionRequest = $this->_paazlData['requests']['shippingOption'];
                 unset($this->_paazlData['requests']['shippingOption']);
                 $this->_paazlData['requests']['shippingOption'] = $shippingOptionRequest;
@@ -318,12 +319,16 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
     {
         $methods = parent::getAllowedMethods();
 
+        if (empty($methods)) {
+            return [];
+        }
+
         // Sort by price
         uasort($methods, ["\Paazl\Shipping\Model\Carrier\Perfect", "cmp"]);
 
         $key = key($methods);
 
-        if ($key == 'SERVICE_POINT') {
+        if ($key == 'SERVICE_POINT' && next($methods) !== false) {
             next($methods);
             $key = key($methods);
         }
