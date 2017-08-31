@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.2]
+### Changed
+- Bugfix: Swagger error: invalid parameter type of Paazl Shipping Model Data Delivery
+- Fixed compatiblity issue with MultiSafepay. (With help from redelschaap)
+
 ## [1.3.1]
 ### Changed
 - Bugfix: The final order reference will use the order increment ID instead of quote ID.
