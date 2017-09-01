@@ -114,7 +114,7 @@ class UpgradeData implements UpgradeDataInterface
                         'required'         => true,
                         'visible'          => true,
                         'visible_on_front' => true,
-                        'user_defined'     => false,
+                        'user_defined'     => true,
                         'position'       => 76,
                         'system'           => 0,
                     ]
@@ -150,7 +150,7 @@ class UpgradeData implements UpgradeDataInterface
                         'required'         => true,
                         'visible'          => true,
                         'visible_on_front' => true,
-                        'user_defined'     => false,
+                        'user_defined'     => true,
                         'position'       => 74,
                         'system'           => 0,
                     ]
@@ -185,7 +185,7 @@ class UpgradeData implements UpgradeDataInterface
                         'required'         => false,
                         'visible'          => true,
                         'visible_on_front' => true,
-                        'user_defined'     => false,
+                        'user_defined'     => true,
                         'position'       => 75,
                         'system'           => 0,
                     ]
