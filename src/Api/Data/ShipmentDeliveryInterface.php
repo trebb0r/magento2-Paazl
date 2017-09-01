@@ -17,7 +17,7 @@ interface ShipmentDeliveryInterface
      * Set the Service Point Address
      *
      * @param string $servicePointAddress
-     * @return null
+     * @return $this
      */
     public function setServicePointAddress($servicePointAddress);
 
@@ -34,7 +34,7 @@ interface ShipmentDeliveryInterface
      * Set the Service Point Name
      *
      * @param string $servicePointName
-     * @return null
+     * @return $this
      */
     public function setServicePointName($servicePointName);
 
@@ -51,7 +51,7 @@ interface ShipmentDeliveryInterface
      * Set the Service Point Postcode
      *
      * @param string $postcode
-     * @return null
+     * @return $this
      */
     public function setServicePointPostcode($postcode);
 
@@ -68,7 +68,7 @@ interface ShipmentDeliveryInterface
      * Set the Service Point City
      *
      * @param string $city
-     * @return null
+     * @return $this
      */
     public function setServicePointCity($city);
 
@@ -85,7 +85,7 @@ interface ShipmentDeliveryInterface
      * Set the Delivery Date
      *
      * @param string $deliveryDate
-     * @return null
+     * @return $this
      */
     public function setDeliveryDate($deliveryDate);
 
@@ -102,7 +102,7 @@ interface ShipmentDeliveryInterface
      * Set the Delivery Window Start
      *
      * @param string $deliveryWindowStart
-     * @return null
+     * @return $this
      */
     public function setDeliveryWindowStart($deliveryWindowStart);
 
@@ -119,7 +119,7 @@ interface ShipmentDeliveryInterface
      * Set the Delivery Window End
      *
      * @param string $deliveryWindowEnd
-     * @return null
+     * @return $this
      */
     public function setDeliveryWindowEnd($deliveryWindowEnd);
 
@@ -136,7 +136,7 @@ interface ShipmentDeliveryInterface
      * Set the Delivery Window End
      *
      * @param string $deliveryWindowText
-     * @return null
+     * @return $this
      */
     public function setDeliveryWindowText($deliveryWindowText);
 
@@ -153,7 +153,7 @@ interface ShipmentDeliveryInterface
      * Set the Service Point Code
      *
      * @param string $servicePointCode
-     * @return null
+     * @return $this
      */
     public function setServicePointCode($servicePointCode);
 }
