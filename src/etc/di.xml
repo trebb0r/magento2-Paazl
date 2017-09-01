@@ -76,7 +76,7 @@
         <plugin name="paalz_shipping_configprovider_plugin" type="Paazl\Shipping\Model\Plugin\Checkout\ConfigProviderPlugin" />
     </type>
 
-    <preference for="Paazl\Shipping\Api\Data\Delivery" type="Paazl\Shipping\Model\Data\Delivery" />
+    <preference for="Paazl\Shipping\Api\Data\ShipmentDeliveryInterface" type="Paazl\Shipping\Model\Data\Delivery" />
 
     <type name="Magento\Quote\Model\Quote\Address\Rate">
         <plugin name="paalz_shipping_quote_address_rate_plugin" type="Paazl\Shipping\Model\Plugin\Quote\Address\RatePlugin" />
@@ -91,6 +91,14 @@
     </type>
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="convertQuoteAddressToCustomerAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToCustomerAddress"/>
+    </type>
+    <type name="Magento\Sales\Api\Data\OrderAddressInterface">
+        <plugin sortOrder="1" name="PaazlAddressPlugin" type="Paazl\Shipping\Model\Plugin\PaazlAddressPlugin" />
+        <plugin sortOrder="1" name="paazlShippingOrderAddressInterface"
+                type="Paazl\Shipping\Model\Plugin\SalesOrderApiDataOrderAddressInterfacePlugin" />
+    </type>
+    <type name="Magento\Sales\Api\Data\OrderAddressInterface">
+        <plugin sortOrder="1" name="paazlOrderAddressInterface" type="Paazl\Shipping\Model\Plugin\SalesOrderApiDataOrderAddressInterfacePlugin" />
     </type>
 
     <preference for="Magento\Customer\Api\AddressRepositoryInterface"

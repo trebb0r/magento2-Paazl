@@ -2,177 +2,197 @@
 
 namespace Paazl\Shipping\Model\Data;
 
-class Delivery implements \Paazl\Shipping\Api\Data\Delivery
+class Delivery implements \Paazl\Shipping\Api\Data\ShipmentDeliveryInterface
 {
+
     protected $_data;
 
+
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getData()
     {
         return $this->_data;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
     public function setData($data)
     {
         $this->_data = $data;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getServicePointAddress()
     {
-        return isset($this->_data['service_point_address'])? $this->_data['service_point_address'] : null;
+        return isset($this->_data['service_point_address'])
+            ? $this->_data['service_point_address'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setServicePointAddress($data)
+    public function setServicePointAddress($servicePointAddress)
     {
-        $this->_data['service_point_address'] = $data;
+        $this->_data['service_point_address'] = $servicePointAddress;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getServicePointName()
     {
-        return isset($this->_data['service_point_name'])? $this->_data['service_point_name'] : null;
+        return isset($this->_data['service_point_name'])
+            ? $this->_data['service_point_name'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setServicePointName($data)
+    public function setServicePointName($servicePointName)
     {
-        $this->_data['service_point_name'] = $data;
+        $this->_data['service_point_name'] = $servicePointName;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getServicePointPostcode()
     {
-        return isset($this->_data['service_point_postcode'])? $this->_data['service_point_postcode'] : null;
+        return isset($this->_data['service_point_postcode'])
+            ? $this->_data['service_point_postcode'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setServicePointPostcode($data)
+    public function setServicePointPostcode($postcode)
     {
-        $this->_data['service_point_postcode'] = $data;
+        $this->_data['service_point_postcode'] = $postcode;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getServicePointCity()
     {
-        return isset($this->_data['service_point_city'])? $this->_data['service_point_city'] : null;
+        return isset($this->_data['service_point_city'])
+            ? $this->_data['service_point_city'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setServicePointCity($data)
+    public function setServicePointCity($city)
     {
-        $this->_data['service_point_city'] = $data;
+        $this->_data['service_point_city'] = $city;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getDeliveryDate()
     {
-        return isset($this->_data['delivery_date'])? $this->_data['delivery_date'] : null;
+        return isset($this->_data['delivery_date']) ? $this->_data['delivery_date']
+            : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setDeliveryDate($data)
+    public function setDeliveryDate($deliveryDate)
     {
-        $this->_data['delivery_date'] = $data;
+        $this->_data['delivery_date'] = $deliveryDate;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getDeliveryWindowStart()
     {
-        return isset($this->_data['delivery_window_start'])? $this->_data['delivery_window_start'] : null;
+        return isset($this->_data['delivery_window_start'])
+            ? $this->_data['delivery_window_start'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setDeliveryWindowStart($data)
+    public function setDeliveryWindowStart($deliveryWindowStart)
     {
-        $this->_data['delivery_window_start'] = $data;
+        $this->_data['delivery_window_start'] = $deliveryWindowStart;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getDeliveryWindowEnd()
     {
-        return isset($this->_data['delivery_window_end'])? $this->_data['delivery_window_end'] : null;
+        return isset($this->_data['delivery_window_end'])
+            ? $this->_data['delivery_window_end'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setDeliveryWindowEnd($data)
+    public function setDeliveryWindowEnd($deliveryWindowEnd)
     {
-        $this->_data['delivery_window_end'] = $data;
+        $this->_data['delivery_window_end'] = $deliveryWindowEnd;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getDeliveryWindowText()
     {
-        return isset($this->_data['delivery_window_text'])? $this->_data['delivery_window_text'] : null;
+        return isset($this->_data['delivery_window_text'])
+            ? $this->_data['delivery_window_text'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setDeliveryWindowText($data)
+    public function setDeliveryWindowText($deliveryWindowText)
     {
-        $this->_data['delivery_window_text'] = $data;
+        $this->_data['delivery_window_text'] = $deliveryWindowText;
     }
 
+
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getServicePointCode()
     {
-        return isset($this->_data['service_point_code'])? $this->_data['service_point_code'] : null;
+        return isset($this->_data['service_point_code'])
+            ? $this->_data['service_point_code'] : null;
     }
 
+
     /**
-     * @param $data
-     * @return $this
+     * @inheritdoc
      */
-    public function setServicePointCode($data)
+    public function setServicePointCode($servicePointCode)
     {
-        $this->_data['service_point_code'] = $data;
+        $this->_data['service_point_code'] = $servicePointCode;
     }
 }
