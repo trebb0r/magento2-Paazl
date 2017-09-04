@@ -48,7 +48,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
-        if (version_compare($context->getVersion(), '1.3.1', '<')) {
+        if (version_compare($context->getVersion(), '1.3.3', '<')) {
             $this->createNewAddressColumns($setup, 'sales_order_address', 'street_name', 'Street Name');
             $this->createNewAddressColumns($setup, 'quote_address', 'street_name', 'Street Name');
             $this->createNewAddressColumns($setup, 'customer_address_entity', 'street_name', 'Street Name');
