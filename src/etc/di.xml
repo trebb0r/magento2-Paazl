@@ -106,6 +106,7 @@
     <preference for="Magento\Sales\Model\ResourceModel\Order\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Order\Address\Collection" />
     <preference for="Magento\Quote\Model\ResourceModel\Quote\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Quote\Address\Collection" />
     <preference for="Magento\Quote\Model\Quote\Address\CustomAttributeList" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
+    <preference for="Magento\Customer\Model\Address\CustomAttributeListInterface" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
 
     <preference for="Magento\Customer\Api\AddressRepositoryInterface"
                 type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
