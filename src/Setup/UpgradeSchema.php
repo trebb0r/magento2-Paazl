@@ -8,6 +8,7 @@ namespace Paazl\Shipping\Setup;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\DB\Ddl\Table;
 
 /**
  * Upgrade the Catalog module DB scheme
@@ -26,7 +27,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getTable('quote_shipping_rate'),
                 'paazl_preferred_date',
                 [
-                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'type' => Table::TYPE_TEXT,
                     'length' => 255,
                     'nullable' => true,
                     'comment' => 'Preferred date'
@@ -39,7 +40,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getTable('paazl_log'),
                 'response_time',
                 [
-                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_FLOAT,
+                    'type' => Table::TYPE_FLOAT,
                     'length' => 255,
                     'nullable' => true,
                     'comment' => 'Response time'
@@ -47,6 +48,40 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
+        if (version_compare($context->getVersion(), '1.3.3', '<')) {
+            $this->createNewAddressColumns($setup, 'sales_order_address', 'street_name', 'Street Name');
+            $this->createNewAddressColumns($setup, 'quote_address', 'street_name', 'Street Name');
+            $this->createNewAddressColumns($setup, 'customer_address_entity', 'street_name', 'Street Name');
+
+            $this->createNewAddressColumns($setup, 'sales_order_address', 'house_number', 'House Number');
+            $this->createNewAddressColumns($setup, 'quote_address', 'house_number', 'House Number');
+            $this->createNewAddressColumns($setup, 'customer_address_entity', 'house_number', 'House Number');
+
+            $this->createNewAddressColumns($setup, 'sales_order_address', 'house_number_addition', 'House Number Addition');
+            $this->createNewAddressColumns($setup, 'quote_address', 'house_number_addition', 'House Number Addition');
+            $this->createNewAddressColumns($setup, 'customer_address_entity', 'house_number_addition', 'House Number Addition');
+        }
         $setup->endSetup();
+    }
+
+
+    /**
+     * @param  $setup
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $columnComment
+     */
+    public function createNewAddressColumns(SchemaSetupInterface $setup, $tableName, $columnName, $columnComment)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable($tableName),
+            $columnName,
+            [
+                'type'     => Table::TYPE_TEXT,
+                'length'   => 255,
+                'nullable' => true,
+                'comment'  => $columnComment
+            ]
+        );
     }
 }

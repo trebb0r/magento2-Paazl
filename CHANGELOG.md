@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.3.3]
 ### Changed
 - Bugfix: extra address fields would not show in My Account page during a fresh install.
+- Bugfix: create order and reorder from backend now fill in address fields correctly.
 
 ## [1.3.2]
 ### Changed
