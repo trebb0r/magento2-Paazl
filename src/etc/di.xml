@@ -92,24 +92,11 @@
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="convertQuoteAddressToCustomerAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToCustomerAddress"/>
     </type>
-<<<<<<< HEAD
-=======
-    <!--<type name="Magento\Sales\Api\Data\OrderAddressInterface">
-        <plugin sortOrder="1" name="PaazlAddressPlugin" type="Paazl\Shipping\Model\Plugin\PaazlAddressPlugin" />
-        <plugin sortOrder="1" name="paazlShippingOrderAddressInterface"
-                type="Paazl\Shipping\Model\Plugin\SalesOrderApiDataOrderAddressInterfacePlugin" />
-    </type>
-
-    <type name="Magento\Sales\Model\Order\Address">
-        <plugin sortOrder="1" name="PaazlOrderAddressPlugin" type="Paazl\Shipping\Model\Plugin\PaazlOrderAddressPlugin" />
-    </type>
-    -->
 
     <preference for="Magento\Sales\Model\ResourceModel\Order\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Order\Address\Collection" />
     <preference for="Magento\Quote\Model\ResourceModel\Quote\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Quote\Address\Collection" />
     <preference for="Magento\Quote\Model\Quote\Address\CustomAttributeList" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
     <preference for="Magento\Customer\Model\Address\CustomAttributeListInterface" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
->>>>>>> develop
 
     <preference for="Magento\Customer\Api\AddressRepositoryInterface"
                 type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
