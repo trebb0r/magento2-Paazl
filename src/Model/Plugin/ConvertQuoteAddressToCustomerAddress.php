@@ -4,6 +4,7 @@
  * See LICENSE.txt for license details.
  */
 namespace Paazl\Shipping\Model\Plugin;
+use Paazl\Shipping\Helper\Utility\Address;
 
 class ConvertQuoteAddressToCustomerAddress
 {
@@ -12,13 +13,21 @@ class ConvertQuoteAddressToCustomerAddress
      */
     private $customerData;
 
+    private $addressHelper;
+
+
     /**
+     * ConvertQuoteAddressToCustomerAddress constructor.
+     *
      * @param \Paazl\Shipping\Helper\Data $customerData
+     * @param Address                     $addressHelper
      */
     public function __construct(
-        \Paazl\Shipping\Helper\Data $customerData
+        \Paazl\Shipping\Helper\Data $customerData,
+        Address $addressHelper
     ) {
         $this->customerData = $customerData;
+        $this->addressHelper = $addressHelper;
     }
 
     /**
@@ -36,4 +45,21 @@ class ConvertQuoteAddressToCustomerAddress
         }
         return $customerAddress;
     }
+
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Address $address
+     */
+    public function beforeBeforeSave(\Magento\Quote\Model\Quote\Address $address)
+    {
+        $convertedStreet = $this->addressHelper->getMultiLineStreetParts($address->getStreet());
+        if (!$convertedStreet['house_number']) {
+            $convertedStreet = $this->addressHelper->getStreetParts($address->getStreet());
+        }
+        $address->setStreetName($convertedStreet['street']);
+        $address->setHouseNumber($convertedStreet['house_number']);
+        $address->setHouseNumberAddition($convertedStreet['addition']);
+    }
+
+
 }

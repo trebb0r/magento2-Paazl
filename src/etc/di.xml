@@ -92,14 +92,6 @@
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="convertQuoteAddressToCustomerAddress" type="Paazl\Shipping\Model\Plugin\ConvertQuoteAddressToCustomerAddress"/>
     </type>
-    <type name="Magento\Sales\Api\Data\OrderAddressInterface">
-        <plugin sortOrder="1" name="PaazlAddressPlugin" type="Paazl\Shipping\Model\Plugin\PaazlAddressPlugin" />
-        <plugin sortOrder="1" name="paazlShippingOrderAddressInterface"
-                type="Paazl\Shipping\Model\Plugin\SalesOrderApiDataOrderAddressInterfacePlugin" />
-    </type>
-    <type name="Magento\Sales\Api\Data\OrderAddressInterface">
-        <plugin sortOrder="1" name="paazlOrderAddressInterface" type="Paazl\Shipping\Model\Plugin\SalesOrderApiDataOrderAddressInterfacePlugin" />
-    </type>
 
     <preference for="Magento\Customer\Api\AddressRepositoryInterface"
                 type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
@@ -114,4 +106,10 @@
     <preference for="Magento\Ui\Component\Layout\Tabs" type="Paazl\Shipping\Model\Ui\Component\Layout\Tabs" />
 
     <preference for="Magento\Customer\Model\Metadata\Form" type="Paazl\Shipping\Model\Customer\Metadata\Form" />
+    <type name="Magento\Sales\Api\Data\OrderAddressInterface">
+        <plugin sortOrder="1" name="paazlShippingOrderAddressInterface" type="Paazl\Shipping\Plugin\Api\Data\SalesApiDataOrderAddressInterfacePlugin" />
+    </type>
+    <type name="Magento\Quote\Api\Data\AddressInterface">
+        <plugin sortOrder="1" name="paazlShippingAddressInterface" type="Paazl\Shipping\Plugin\Api\Data\QuoteApiDataAddressInterfacePlugin" />
+    </type>
 </config>
