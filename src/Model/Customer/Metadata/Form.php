@@ -27,6 +27,7 @@ class Form extends \Magento\Customer\Model\Metadata\Form
         $builder = $validatorFactory->createValidatorBuilder('customer', 'form');
 
         $attributes = $this->getAllowedAttributes();
+        // Remove old street field in forms
         unset($attributes['street']);
 
         $builder->addConfiguration(

@@ -70,6 +70,7 @@ class Address extends \Magento\Sales\Block\Adminhtml\Order\Create\Billing\Addres
 
         $addressForm = $this->_customerFormFactory->create('customer_address', 'adminhtml_customer_address');
         $attributes = $addressForm->getAttributes();
+        // Remove old street from Admin -> Create Order
         unset($attributes['street']);
         $this->_addAttributesToForm($attributes, $fieldset);
 

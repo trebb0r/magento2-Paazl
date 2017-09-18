@@ -65,6 +65,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
 
         $addressForm = $this->_customerFormFactory->create('customer_address', 'adminhtml_customer_address');
         $attributes = $addressForm->getAttributes();
+        // Remove old street from Admin -> order view -> edit address
         unset($attributes['street']);
         $this->_addAttributesToForm($attributes, $fieldset);
 

@@ -83,6 +83,7 @@ class LayoutProcessor implements LayoutProcessorInterface
                     ['children']['payment']['children']['payments-list']['children'][$name]['children']
                     ['form-fields']['children'];
                     if (isset($formFields['postcode']) && isset($formFields['street'])) {
+                        // Remove old street from checkout form
                         unset($jsLayout['components']['checkout']['children']['steps']['children']['billing-step']
                             ['children']['payment']['children']['payments-list']['children'][$name]['children']
                             ['form-fields']['children']['street']);

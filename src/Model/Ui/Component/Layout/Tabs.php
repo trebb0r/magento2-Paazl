@@ -25,6 +25,7 @@ class Tabs extends \Magento\Ui\Component\Layout\Tabs
     protected function prepareChildComponents(UiComponentInterface $component, $parentName)
     {
         $name = $component->getName();
+        // Remove old street from Admin -> customer -> addresses
         if (in_array($name, array('street', 'street_0', 'street_1'))) {
             return [$component, []];
         }

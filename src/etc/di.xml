@@ -103,22 +103,34 @@
     </type>
     -->
 
+    <!-- Allow reorder and use old street field to fill in Paazl street fields -->
     <preference for="Magento\Sales\Model\ResourceModel\Order\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Order\Address\Collection" />
+    <!-- use old street field to fill in Paazl street fields for Admin -> Create Order -->
     <preference for="Magento\Quote\Model\ResourceModel\Quote\Address\Collection" type="Paazl\Shipping\Model\ResourceModel\Quote\Address\Collection" />
+    <!-- Save Paazl address fields also to quote and order address during checkout -->
     <preference for="Magento\Quote\Model\Quote\Address\CustomAttributeList" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
+    <!-- Make sure Admin -> Create Order also works from the customer detail page -->
     <preference for="Magento\Customer\Model\Address\CustomAttributeListInterface" type="Paazl\Shipping\Model\Quote\Address\CustomAttributeList" />
 
+    <!-- Remove old street field in forms and use new street fields for saving -->
     <preference for="Magento\Customer\Api\AddressRepositoryInterface"
                 type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+    <!-- Remove old street field in forms and use new street fields for saving -->
     <preference for="\Magento\Customer\Model\ResourceModel\AddressRepository"
                 type="Paazl\Shipping\Model\Customer\ResourceModel\AddressRepository" />
+    <!-- Prevent old street validate error in Admin -> Create Order -->
     <preference for="Magento\Quote\Model\Quote\Address" type="Paazl\Shipping\Model\Quote\Address" />
 
+    <!-- Remove old street from Admin -> Create Order -->
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Billing\Address" />
+    <!-- Remove old street from Admin -> Create Order -->
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Address" type="Paazl\Shipping\Block\Adminhtml\Order\Create\Shipping\Address" />
+    <!-- Remove old street from Admin -> order view -> edit address -->
     <preference for="Magento\Sales\Block\Adminhtml\Order\Address\Form" type="Paazl\Shipping\Block\Adminhtml\Order\Address\Form" />
 
+    <!-- Remove old street from Admin -> customer -> addresses -->
     <preference for="Magento\Ui\Component\Layout\Tabs" type="Paazl\Shipping\Model\Ui\Component\Layout\Tabs" />
 
+    <!-- Remove old street field in forms and use new street fields for saving -->
     <preference for="Magento\Customer\Model\Metadata\Form" type="Paazl\Shipping\Model\Customer\Metadata\Form" />
 </config>
